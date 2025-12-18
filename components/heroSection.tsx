@@ -3,12 +3,20 @@
 import { useRef } from "react";
 import VariableProximity from "./ui/shadcn-io/variable-proximity";
 import { LiquidButton } from "./ui/shadcn-io/liquid-button";
-
+import SplashCursor from "./SplashCursor";
 
 export function HeroSection() {
   const containerRef = useRef(null);
   return (
     <section className="relative isolate overflow-hidden bg-white">
+      {/* Splash Cursor Effect - scoped to hero section */}
+      <SplashCursor 
+        DENSITY_DISSIPATION={2}
+        VELOCITY_DISSIPATION={1.5}
+        SPLAT_FORCE={4000}
+        SPLAT_RADIUS={0.15}
+      />
+      
       {/* background bubbles */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
         <div className="absolute inset-0 bg-white/40" />
@@ -59,14 +67,14 @@ export function HeroSection() {
         <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
           <a
             href="#start"
-            className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-emerald-700 px-7 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 sm:w-auto"
+            className="group inline-flex w-full items-center justify-center rounded-full bg-emerald-700 px-7 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 sm:w-auto"
           >
             Start Connecting Free
             <svg
               aria-hidden="true"
               viewBox="0 0 20 20"
               fill="currentColor"
-              className="h-4 w-4"
+              className="h-4 w-0 overflow-hidden opacity-0 transition-all duration-300 group-hover:ml-2 group-hover:w-4 group-hover:opacity-100"
             >
               <path
                 fillRule="evenodd"
@@ -92,14 +100,14 @@ export function HeroSection() {
           </LiquidButton>
         </div>
 
-        <div className="mt-14 text-sm text-slate-500">Trusted by professionals from</div>
-        <div className="mt-6 flex flex-wrap items-center justify-center gap-x-10 gap-y-4 text-sm font-semibold text-slate-400">
+        <div className="mt-14 text-2xl text-slate-500">Trusted by professionals </div>
+        {/* <div className="mt-6 flex flex-wrap items-center justify-center gap-x-10 gap-y-4 text-sm font-semibold text-slate-400">
           <span>Google</span>
           <span>Microsoft</span>
           <span>Amazon</span>
           <span>Meta</span>
           <span>Startup India</span>
-        </div>
+        </div> */}
       </div>
     </section>
   );
