@@ -1,3 +1,5 @@
+import { LiquidButton } from "./ui/shadcn-io/liquid-button";
+
 export function YariConnect() {
   return (
     <section
@@ -142,9 +144,10 @@ export function YariConnect() {
             </div>
 
             <div className="mt-10">
-              <a
+              <LiquidButton
                 href="#start"
-                className="inline-flex items-center gap-2 rounded-full bg-emerald-700 px-7 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-emerald-800 hover:shadow-lg hover:shadow-emerald-700/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
+                className="inline-flex items-center gap-2 rounded-full bg-emerald-700 px-7 py-3 text-sm font-semibold text-emerald-700 hover:text-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-emerald-800 hover:shadow-lg hover:shadow-emerald-700/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 border-2 border-emerald-700"
+
               >
                 Try YariConnect Free
                 <svg
@@ -159,7 +162,7 @@ export function YariConnect() {
                     clipRule="evenodd"
                   />
                 </svg>
-              </a>
+              </LiquidButton>
             </div>
           </div>
 
