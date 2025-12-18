@@ -1,3 +1,5 @@
+import SpotlightCard from "./SpotlightCard";
+
 export function SolutionSection() {
   return (
     <section
@@ -31,7 +33,9 @@ export function SolutionSection() {
 
         <div className="mt-14 grid gap-8 lg:grid-cols-2">
           {/* Card: YariConnect */}
-          <div className="group relative rounded-3xl bg-white p-10 shadow-sm ring-1 ring-slate-900/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10">
+          <SpotlightCard
+           className="group relative rounded-3xl bg-white p-10 shadow-sm ring-1 ring-slate-900/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10 border-none"
+          spotlightColor="rgba(16, 185, 129, 0.2)">
             <div
               aria-hidden="true"
               className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-emerald-200/50 blur-3xl opacity-0 transition-opacity duration-300 group-hover:opacity-100"
@@ -114,10 +118,12 @@ export function SolutionSection() {
                 Built-in conversation guides
               </li>
             </ul>
-          </div>
+          </SpotlightCard>
 
           {/* Card: Clarity Connect */}
-          <div className="group relative rounded-3xl bg-white p-10 shadow-sm ring-1 ring-slate-900/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10">
+          <SpotlightCard
+           className="group relative rounded-3xl bg-white p-10 shadow-sm ring-1 ring-slate-900/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10 border-none"
+           spotlightColor="rgba(237, 137, 54, 0.2)">
             <div
               aria-hidden="true"
               className="pointer-events-none absolute -left-16 -top-16 h-48 w-48 rounded-full bg-orange-200/55 blur-3xl opacity-0 transition-opacity duration-300 group-hover:opacity-100"
@@ -202,7 +208,7 @@ export function SolutionSection() {
                 Premium venues
               </li>
             </ul>
-          </div>
+          </SpotlightCard>
         </div>
       </div>
     </section>
