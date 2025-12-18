@@ -1,5 +1,8 @@
 "use client";
 
+import { Linkedin, Mail, Instagram } from "lucide-react";
+import { FaXTwitter } from "react-icons/fa6";
+
 export function Footer() {
   return (
     <footer className="relative isolate overflow-hidden border-t border-slate-900/10 bg-white py-16">
@@ -23,6 +26,42 @@ export function Footer() {
               <p className="mt-4 text-sm leading-6 text-slate-600">
                 Real networks built through real conversations. Making professional networking accessible and meaningful.
               </p>
+              <div className="mt-6 flex gap-4">
+                <a
+                  href="https://www.linkedin.com/company/growthyari"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-slate-600 transition-colors hover:text-slate-900"
+                  aria-label="LinkedIn"
+                >
+                  <Linkedin className="h-5 w-5" />
+                </a>
+                <a
+                  href="https://x.com/growthyari"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-slate-600 transition-colors hover:text-slate-900"
+                  aria-label="X (formerly Twitter)"
+                >
+                  <FaXTwitter className="h-5 w-5" />
+                </a>
+                <a
+                  href="mailto:contact@growthyari.com"
+                  className="text-slate-600 transition-colors hover:text-slate-900"
+                  aria-label="Email"
+                >
+                  <Mail className="h-5 w-5" />
+                </a>
+                <a
+                  href="https://instagram.com/growthyari"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-slate-600 transition-colors hover:text-slate-900"
+                  aria-label="Instagram"
+                >
+                  <Instagram className="h-5 w-5" />
+                </a>
+              </div>
             </div>
 
             {/* Products */}

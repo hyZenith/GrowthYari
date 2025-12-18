@@ -36,7 +36,7 @@ export function Header() {
             </a>
 
             <a
-              href="/about"
+              href="/Dashboard"
               className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 transition-colors hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
             >
               <svg
@@ -56,7 +56,7 @@ export function Header() {
             </a>
 
             <a
-              href="/services"
+              href="/events"
               className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 transition-colors hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
             >
               <svg
