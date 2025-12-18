@@ -213,7 +213,7 @@ export function YariConnect() {
                   </div>
                   <div>
                     <div className="text-sm font-semibold text-slate-900">
-                      Sarah Kim
+                      XYZ
                     </div>
                     <div className="text-xs text-slate-600">
                       Product Lead at Stripe
