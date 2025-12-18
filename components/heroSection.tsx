@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import VariableProximity from "./ui/shadcn-io/variable-proximity";
+import { LiquidButton } from "./ui/shadcn-io/liquid-button";
 
 
 export function HeroSection() {
@@ -36,10 +37,10 @@ export function HeroSection() {
               className="text-[100px] font-semibold"
             >
               <VariableProximity
-                label={'Professional Networking,'}
+                label={'Professional Networking'}
                 className={'text-center '}
                 fromFontVariationSettings="'wght' 400, 'opsz' 12"
-                toFontVariationSettings="'wght' 900, 'opsz' 144"
+                toFontVariationSettings="'wght' 700, 'opsz' 144"
                 containerRef={containerRef}
                 radius={120}
                 falloff='linear'
@@ -75,7 +76,7 @@ export function HeroSection() {
             </svg>
           </a>
 
-          <a
+          <LiquidButton
             href="#how-it-works"
             className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-emerald-700/60 bg-white/60 px-7 py-3 text-sm font-semibold text-emerald-800 shadow-sm backdrop-blur transition-colors hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 sm:w-auto"
           >
@@ -88,7 +89,7 @@ export function HeroSection() {
               <path d="M6.5 5.75A.75.75 0 0 1 7.25 5h.57c.31 0 .6.12.82.34l5.02 5.02c.37.37.37.98 0 1.35l-5.02 5.02c-.22.22-.51.34-.82.34h-.57a.75.75 0 0 1-.75-.75V5.75Z" />
             </svg>
             Watch How It Works
-          </a>
+          </LiquidButton>
         </div>
 
         <div className="mt-14 text-sm text-slate-500">Trusted by professionals from</div>
