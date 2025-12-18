@@ -9,12 +9,16 @@ export function HeroSection() {
   const containerRef = useRef(null);
   return (
     <section className="relative isolate overflow-hidden bg-white">
-      {/* Splash Cursor Effect - scoped to hero section */}
       <SplashCursor 
-        DENSITY_DISSIPATION={2}
-        VELOCITY_DISSIPATION={1.5}
-        SPLAT_FORCE={4000}
-        SPLAT_RADIUS={0.15}
+        DENSITY_DISSIPATION={1.5}
+        VELOCITY_DISSIPATION={2.5}
+        PRESSURE={0.05}
+        CURL={5}
+        SPLAT_RADIUS={0.1}
+        SPLAT_FORCE={2000}
+        SHADING={false}
+        COLOR_UPDATE_SPEED={15}
+        TRANSPARENT={true}
       />
       
       {/* background bubbles */}
