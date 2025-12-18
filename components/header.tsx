@@ -3,9 +3,11 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b border-slate-900/10 bg-white/70 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-7xl items-center gap-6 px-4 sm:px-6 lg:px-8">
         <a href="/" className="flex items-center gap-2">
-          <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-emerald-700 text-lg font-semibold text-white">
-            G
-          </span>
+          <img
+            src="/images/logo.png"
+            alt="GrowthYari logo"
+            className="h-9 w-9 rounded-full object-cover"
+          />
           <span className="text-lg font-semibold tracking-tight text-slate-900">
             GrowthYari
           </span>
