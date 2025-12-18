@@ -1,3 +1,5 @@
+import SpotlightCard from "./SpotlightCard";
+
 export function FeatureSection() {
   return (
     <section
@@ -21,7 +23,9 @@ export function FeatureSection() {
 
         <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {/* Card 1 */}
-          <div className="group relative rounded-2xl bg-white p-8 shadow-sm ring-1 ring-slate-900/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10">
+          <SpotlightCard
+           className="group relative rounded-2xl bg-white  p-8 shadow-sm ring-1 ring-slate-900/5 transition-all duration-300 border-none hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10" spotlightColor="rgba(0, 229, 255, 0.2)"
+           >
             <div
               aria-hidden="true"
               className="pointer-events-none absolute -left-10 -top-10 h-36 w-36 rounded-full bg-emerald-200/50 blur-3xl opacity-0 transition-opacity duration-300 group-hover:opacity-100"
@@ -50,10 +54,13 @@ export function FeatureSection() {
               LinkedIn requests pile up, but genuine professional relationships
               remain elusive.
             </p>
-          </div>
+          </SpotlightCard>
 
           {/* Card 2 */}
-          <div className="group relative rounded-2xl bg-white p-8 shadow-sm ring-1 ring-slate-900/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10">
+          <SpotlightCard
+            className="group relative rounded-2xl bg-white p-8 shadow-sm ring-1 ring-slate-900/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10 border-none"
+            spotlightColor="rgba(0, 229, 255, 0.2)"
+          >
             <div
               aria-hidden="true"
               className="pointer-events-none absolute -left-10 -top-10 h-36 w-36 rounded-full bg-emerald-200/50 blur-3xl opacity-0 transition-opacity duration-300 group-hover:opacity-100"
@@ -80,10 +87,13 @@ export function FeatureSection() {
               Hours spent at networking events, yet leaving with nothing but
               business cards.
             </p>
-          </div>
+          </SpotlightCard>
 
           {/* Card 3 */}
-          <div className="group relative rounded-2xl bg-white p-8 shadow-sm ring-1 ring-slate-900/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10">
+          <SpotlightCard
+            className="group relative rounded-2xl bg-white p-8 shadow-sm ring-1 ring-slate-900/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10 border-none"
+            spotlightColor="rgba(0, 229, 255, 0.2)"
+          >
             <div
               aria-hidden="true"
               className="pointer-events-none absolute -left-10 -top-10 h-36 w-36 rounded-full bg-emerald-200/50 blur-3xl opacity-0 transition-opacity duration-300 group-hover:opacity-100"
@@ -109,10 +119,13 @@ export function FeatureSection() {
               DMs get ignored. Comments feel hollow. Where&apos;s the authentic
               dialogue?
             </p>
-          </div>
+          </SpotlightCard>
 
           {/* Card 4 */}
-          <div className="group relative rounded-2xl bg-white p-8 shadow-sm ring-1 ring-slate-900/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10">
+          <SpotlightCard
+            className="group relative rounded-2xl bg-white p-8 shadow-sm ring-1 ring-slate-900/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10 border-none"
+            spotlightColor="rgba(0, 229, 255, 0.2)"
+          >
             <div
               aria-hidden="true"
               className="pointer-events-none absolute -left-10 -top-10 h-36 w-36 rounded-full bg-emerald-200/50 blur-3xl opacity-0 transition-opacity duration-300 group-hover:opacity-100"
@@ -139,7 +152,7 @@ export function FeatureSection() {
               The right mentor, co-founder, or client exists—but finding them
               feels impossible.
             </p>
-          </div>
+          </SpotlightCard>
         </div>
       </div>
     </section>
