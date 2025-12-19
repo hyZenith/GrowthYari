@@ -4,27 +4,27 @@ export function FeatureSection() {
   return (
     <section
       id="why-us"
-      className="relative isolate overflow-hidden bg-[#fbfaf7] py-20"
+      className="relative isolate overflow-hidden bg-[#fbfaf7] py-14 sm:py-20"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-3xl text-center">
           <div className="text-xs font-semibold tracking-[0.2em] text-emerald-700">
             THE PROBLEM
           </div>
-          <h2 className="mt-4 text-balance text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl">
+          <h2 className="mt-4 text-balance text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl md:text-5xl">
             Networking Is{" "}
             <span className="font-serif italic text-slate-900">Broken</span>
           </h2>
-          <p className="mt-5 text-pretty text-lg text-slate-600">
+          <p className="mt-4 text-pretty text-base text-slate-600 sm:mt-5 sm:text-lg">
             Professional networking has become a numbers game—more connections,
             fewer relationships.
           </p>
         </div>
 
-        <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-10 grid gap-4 sm:mt-14 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
           {/* Card 1 */}
           <SpotlightCard
-           className="group relative rounded-2xl bg-white  p-8 shadow-sm ring-1 ring-slate-900/5 transition-all duration-300 border-none hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10" spotlightColor="rgba(0, 229, 255, 0.2)"
+           className="group relative rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-900/5 transition-all duration-300 border-none hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10 sm:p-8" spotlightColor="rgba(0, 229, 255, 0.2)"
            >
             <div
               aria-hidden="true"
@@ -58,7 +58,7 @@ export function FeatureSection() {
 
           {/* Card 2 */}
           <SpotlightCard
-            className="group relative rounded-2xl bg-white p-8 shadow-sm ring-1 ring-slate-900/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10 border-none"
+            className="group relative rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-900/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10 border-none sm:p-8"
             spotlightColor="rgba(0, 229, 255, 0.2)"
           >
             <div
@@ -91,7 +91,7 @@ export function FeatureSection() {
 
           {/* Card 3 */}
           <SpotlightCard
-            className="group relative rounded-2xl bg-white p-8 shadow-sm ring-1 ring-slate-900/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10 border-none"
+            className="group relative rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-900/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10 border-none sm:p-8"
             spotlightColor="rgba(0, 229, 255, 0.2)"
           >
             <div
@@ -123,7 +123,7 @@ export function FeatureSection() {
 
           {/* Card 4 */}
           <SpotlightCard
-            className="group relative rounded-2xl bg-white p-8 shadow-sm ring-1 ring-slate-900/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10 border-none"
+            className="group relative rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-900/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10 border-none sm:p-8"
             spotlightColor="rgba(0, 229, 255, 0.2)"
           >
             <div

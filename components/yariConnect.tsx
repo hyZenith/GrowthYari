@@ -4,36 +4,36 @@ export function YariConnect() {
   return (
     <section
       id="yariconnect"
-      className="relative isolate overflow-hidden bg-[#fbfaf7] py-24"
+      className="relative isolate overflow-hidden bg-[#fbfaf7] py-16 sm:py-24"
     >
       {/* subtle background glow */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-        <div className="absolute left-1/2 top-16 h-[520px] w-[520px] -translate-x-[70%] rounded-full bg-emerald-200/35 blur-3xl" />
-        <div className="absolute left-1/2 top-28 h-[520px] w-[520px] -translate-x-[-5%] rounded-full bg-orange-200/35 blur-3xl" />
+        <div className="absolute left-1/2 top-16 h-[320px] w-[320px] -translate-x-[70%] rounded-full bg-emerald-200/35 blur-3xl sm:h-[520px] sm:w-[520px]" />
+        <div className="absolute left-1/2 top-28 h-[320px] w-[320px] -translate-x-[-5%] rounded-full bg-orange-200/35 blur-3xl sm:h-[520px] sm:w-[520px]" />
         <div className="absolute inset-0 bg-linear-to-b from-[#fbfaf7]/80 via-[#fbfaf7]/40 to-[#fbfaf7]" />
       </div>
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
+        <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
           {/* left */}
           <div>
             <div className="text-xs font-semibold tracking-[0.2em] text-emerald-700">
               YARICONNECT PLATFORM
             </div>
 
-            <h2 className="mt-4 text-balance text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl">
+            <h2 className="mt-4 text-balance text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl md:text-5xl">
               1:1 Video Networking{"\u00A0"}That{" "}
               <span className="font-serif italic text-emerald-700">
                 Actually Works
               </span>
             </h2>
 
-            <p className="mt-5 max-w-xl text-pretty text-lg text-slate-600">
+            <p className="mt-4 max-w-xl text-pretty text-base text-slate-600 sm:mt-5 sm:text-lg">
               Skip the small talk. Our intelligent matching connects you with
               professionals who can genuinely impact your career—and vice versa.
             </p>
 
-            <div className="mt-10 grid gap-8 sm:grid-cols-2">
+            <div className="mt-8 grid gap-6 sm:mt-10 sm:grid-cols-2 sm:gap-8">
               <div className="flex gap-4">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-50 ring-1 ring-emerald-900/10">
                   <svg
@@ -143,10 +143,10 @@ export function YariConnect() {
               </div>
             </div>
 
-            <div className="mt-10">
+            <div className="mt-8 sm:mt-10">
               <LiquidButton
                 href="#start"
-                className="inline-flex items-center gap-2 rounded-full bg-emerald-700 px-7 py-3 text-sm font-semibold text-emerald-700 hover:text-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-emerald-800 hover:shadow-lg hover:shadow-emerald-700/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 border-2 border-emerald-700"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-emerald-700 px-6 py-2.5 text-sm font-semibold text-emerald-700 hover:text-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-emerald-800 hover:shadow-lg hover:shadow-emerald-700/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 border-2 border-emerald-700 sm:w-auto sm:px-7 sm:py-3"
 
               >
                 Try YariConnect Free
@@ -168,14 +168,14 @@ export function YariConnect() {
 
           {/* right mock */}
           <div className="relative">
-            <div className="group relative rounded-3xl bg-white p-7 shadow-sm ring-1 ring-slate-900/10 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10">
+            <div className="group relative rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-900/10 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10 sm:p-7">
               <div
                 aria-hidden="true"
                 className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full bg-emerald-200/50 blur-3xl opacity-0 transition-opacity duration-300 group-hover:opacity-100"
               />
 
-              <div className="flex min-h-[340px] flex-col justify-center rounded-2xl bg-[#efece6] p-10">
-                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-200/60">
+              <div className="flex min-h-[260px] flex-col justify-center rounded-2xl bg-[#efece6] p-6 sm:min-h-[340px] sm:p-10">
+                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-emerald-200/60 sm:h-16 sm:w-16">
                   <svg
                     aria-hidden="true"
                     viewBox="0 0 24 24"
@@ -184,31 +184,31 @@ export function YariConnect() {
                     strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    className="h-7 w-7 text-emerald-800"
+                    className="h-6 w-6 text-emerald-800 sm:h-7 sm:w-7"
                   >
                     <path d="M15 10 21 6v12l-6-4" />
                     <rect x="3" y="7" width="12" height="10" rx="2" ry="2" />
                   </svg>
                 </div>
-                <div className="mt-6 text-center text-sm font-medium text-slate-600">
+                <div className="mt-4 text-center text-sm font-medium text-slate-600 sm:mt-6">
                   Live Video Session
                 </div>
 
-                <div className="mt-14 flex items-center justify-between">
-                  <span className="inline-flex items-center gap-2 rounded-full bg-white/70 px-3 py-1 text-xs font-medium text-slate-700 ring-1 ring-slate-900/10">
-                    <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                <div className="mt-10 flex items-center justify-between sm:mt-14">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-white/70 px-2.5 py-1 text-xs font-medium text-slate-700 ring-1 ring-slate-900/10 sm:gap-2 sm:px-3">
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 sm:h-2 sm:w-2" />
                     You
                   </span>
-                  <span className="inline-flex items-center gap-2 rounded-full bg-white/70 px-3 py-1 text-xs font-medium text-slate-700 ring-1 ring-slate-900/10">
-                    <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-white/70 px-2.5 py-1 text-xs font-medium text-slate-700 ring-1 ring-slate-900/10 sm:gap-2 sm:px-3">
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 sm:h-2 sm:w-2" />
                     Sarah K.
                   </span>
                 </div>
               </div>
 
-              <div className="mt-6 rounded-2xl bg-[#f4f2ee] p-6">
-                <div className="flex items-center gap-4">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-emerald-700 text-sm font-semibold text-white">
+              <div className="mt-4 rounded-2xl bg-[#f4f2ee] p-4 sm:mt-6 sm:p-6">
+                <div className="flex items-center gap-3 sm:gap-4">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-700 text-sm font-semibold text-white sm:h-11 sm:w-11">
                     SK
                   </div>
                   <div>

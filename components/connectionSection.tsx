@@ -66,28 +66,28 @@ export function ConnectionSection() {
     <section
       ref={sectionRef}
       id="how-it-works"
-      className="relative isolate overflow-hidden bg-[#fbfaf7] py-24"
+      className="relative isolate overflow-hidden bg-[#fbfaf7] py-16 sm:py-24"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-3xl text-center">
           <div className="text-xs font-semibold tracking-[0.2em] text-emerald-700">
             HOW IT WORKS
           </div>
-          <h2 className="mt-4 text-balance text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl">
+          <h2 className="mt-4 text-balance text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl md:text-5xl">
             Four Steps to{" "}
             <span className="font-serif italic text-emerald-700">
               Meaningful Connections
             </span>
           </h2>
-          <p className="mt-5 text-pretty text-lg text-slate-600">
+          <p className="mt-4 text-pretty text-base text-slate-600 sm:mt-5 sm:text-lg">
             Building your professional network shouldn&apos;t be complicated.
             Here&apos;s how GrowthYari makes it effortless.
           </p>
         </div>
 
-        <div className="relative mx-auto mt-16 max-w-5xl">
-          {/* center line - dotted circular */}
-          <div className="group/line pointer-events-auto absolute left-1/2 top-0 bottom-0 -translate-x-1/2 cursor-pointer">
+        <div className="relative mx-auto mt-10 max-w-5xl sm:mt-16">
+          {/* center line - dotted circular - hidden on mobile */}
+          <div className="group/line pointer-events-auto absolute left-1/2 top-0 bottom-0 -translate-x-1/2 cursor-pointer hidden md:block">
             <div className="relative h-full flex flex-col justify-start items-center gap-4 py-2">
               {/* Background hollow circular dots */}
               {Array.from({ length: 30 }).map((_, i) => (
@@ -123,11 +123,11 @@ export function ConnectionSection() {
             </div>
           </div>
 
-          <div className="grid gap-14">
+          <div className="grid gap-10 sm:gap-14">
             {/* Step 1 - left */}
-            <div className="group grid items-center gap-8 md:grid-cols-[1fr_auto_1fr]">
-              <div className="relative text-left transition-transform duration-300 group-hover:scale-105">
-                <div className="pointer-events-none absolute -left-2 -top-8 text-6xl font-semibold text-emerald-900/10">
+            <div className="group grid items-center gap-4 sm:gap-8 md:grid-cols-[1fr_auto_1fr]">
+              <div className="order-2 md:order-1 relative text-left transition-transform duration-300 group-hover:scale-105">
+                <div className="pointer-events-none absolute -left-2 -top-8 text-5xl font-semibold text-emerald-900/10 sm:text-6xl">
                   01
                 </div>
                 <div className="text-lg font-semibold text-slate-900">
@@ -139,7 +139,7 @@ export function ConnectionSection() {
                 </div>
               </div>
 
-              <div className="relative z-10 flex h-14 w-14 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-slate-900/10 transition-all duration-300 group-hover:scale-125 group-hover:shadow-xl group-hover:shadow-emerald-500/50">
+              <div className="order-1 md:order-2 relative z-10 mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-slate-900/10 transition-all duration-300 group-hover:scale-125 group-hover:shadow-xl group-hover:shadow-emerald-500/50 sm:h-14 sm:w-14 md:mx-0">
                 <svg
                   aria-hidden="true"
                   viewBox="0 0 24 24"
@@ -157,14 +157,14 @@ export function ConnectionSection() {
                 </svg>
               </div>
 
-              <div className="hidden md:block" />
+              <div className="hidden md:block order-3" />
             </div>
 
             {/* Step 2 - right */}
-            <div className="group grid items-center gap-8 md:grid-cols-[1fr_auto_1fr]">
+            <div className="group grid items-center gap-4 sm:gap-8 md:grid-cols-[1fr_auto_1fr]">
               <div className="hidden md:block" />
 
-              <div className="relative z-10 flex h-14 w-14 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-slate-900/10 transition-all duration-300 group-hover:scale-125 group-hover:shadow-xl group-hover:shadow-emerald-500/50">
+              <div className="order-1 relative z-10 mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-slate-900/10 transition-all duration-300 group-hover:scale-125 group-hover:shadow-xl group-hover:shadow-emerald-500/50 sm:h-14 sm:w-14 md:mx-0">
                 <svg
                   aria-hidden="true"
                   viewBox="0 0 24 24"
@@ -180,11 +180,11 @@ export function ConnectionSection() {
                 </svg>
               </div>
 
-              <div className="relative text-right md:text-left transition-transform duration-300 group-hover:scale-105">
-                <div className="pointer-events-none absolute -right-2 -top-8 text-6xl font-semibold text-emerald-900/10 md:static md:hidden">
+              <div className="order-2 relative text-left transition-transform duration-300 group-hover:scale-105">
+                <div className="pointer-events-none absolute -left-2 -top-8 text-5xl font-semibold text-emerald-900/10 sm:text-6xl md:hidden">
                   02
                 </div>
-                <div className="hidden md:block pointer-events-none absolute -right-2 -top-8 text-6xl font-semibold text-emerald-900/10">
+                <div className="hidden md:block pointer-events-none absolute -right-2 -top-8 text-5xl font-semibold text-emerald-900/10 sm:text-6xl">
                   02
                 </div>
                 <div className="text-lg font-semibold text-slate-900">
@@ -199,9 +199,9 @@ export function ConnectionSection() {
             </div>
 
             {/* Step 3 - left */}
-            <div className="group grid items-center gap-8 md:grid-cols-[1fr_auto_1fr]">
-              <div className="relative text-left transition-transform duration-300 group-hover:scale-105">
-                <div className="pointer-events-none absolute -left-2 -top-8 text-6xl font-semibold text-emerald-900/10">
+            <div className="group grid items-center gap-4 sm:gap-8 md:grid-cols-[1fr_auto_1fr]">
+              <div className="order-2 md:order-1 relative text-left transition-transform duration-300 group-hover:scale-105">
+                <div className="pointer-events-none absolute -left-2 -top-8 text-5xl font-semibold text-emerald-900/10 sm:text-6xl">
                   03
                 </div>
                 <div className="text-lg font-semibold text-slate-900">
@@ -213,7 +213,7 @@ export function ConnectionSection() {
                 </div>
               </div>
 
-              <div className="relative z-10 flex h-14 w-14 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-slate-900/10 transition-all duration-300 group-hover:scale-125 group-hover:shadow-xl group-hover:shadow-emerald-500/50">
+              <div className="order-1 md:order-2 relative z-10 mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-slate-900/10 transition-all duration-300 group-hover:scale-125 group-hover:shadow-xl group-hover:shadow-emerald-500/50 sm:h-14 sm:w-14 md:mx-0">
                 <svg
                   aria-hidden="true"
                   viewBox="0 0 24 24"
@@ -229,14 +229,14 @@ export function ConnectionSection() {
                 </svg>
               </div>
 
-              <div className="hidden md:block" />
+              <div className="hidden md:block order-3" />
             </div>
 
             {/* Step 4 - right */}
-            <div className="group grid items-center gap-8 md:grid-cols-[1fr_auto_1fr]">
+            <div className="group grid items-center gap-4 sm:gap-8 md:grid-cols-[1fr_auto_1fr]">
               <div className="hidden md:block" />
 
-              <div className="relative z-10 flex h-14 w-14 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-slate-900/10 transition-all duration-300 group-hover:scale-125 group-hover:shadow-xl group-hover:shadow-emerald-500/50">
+              <div className="order-1 relative z-10 mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-slate-900/10 transition-all duration-300 group-hover:scale-125 group-hover:shadow-xl group-hover:shadow-emerald-500/50 sm:h-14 sm:w-14 md:mx-0">
                 <svg
                   aria-hidden="true"
                   viewBox="0 0 24 24"
@@ -253,8 +253,11 @@ export function ConnectionSection() {
                 </svg>
               </div>
 
-              <div className="relative text-right md:text-left transition-transform duration-300 group-hover:scale-105">
-                <div className="hidden md:block pointer-events-none absolute -right-2 -top-8 text-6xl font-semibold text-emerald-900/10">
+              <div className="order-2 relative text-left transition-transform duration-300 group-hover:scale-105">
+                <div className="pointer-events-none absolute -left-2 -top-8 text-5xl font-semibold text-emerald-900/10 sm:text-6xl md:hidden">
+                  04
+                </div>
+                <div className="hidden md:block pointer-events-none absolute -right-2 -top-8 text-5xl font-semibold text-emerald-900/10 sm:text-6xl">
                   04
                 </div>
                 <div className="text-lg font-semibold text-slate-900">

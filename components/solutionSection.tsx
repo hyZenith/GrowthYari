@@ -4,12 +4,12 @@ export function SolutionSection() {
   return (
     <section
       id="our-solution"
-      className="relative isolate overflow-hidden bg-white py-24"
+      className="relative isolate overflow-hidden bg-white py-16 sm:py-24"
     >
       {/* soft background glow */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-        <div className="absolute left-1/2 top-12 h-[560px] w-[560px] -translate-x-[75%] rounded-full bg-emerald-200/40 blur-3xl" />
-        <div className="absolute left-1/2 top-20 h-[620px] w-[620px] -translate-x-[-5%] rounded-full bg-emerald-100/40 blur-3xl" />
+        <div className="absolute left-1/2 top-12 h-[360px] w-[360px] -translate-x-[75%] rounded-full bg-emerald-200/40 blur-3xl sm:h-[560px] sm:w-[560px]" />
+        <div className="absolute left-1/2 top-20 h-[400px] w-[400px] -translate-x-[-5%] rounded-full bg-emerald-100/40 blur-3xl sm:h-[620px] sm:w-[620px]" />
         <div className="absolute inset-0 bg-linear-to-b from-white/70 via-white/30 to-white" />
       </div>
 
@@ -18,23 +18,23 @@ export function SolutionSection() {
           <div className="text-xs font-semibold tracking-[0.2em] text-emerald-700">
             OUR SOLUTION
           </div>
-          <h2 className="mt-4 text-balance text-4xl font-semibold tracking-tight text-slate-900 sm:text-5xl">
+          <h2 className="mt-4 text-balance text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl md:text-5xl">
             A{" "}
             <span className="font-serif italic text-emerald-700">Hybrid</span>{" "}
             Approach to Real
-            <br />
-            Networking
+            <br className="hidden sm:block" />
+            <span className="sm:hidden"> </span>Networking
           </h2>
-          <p className="mt-5 text-pretty text-lg text-slate-600">
+          <p className="mt-4 text-pretty text-base text-slate-600 sm:mt-5 sm:text-lg">
             GrowthYari combines the best of online and offline networking to
             help you build meaningful professional relationships.
           </p>
         </div>
 
-        <div className="mt-14 grid gap-8 lg:grid-cols-2">
+        <div className="mt-10 grid gap-6 sm:mt-14 sm:gap-8 lg:grid-cols-2">
           {/* Card: YariConnect */}
           <SpotlightCard
-           className="group relative rounded-3xl bg-white p-10 shadow-sm ring-1 ring-slate-900/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10 border-none"
+           className="group relative rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-900/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10 border-none sm:p-10"
           spotlightColor="rgba(16, 185, 129, 0.2)">
             <div
               aria-hidden="true"
@@ -122,7 +122,7 @@ export function SolutionSection() {
 
           {/* Card: Clarity Connect */}
           <SpotlightCard
-           className="group relative rounded-3xl bg-white p-10 shadow-sm ring-1 ring-slate-900/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10 border-none"
+           className="group relative rounded-3xl bg-white p-6 shadow-sm ring-1 ring-slate-900/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-slate-900/10 border-none sm:p-10"
            spotlightColor="rgba(237, 137, 54, 0.2)">
             <div
               aria-hidden="true"

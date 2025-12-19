@@ -25,20 +25,20 @@ export function HeroSection() {
       <div aria-hidden="true" className="pointer-events-none absolute inset-0">
         <div className="absolute inset-0 bg-white/40" />
 
-        <div className="gy-bubble-a absolute left-1/2 top-10 h-[420px] w-[420px] -translate-x-[85%] rounded-full bg-emerald-300/80 blur-3xl" />
-        <div className="gy-bubble-b absolute left-1/2 top-28 h-[520px] w-[520px] -translate-x-[10%] rounded-full bg-orange-300/80 blur-3xl" />
+        <div className="gy-bubble-a absolute left-1/2 top-10 h-[280px] w-[280px] -translate-x-[85%] rounded-full bg-emerald-300/80 blur-3xl sm:h-[420px] sm:w-[420px]" />
+        <div className="gy-bubble-b absolute left-1/2 top-28 h-[340px] w-[340px] -translate-x-[10%] rounded-full bg-orange-300/80 blur-3xl sm:h-[520px] sm:w-[520px]" />
 
         <div className="absolute inset-0 bg-linear-to-b from-white/60 via-white/30 to-white" />
       </div>
 
       {/* content */}
-      <div className="relative mx-auto flex min-h-[calc(100vh-64px)] max-w-7xl flex-col items-center justify-center px-4 pb-20 pt-24 text-center sm:px-6 lg:px-8">
-        <div className="inline-flex items-center gap-2 rounded-full border border-emerald-900/10 bg-emerald-50 px-4 py-2 text-sm font-medium text-emerald-800">
-          <span className="h-2 w-2 rounded-full bg-emerald-600" />
+      <div className="relative mx-auto flex min-h-[calc(100vh-64px)] max-w-7xl flex-col items-center justify-center px-4 pb-16 pt-16 text-center sm:px-6 sm:pb-20 sm:pt-24 lg:px-8">
+        <div className="inline-flex items-center gap-2 rounded-full border border-emerald-900/10 bg-emerald-50 px-3 py-1.5 text-xs font-medium text-emerald-800 sm:px-4 sm:py-2 sm:text-sm">
+          <span className="h-1.5 w-1.5 rounded-full bg-emerald-600 sm:h-2 sm:w-2" />
           Real Networks. Real Conversations.
         </div>
 
-        <div className="mt-8 text-balance text-4xl font-semibold tracking-tight text-slate-900 sm:text-6xl lg:text-7xl">
+        <div className="mt-6 text-balance text-3xl font-semibold tracking-tight text-slate-900 sm:mt-8 sm:text-4xl md:text-6xl lg:text-7xl">
           <div>
             <link
               href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,100..1000&display=swap"
@@ -46,7 +46,7 @@ export function HeroSection() {
             />
             <div
               ref={containerRef}
-              className="text-[100px] font-semibold"
+              className="text-[40px] font-semibold sm:text-[60px] md:text-[80px] lg:text-[100px]"
             >
               <VariableProximity
                 label={'Professional Networking'}
@@ -63,15 +63,15 @@ export function HeroSection() {
           <span className="font-serif italic text-emerald-700">Reimagined</span>
         </div>
 
-        <p className="mt-6 max-w-2xl text-pretty text-lg text-slate-600 sm:text-xl">
+        <p className="mt-4 max-w-2xl text-pretty text-base text-slate-600 sm:mt-6 sm:text-lg md:text-xl">
           Stop collecting connections. Start building relationships through
           meaningful 1:1 video conversations and curated offline events.
         </p>
 
-        <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+        <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:mt-10 sm:flex-row sm:gap-4">
           <a
             href="#start"
-            className="group inline-flex w-full items-center justify-center rounded-full bg-emerald-700 px-7 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 sm:w-auto"
+            className="group inline-flex w-full items-center justify-center rounded-full bg-emerald-700 px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 sm:w-auto sm:px-7 sm:py-3"
           >
             Start Connecting Free
             <svg
@@ -90,7 +90,7 @@ export function HeroSection() {
 
           <LiquidButton
             href="#how-it-works"
-            className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-emerald-700/60 bg-white/60 px-7 py-3 text-sm font-semibold text-emerald-800 shadow-sm backdrop-blur transition-colors hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 sm:w-auto"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-emerald-700/60 bg-white/60 px-6 py-2.5 text-sm font-semibold text-emerald-800 shadow-sm backdrop-blur transition-colors hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 sm:w-auto sm:px-7 sm:py-3"
           >
             <svg
               aria-hidden="true"
@@ -104,7 +104,7 @@ export function HeroSection() {
           </LiquidButton>
         </div>
 
-        <div className="mt-14 text-2xl text-slate-500">Trusted by professionals </div>
+        <div className="mt-10 text-lg text-slate-500 sm:mt-14 sm:text-2xl">Trusted by professionals </div>
         {/* <div className="mt-6 flex flex-wrap items-center justify-center gap-x-10 gap-y-4 text-sm font-semibold text-slate-400">
           <span>Google</span>
           <span>Microsoft</span>
