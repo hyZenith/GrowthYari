@@ -8,7 +8,7 @@ import SplashCursor from "./SplashCursor";
 export function HeroSection() {
   const containerRef = useRef(null);
   return (
-    <section className="relative isolate overflow-hidden bg-white py-14 sm:py-20">
+    <section className="relative isolate overflow-hidden bg-white py-14 sm:py-24">
       <SplashCursor 
         DENSITY_DISSIPATION={1.5}
         VELOCITY_DISSIPATION={2.5}
@@ -26,8 +26,8 @@ export function HeroSection() {
         {/* Bubbles behind content, vertically centered to the content area */}
         <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-1/2 -z-10 -translate-y-1/2">
           <div className="absolute inset-0 bg-white/40" />
-          <div className="gy-bubble-a absolute left-1/2 -translate-x-[85%] top-1/2 -translate-y-1/2 h-[280px] w-[280px] rounded-full bg-emerald-300/80 blur-3xl sm:h-[420px] sm:w-[420px]" />
-          <div className="gy-bubble-b absolute left-1/2 -translate-x-[10%] top-1/2 -translate-y-1/2 h-[340px] w-[340px] rounded-full bg-orange-300/80 blur-3xl sm:h-[520px] sm:w-[520px]" />
+          <div className="gy-bubble-a absolute left-1/2 -translate-x-[85%] top-1/2 -translate-y-1/2 h-[280px] w-[280px] rounded-full bg-emerald-400/30 blur-3xl sm:h-[420px] sm:w-[420px]" />
+          <div className="gy-bubble-b absolute left-1/2 -translate-x-[10%] top-1/2 -translate-y-1/2 h-[340px] w-[340px] rounded-full bg-orange-300/40 blur-[64px] sm:h-[520px] sm:w-[520px]" />
           <div className="absolute inset-0 bg-linear-to-b from-white/60 via-white/30 to-white" />
         </div>
         <div className="inline-flex items-center gap-2 rounded-full border border-emerald-900/10 bg-emerald-50 px-3 py-1.5 text-xs font-medium text-emerald-800 sm:px-4 sm:py-2 sm:text-sm">
