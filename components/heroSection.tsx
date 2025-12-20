@@ -8,7 +8,7 @@ import SplashCursor from "./SplashCursor";
 export function HeroSection() {
   const containerRef = useRef(null);
   return (
-    <section className="relative isolate overflow-hidden bg-white">
+    <section className="relative isolate overflow-hidden bg-white py-14 sm:py-20">
       <SplashCursor 
         DENSITY_DISSIPATION={1.5}
         VELOCITY_DISSIPATION={2.5}
@@ -21,18 +21,15 @@ export function HeroSection() {
         TRANSPARENT={true}
       />
       
-      {/* background bubbles */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-        <div className="absolute inset-0 bg-white/40" />
-
-        <div className="gy-bubble-a absolute left-1/2 top-10 h-[280px] w-[280px] -translate-x-[85%] rounded-full bg-emerald-300/80 blur-3xl sm:h-[420px] sm:w-[420px]" />
-        <div className="gy-bubble-b absolute left-1/2 top-28 h-[340px] w-[340px] -translate-x-[10%] rounded-full bg-orange-300/80 blur-3xl sm:h-[520px] sm:w-[520px]" />
-
-        <div className="absolute inset-0 bg-linear-to-b from-white/60 via-white/30 to-white" />
-      </div>
-
       {/* content */}
-      <div className="relative mx-auto flex min-h-[calc(100vh-64px)] max-w-7xl flex-col items-center justify-center px-4 pb-16 pt-16 text-center sm:px-6 sm:pb-20 sm:pt-24 lg:px-8">
+      <div className="relative z-10 mx-auto flex max-w-7xl flex-col items-center justify-start px-4 pb-16 pt-16 text-center sm:px-6 sm:pb-20 sm:pt-24 lg:px-8">
+        {/* Bubbles behind content, vertically centered to the content area */}
+        <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-1/2 -z-10 -translate-y-1/2">
+          <div className="absolute inset-0 bg-white/40" />
+          <div className="gy-bubble-a absolute left-1/2 -translate-x-[85%] top-1/2 -translate-y-1/2 h-[280px] w-[280px] rounded-full bg-emerald-300/80 blur-3xl sm:h-[420px] sm:w-[420px]" />
+          <div className="gy-bubble-b absolute left-1/2 -translate-x-[10%] top-1/2 -translate-y-1/2 h-[340px] w-[340px] rounded-full bg-orange-300/80 blur-3xl sm:h-[520px] sm:w-[520px]" />
+          <div className="absolute inset-0 bg-linear-to-b from-white/60 via-white/30 to-white" />
+        </div>
         <div className="inline-flex items-center gap-2 rounded-full border border-emerald-900/10 bg-emerald-50 px-3 py-1.5 text-xs font-medium text-emerald-800 sm:px-4 sm:py-2 sm:text-sm">
           <span className="h-1.5 w-1.5 rounded-full bg-emerald-600 sm:h-2 sm:w-2" />
           Real Networks. Real Conversations.
