@@ -127,7 +127,7 @@ export function ConnectionSection() {
             {/* Step 1 - left */}
             <div className="group grid items-center gap-4 sm:gap-8 md:grid-cols-[1fr_auto_1fr]">
               <div className="order-2 md:order-1 relative text-left transition-transform duration-300 group-hover:scale-105">
-                <div className="pointer-events-none absolute -left-2 -top-8 text-5xl font-semibold text-emerald-900/10 sm:text-6xl">
+                <div className="pointer-events-none absolute -left-2 -top-8 text-6xl font-bold text-emerald-600/20 sm:text-7xl md:text-5xl md:font-semibold md:text-emerald-900/10">
                   01
                 </div>
                 <div className="text-lg font-semibold text-slate-900">
@@ -139,7 +139,7 @@ export function ConnectionSection() {
                 </div>
               </div>
 
-              <div className="order-1 md:order-2 relative z-10 mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-slate-900/10 transition-all duration-300 group-hover:scale-125 group-hover:shadow-xl group-hover:shadow-emerald-500/50 sm:h-14 sm:w-14 md:mx-0">
+              <div className="order-1 md:order-2 relative z-10 mx-auto hidden md:flex h-12 w-12 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-slate-900/10 transition-all duration-300 group-hover:scale-125 group-hover:shadow-xl group-hover:shadow-emerald-500/50 sm:h-14 sm:w-14 md:mx-0">
                 <svg
                   aria-hidden="true"
                   viewBox="0 0 24 24"
@@ -164,7 +164,7 @@ export function ConnectionSection() {
             <div className="group grid items-center gap-4 sm:gap-8 md:grid-cols-[1fr_auto_1fr]">
               <div className="hidden md:block" />
 
-              <div className="order-1 relative z-10 mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-slate-900/10 transition-all duration-300 group-hover:scale-125 group-hover:shadow-xl group-hover:shadow-emerald-500/50 sm:h-14 sm:w-14 md:mx-0">
+              <div className="order-1 relative z-10 mx-auto hidden md:flex h-12 w-12 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-slate-900/10 transition-all duration-300 group-hover:scale-125 group-hover:shadow-xl group-hover:shadow-emerald-500/50 sm:h-14 sm:w-14 md:mx-0">
                 <svg
                   aria-hidden="true"
                   viewBox="0 0 24 24"
@@ -180,8 +180,8 @@ export function ConnectionSection() {
                 </svg>
               </div>
 
-              <div className="order-2 relative text-left transition-transform duration-300 group-hover:scale-105">
-                <div className="pointer-events-none absolute -left-2 -top-8 text-5xl font-semibold text-emerald-900/10 sm:text-6xl md:hidden">
+              <div className="order-2 relative text-right md:col-start-3 md:text-right transition-transform duration-300 group-hover:scale-105">
+                <div className="pointer-events-none absolute -right-2 -top-8 text-6xl font-bold text-emerald-600/20 sm:text-7xl md:hidden">
                   02
                 </div>
                 <div className="hidden md:block pointer-events-none absolute -right-2 -top-8 text-5xl font-semibold text-emerald-900/10 sm:text-6xl">
@@ -201,7 +201,7 @@ export function ConnectionSection() {
             {/* Step 3 - left */}
             <div className="group grid items-center gap-4 sm:gap-8 md:grid-cols-[1fr_auto_1fr]">
               <div className="order-2 md:order-1 relative text-left transition-transform duration-300 group-hover:scale-105">
-                <div className="pointer-events-none absolute -left-2 -top-8 text-5xl font-semibold text-emerald-900/10 sm:text-6xl">
+                <div className="pointer-events-none absolute -left-2 -top-8 text-6xl font-bold text-emerald-600/20 sm:text-7xl md:text-5xl md:font-semibold md:text-emerald-900/10">
                   03
                 </div>
                 <div className="text-lg font-semibold text-slate-900">
@@ -213,7 +213,7 @@ export function ConnectionSection() {
                 </div>
               </div>
 
-              <div className="order-1 md:order-2 relative z-10 mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-slate-900/10 transition-all duration-300 group-hover:scale-125 group-hover:shadow-xl group-hover:shadow-emerald-500/50 sm:h-14 sm:w-14 md:mx-0">
+              <div className="order-1 md:order-2 relative z-10 mx-auto hidden md:flex h-12 w-12 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-slate-900/10 transition-all duration-300 group-hover:scale-125 group-hover:shadow-xl group-hover:shadow-emerald-500/50 sm:h-14 sm:w-14 md:mx-0">
                 <svg
                   aria-hidden="true"
                   viewBox="0 0 24 24"
@@ -236,7 +236,7 @@ export function ConnectionSection() {
             <div className="group grid items-center gap-4 sm:gap-8 md:grid-cols-[1fr_auto_1fr]">
               <div className="hidden md:block" />
 
-              <div className="order-1 relative z-10 mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-slate-900/10 transition-all duration-300 group-hover:scale-125 group-hover:shadow-xl group-hover:shadow-emerald-500/50 sm:h-14 sm:w-14 md:mx-0">
+              <div className="order-1 relative z-10 mx-auto hidden md:flex h-12 w-12 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-slate-900/10 transition-all duration-300 group-hover:scale-125 group-hover:shadow-xl group-hover:shadow-emerald-500/50 sm:h-14 sm:w-14 md:mx-0">
                 <svg
                   aria-hidden="true"
                   viewBox="0 0 24 24"
@@ -253,8 +253,8 @@ export function ConnectionSection() {
                 </svg>
               </div>
 
-              <div className="order-2 relative text-left transition-transform duration-300 group-hover:scale-105">
-                <div className="pointer-events-none absolute -left-2 -top-8 text-5xl font-semibold text-emerald-900/10 sm:text-6xl md:hidden">
+              <div className="order-2 relative text-right md:col-start-3 md:text-right transition-transform duration-300 group-hover:scale-105">
+                <div className="pointer-events-none absolute -right-2 -top-8 text-6xl font-bold text-emerald-600/20 sm:text-7xl md:hidden">
                   04
                 </div>
                 <div className="hidden md:block pointer-events-none absolute -right-2 -top-8 text-5xl font-semibold text-emerald-900/10 sm:text-6xl">
