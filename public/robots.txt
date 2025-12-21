@@ -1,0 +1,5 @@
+# Allow all crawlers; point to sitemap
+User-agent: *
+Allow: /
+
+Sitemap: https://www.growthyari.com//sitemap.xml
