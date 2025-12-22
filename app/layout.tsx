@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "GrowthYari",
   description:
-    "Discover the path to healthy minds with GrowthYari — a mindset-building platform to enhance resilience and positivity in young adults.",
+    "Discover the path to healthy minds with Growthyari. A mindset-building platform to enhance resilience and positivity in young adults.",
   keywords: [
     "growth",
     "mindset",
@@ -24,18 +24,17 @@ export const metadata: Metadata = {
     "wellbeing",
     "GrowthYari",
   ],
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://www.growthyari.com/"),
   openGraph: {
     title: "GrowthYari",
     description:
-      "Discover the path to healthy minds with GrowthYari — a mindset-building platform to enhance resilience and positivity in young adults.",
+      "Discover the path to healthy minds with Growthyari. A mindset-building platform to enhance resilience and positivity in young adults.",
     type: "website",
-    url: process.env.NEXT_PUBLIC_SITE_URL || "https://www.growthyari.com/",
+    url: "/",
     siteName: "GrowthYari",
     images: [
       {
-        url:
-          (process.env.NEXT_PUBLIC_SITE_URL || "https://www.growthyari.com/") +
-          "/images/logo.png",
+        url: "/images/logo.png",
         width: 1200,
         height: 630,
         alt: "GrowthYari logo",
@@ -46,10 +45,9 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "GrowthYari",
     description:
-      "Discover the path to healthy minds with GrowthYari — a mindset-building platform to enhance resilience and positivity in young adults.",
+      "Discover the path to healthy minds with Growthyari. A mindset-building platform to enhance resilience and positivity in young adults.",
     images: [
-      (process.env.NEXT_PUBLIC_SITE_URL || "https://www.growthyari.com/") +
-        "/images/logo.png",
+      "/images/logo.png",
     ],
   },
   icons: {
@@ -57,7 +55,7 @@ export const metadata: Metadata = {
     apple: "/images/logo.png",
   },
   alternates: {
-    canonical: process.env.NEXT_PUBLIC_SITE_URL || "https://www.growthyari.com/",
+    canonical: "/",
   },
   robots: {
     index: true,
