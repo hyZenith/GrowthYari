@@ -3,19 +3,30 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
 const geistSans = Geist({
-  variable: "--font-geist-sans",
   subsets: ["latin"],
+  variable: "--font-geist-sans",
 });
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
   subsets: ["latin"],
+  variable: "--font-geist-mono",
 });
 
+const SITE_URL = "https://www.growthyari.com";
+const SITE_NAME = "GrowthYari";
+const SITE_DESCRIPTION =
+  "Discover the path to healthy minds with GrowthYari. A mindset-building platform to enhance resilience and positivity in young adults.";
+
 export const metadata: Metadata = {
-  title: "GrowthYari",
-  description:
-    "Discover the path to healthy minds with Growthyari. A mindset-building platform to enhance resilience and positivity in young adults.",
+  metadataBase: new URL(SITE_URL),
+
+  title: {
+    default: SITE_NAME,
+    template: `%s | ${SITE_NAME}`,
+  },
+
+  description: SITE_DESCRIPTION,
+
   keywords: [
     "growth",
     "mindset",
@@ -24,39 +35,40 @@ export const metadata: Metadata = {
     "wellbeing",
     "GrowthYari",
   ],
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://www.growthyari.com/"),
+
+  alternates: {
+    canonical: SITE_URL,
+  },
+
+  icons: {
+    icon: "/favicon.png",
+    shortcut: "/favicon.ico",
+    apple: "/favicon.png",
+  },
+
   openGraph: {
-    title: "GrowthYari",
-    description:
-      "Discover the path to healthy minds with Growthyari. A mindset-building platform to enhance resilience and positivity in young adults.",
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+    url: SITE_URL,
+    siteName: SITE_NAME,
     type: "website",
-    url: "/",
-    siteName: "GrowthYari",
     images: [
       {
         url: "/images/logo.png",
         width: 1200,
         height: 630,
-        alt: "GrowthYari logo",
+        alt: "GrowthYari",
       },
     ],
   },
+
   twitter: {
     card: "summary_large_image",
-    title: "GrowthYari",
-    description:
-      "Discover the path to healthy minds with Growthyari. A mindset-building platform to enhance resilience and positivity in young adults.",
-    images: [
-      "/images/logo.png",
-    ],
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+    images: ["/images/logo.png"],
   },
-  icons: {
-    icon: "/images/logo.png",
-    apple: "/images/logo.png",
-  },
-  alternates: {
-    canonical: "/",
-  },
+
   robots: {
     index: true,
     follow: true,
@@ -69,36 +81,32 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.growthyari.com/";
-  const logoUrl = `${siteUrl}/images/logo.png`;
-
-  const jsonLd = {
+}) {
+  const organizationSchema = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: "GrowthYari",
-    url: siteUrl,
-    logo: logoUrl,
-    sameAs: [],
+    name: SITE_NAME,
+    url: SITE_URL,
+    logo: `${SITE_URL}/images/logo.png`,
   };
 
   return (
     <html lang="en">
       <head>
-        <link rel="canonical" href={siteUrl} />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#ffffff" />
+
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationSchema),
+          }}
         />
       </head>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         {children}
       </body>
     </html>
