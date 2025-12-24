@@ -9,7 +9,7 @@ export function HeroSection() {
   const containerRef = useRef(null);
   return (
     <section className="relative isolate overflow-hidden bg-white py-14 sm:py-24">
-      <SplashCursor 
+      <SplashCursor
         DENSITY_DISSIPATION={1.5}
         VELOCITY_DISSIPATION={2.5}
         PRESSURE={0.05}
@@ -20,7 +20,7 @@ export function HeroSection() {
         COLOR_UPDATE_SPEED={15}
         TRANSPARENT={true}
       />
-      
+
       {/* content */}
       <div className="relative z-10 mx-auto flex max-w-7xl flex-col items-center justify-start px-4 pb-16 pt-16 text-center sm:px-6 sm:pb-20 sm:pt-24 lg:px-8">
         {/* Bubbles behind content, vertically centered to the content area */}
@@ -67,7 +67,7 @@ export function HeroSection() {
 
         <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:mt-10 sm:flex-row sm:gap-4">
           <a
-            href="#start"
+            href="https://chat.whatsapp.com/BxgOPDg5NPcJKjIroVCoQF"
             className="group inline-flex w-full items-center justify-center rounded-full bg-emerald-700 px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 sm:w-auto sm:px-7 sm:py-3"
           >
             Start Connecting Free
