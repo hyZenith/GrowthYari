@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { Input } from "@/components/ui/Input";
 
 export default function LoginPage() {
     return (
@@ -34,7 +35,7 @@ export default function LoginPage() {
                                     Email address
                                 </label>
                                 <div className="mt-2">
-                                    <input
+                                    <Input
                                         id="email"
                                         name="email"
                                         type="email"
@@ -51,7 +52,7 @@ export default function LoginPage() {
                                     Password
                                 </label>
                                 <div className="mt-2">
-                                    <input
+                                    <Input
                                         id="password"
                                         name="password"
                                         type="password"

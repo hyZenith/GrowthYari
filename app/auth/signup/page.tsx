@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { Input } from "@/components/ui/Input";
 
 export default function SignupPage() {
     return (
@@ -36,7 +37,7 @@ export default function SignupPage() {
                                     Full name
                                 </label>
                                 <div className="mt-2">
-                                    <input
+                                    <Input
                                         id="name"
                                         name="name"
                                         type="text"
@@ -53,7 +54,7 @@ export default function SignupPage() {
                                     Email address
                                 </label>
                                 <div className="mt-2">
-                                    <input
+                                    <Input
                                         id="email"
                                         name="email"
                                         type="email"
@@ -70,7 +71,7 @@ export default function SignupPage() {
                                     Phone number
                                 </label>
                                 <div className="mt-2">
-                                    <input
+                                    <Input
                                         id="phone"
                                         name="phone"
                                         type="tel"
@@ -87,7 +88,7 @@ export default function SignupPage() {
                                     Password
                                 </label>
                                 <div className="mt-2">
-                                    <input
+                                    <Input
                                         id="password"
                                         name="password"
                                         type="password"
