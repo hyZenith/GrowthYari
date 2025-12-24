@@ -70,7 +70,7 @@ export function HeroSection() {
             href="https://chat.whatsapp.com/BxgOPDg5NPcJKjIroVCoQF"
             className="group inline-flex w-full items-center justify-center rounded-full bg-emerald-700 px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 sm:w-auto sm:px-7 sm:py-3"
           >
-            Start Connecting Free
+            Join Whatsapp Community
             <svg
               aria-hidden="true"
               viewBox="0 0 20 20"
