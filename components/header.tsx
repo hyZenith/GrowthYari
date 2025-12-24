@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -41,7 +42,7 @@ export function Header() {
               Home
             </a>
 
-            <a
+            {/* <a
               href="/Dashboard"
               className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 transition-colors hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
             >
@@ -59,7 +60,7 @@ export function Header() {
                 <path d="M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" />
               </svg>
               Dashboard
-            </a>
+            </a> */}
 
             <a
               href="/events"
@@ -145,8 +146,8 @@ export function Header() {
           )}
         </button>
 
-        <a
-          href="#get-started"
+        <Link
+          href="/auth/login"
           className="group hidden items-center rounded-full bg-emerald-700 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 sm:inline-flex sm:px-5 sm:py-2.5 md:ml-auto"
         >
           Get Started
@@ -162,7 +163,7 @@ export function Header() {
               clipRule="evenodd"
             />
           </svg>
-        </a>
+        </Link>
       </div>
 
       {/* Mobile menu */}
@@ -190,7 +191,7 @@ export function Header() {
             </svg>
             Home
           </a>
-          <a
+          {/* <a
             href="/Dashboard"
             className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-base font-medium text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900"
           >
@@ -208,7 +209,7 @@ export function Header() {
               <path d="M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" />
             </svg>
             Dashboard
-          </a>
+          </a> */}
           <a
             href="/events"
             className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-base font-medium text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900"
@@ -269,12 +270,12 @@ export function Header() {
             Contact
           </a>
           <div className="pt-3">
-            <a
-              href="#get-started"
+            <Link
+              href="/auth/login"
               className="flex w-full items-center justify-center rounded-full bg-emerald-700 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-emerald-800"
             >
               Get Started
-            </a>
+            </Link>
           </div>
         </div>
       </div>
