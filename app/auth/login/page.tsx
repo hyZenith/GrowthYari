@@ -1,131 +1,265 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { Eye, EyeOff, UserCircle, Users, Video, LineChart } from "lucide-react";
 import { Input } from "@/components/ui/Input";
+import { FaGoogle } from "react-icons/fa6";
 
 export default function LoginPage() {
-    return (
-        <div className="flex min-h-screen items-center justify-center bg-white px-4">
-            <div className="w-full max-w-4xl">
-                <div className="grid grid-cols-1 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm md:grid-cols-2">
-                    <div className="p-8">
-                        <div className="flex flex-col items-center gap-3">
-                            <Image
-                                alt="GrowthYari"
-                                src="/images/logo.png"
-                                width={56}
-                                height={56}
-                                className="h-14 w-14 rounded-full object-cover"
-                            />
-                            <span className="font-serif text-xl italic text-emerald-600">GrowthYari</span>
-                        </div>
+  const router = useRouter();
 
-                        <h2 className="mt-4 text-center text-2xl font-bold tracking-tight text-slate-900">
-                            Sign in to your account
-                        </h2>
-                        <p className="mt-2 text-center text-sm text-slate-500">
-                            Don't have an account?{' '}
-                            <Link href="/auth/signup" className="font-semibold text-emerald-600 hover:text-emerald-500">
-                                Create now
-                            </Link>
-                        </p>
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-                        <div className="mt-6">
-                            <form action="#" method="POST" className="space-y-6">
-                                <div>
-                                    <label htmlFor="email" className="block text-sm font-medium text-slate-900">
-                                        Email address
-                                    </label>
-                                    <div className="mt-2">
-                                        <Input
-                                            id="email"
-                                            name="email"
-                                            type="email"
-                                            required
-                                            autoComplete="email"
-                                            placeholder="example@gmail.com"
-                                            className="block w-full rounded-md bg-white px-3 py-2 text-sm text-slate-900 ring-1 ring-slate-200 placeholder:text-slate-400 focus:ring-2 focus:ring-emerald-600 sm:text-sm"
-                                        />
-                                    </div>
-                                </div>
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
 
-                                <div>
-                                    <label htmlFor="password" className="block text-sm font-medium text-slate-900">
-                                        Password
-                                    </label>
-                                    <div className="mt-2">
-                                        <Input
-                                            id="password"
-                                            name="password"
-                                            type="password"
-                                            required
-                                            autoComplete="current-password"
-                                            placeholder="Password"
-                                            className="block w-full rounded-md bg-white px-3 py-2 text-sm text-slate-900 ring-1 ring-slate-200 placeholder:text-slate-400 focus:ring-2 focus:ring-emerald-600 sm:text-sm"
-                                        />
-                                    </div>
-                                </div>
+    const res = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
 
-                                <div className="flex items-center justify-between">
-                                    <div className="flex items-center">
-                                        <input
-                                            id="remember-me"
-                                            name="remember-me"
-                                            type="checkbox"
-                                            className="h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-600"
-                                        />
-                                        <label htmlFor="remember-me" className="ml-3 block text-sm text-slate-900">
-                                            Remember me
-                                        </label>
-                                    </div>
+    setLoading(false);
 
-                                    <div className="text-sm">
-                                        <a href="#" className="font-semibold text-emerald-600 hover:text-emerald-500">
-                                            Forgot password?
-                                        </a>
-                                    </div>
-                                </div>
+    if (!res.ok) {
+      const data = await res.json();
+      setError(data.error || "Invalid credentials");
+      return;
+    }
 
-                                <div>
-                                    <button
-                                        type="submit"
-                                        className="flex w-full justify-center rounded-md bg-emerald-700 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600"
-                                    >
-                                        Sign in
-                                    </button>
-                                </div>
-                            </form>
+    // Cookie is set by server
+    router.push("/events");
+  }
 
-                            <div className="mt-6">
-                                <div className="relative">
-                                    <div aria-hidden="true" className="absolute inset-0 flex items-center">
-                                        <div className="w-full border-t border-slate-200" />
-                                    </div>
-                                    <div className="relative flex justify-center text-sm font-medium">
-                                        <span className="bg-white px-4 text-slate-500">OR</span>
-                                    </div>
-                                </div>
+  const steps = [
+    {
+      title: "Create Your Profile",
+      description: "Share your background and goals.",
+      icon: UserCircle,
+    },
+    {
+      title: "Get Matched",
+      description: "Our algorithm finds aligned professionals.",
+      icon: Users,
+    },
+    {
+      title: "Connect Live",
+      description: "Schedule 15-minute intro calls.",
+      icon: Video,
+    },
+    {
+      title: "Grow Your Network",
+      description: "building relationships that facilitate growth.",
+      icon: LineChart,
+    },
+  ];
 
-                                <div className="mt-4">
-                                    <a
-                                        href="#"
-                                        className="flex w-full items-center justify-center gap-3 rounded-md bg-white px-3 py-2 text-sm font-semibold text-slate-900 ring-1 ring-inset ring-slate-300 hover:bg-slate-50"
-                                    >
-                                        <svg className="h-5 w-5" aria-hidden="true" viewBox="0 0 24 24">
-                                            <path d="M12.0003 20.45C16.667 20.45 20.5836 16.5333 20.5836 11.8667C20.5836 7.2 16.667 3.28333 12.0003 3.28333C7.33366 3.28333 3.41699 7.2 3.41699 11.8667C3.41699 16.5333 7.33366 20.45 12.0003 20.45Z" fill="currentColor" fillOpacity="0.2" />
-                                            <path d="M16.292 11.8667C16.292 11.6334 16.2753 11.4 16.242 11.1834H12.0003V12.9167H14.417C14.3087 13.4834 14.0003 13.9667 13.5253 14.2834V15.4167H14.9753C15.8253 14.6334 16.292 13.4834 16.292 11.8667Z" fill="#4285F4" />
-                                            <path d="M12.0003 16.2334C13.2087 16.2334 14.217 15.8334 14.9753 15.1417L13.5253 14.0084C13.1253 14.275 12.6086 14.4417 12.0003 14.4417C10.8336 14.4417 9.85033 13.6584 9.50033 12.6084H8.00033V13.7667C8.75033 15.2584 10.2837 16.2334 12.0003 16.2334Z" fill="#34A853" />
-                                            <path d="M9.50033 12.6083C9.40866 12.3333 9.35866 12.0417 9.35866 11.7417C9.35866 11.4417 9.40866 11.15 9.50033 10.875V9.71667H8.00033C7.692 10.3333 7.517 11.025 7.517 11.7417C7.517 12.4583 7.692 13.15 8.00033 13.7667L9.50033 12.6083Z" fill="#FBBC05" />
-                                            <path d="M12.0003 9.04169C12.6587 9.04169 13.2503 9.26669 13.717 9.70835L15.0087 8.41669C14.2087 7.67502 13.192 7.25002 12.0003 7.25002C10.2837 7.25002 8.75033 8.22502 8.00033 9.71669L9.50033 10.875C9.85033 9.82502 10.8336 9.04169 12.0003 9.04169Z" fill="#EA4335" />
-                                        </svg>
-                                        <span className="text-sm font-semibold text-slate-700">Continue with Google</span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="bg-emerald-800 "></div>
-                </div>
+  return (
+    <div className="flex min-h-screen w-full bg-white font-sans text-slate-900">
+      {/* Left Panel: Content & Steps */}
+      <div className="hidden w-1/2 flex-col justify-between bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 p-12 lg:flex xl:p-16">
+        <Link href="/" className="flex items-center gap-3 w-fit hover:opacity-80 transition-opacity">
+          <Image
+            alt="GrowthYari"
+            src="/images/logo.png"
+            width={48}
+            height={48}
+            className="h-10 w-10 rounded-full object-cover"
+          />
+          <span className="font-serif text-xl italic text-emerald-800">
+            GrowthYari
+          </span>
+        </Link>
+
+        <div className="flex flex-col gap-12 max-w-lg mx-auto">
+          {/* Step 1 - Left */}
+          <div className="relative text-left">
+            <div className="pointer-events-none absolute -left-4 -top-8 text-8xl font-bold text-emerald-600/10 select-none">
+              01
             </div>
+            <div className="relative z-10">
+              <h3 className="text-xl font-bold text-slate-900">
+                Find Events
+              </h3>
+              <p className="mt-1 text-sm text-slate-600 max-w-[250px]">
+                Find Events for your growth
+              </p>
+            </div>
+          </div>
+
+          {/* Step 2 - Right */}
+          <div className="relative text-right self-end">
+            <div className="pointer-events-none absolute -right-4 -top-8 text-8xl font-bold text-emerald-600/10 select-none">
+              02
+            </div>
+            <div className="relative z-10">
+              <h3 className="text-xl font-bold text-slate-900">
+                Build Connection
+              </h3>
+              <p className="mt-1 text-sm text-slate-600 max-w-[250px] ml-auto">
+                Build connections with professionals.
+              </p>
+            </div>
+          </div>
+
+          {/* Step 3 - Left */}
+          <div className="relative text-left">
+            <div className="pointer-events-none absolute -left-4 -top-8 text-8xl font-bold text-emerald-600/10 select-none">
+              03
+            </div>
+            <div className="relative z-10">
+              <h3 className="text-xl font-bold text-slate-900">
+                Connect Live
+              </h3>
+              <p className="mt-1 text-sm text-slate-600 max-w-[250px]">
+                Schedule 15-minute intro calls.
+              </p>
+            </div>
+          </div>
+
+          {/* Step 4 - Right */}
+          <div className="relative text-right self-end">
+            <div className="pointer-events-none absolute -right-4 -top-8 text-8xl font-bold text-emerald-600/10 select-none">
+              04
+            </div>
+            <div className="relative z-10">
+              <h3 className="text-xl font-bold text-slate-900">
+                Grow Network
+              </h3>
+              <p className="mt-1 text-sm text-slate-600 max-w-[250px] ml-auto">
+                Build relationships that facilitate growth.
+              </p>
+            </div>
+          </div>
         </div>
-    );
+
+        <div className="text-sm text-emerald-800/60">
+          © 2024 GrowthYari. All rights reserved.
+        </div>
+      </div>
+
+      {/* Right Panel: Login Form */}
+      <div className="flex w-full flex-col items-center justify-center p-8 lg:w-1/2">
+        <div className="w-full max-w-sm">
+          <div className="mb-8 text-center lg:text-left">
+            <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+              Welcome back
+            </h1>
+            <p className="mt-2 text-sm text-slate-500">
+              Please enter your details to sign in.
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            <button
+              type="button"
+              className="flex w-full items-center justify-center gap-3 rounded-md border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 hover:text-slate-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400"
+            >
+              <FaGoogle className="h-4 w-4" />
+              Continue with Google
+            </button>
+
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t border-slate-200" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-white px-2 text-slate-500">
+                  Or continue with email
+                </span>
+              </div>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-1.5">
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium text-slate-700"
+                >
+                  Email
+                </label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="Enter your email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="bg-white"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <label
+                    htmlFor="password"
+                    className="block text-sm font-medium text-slate-700"
+                  >
+                    Password
+                  </label>
+                  <Link
+                    href="#"
+                    className="text-xs font-medium text-emerald-600 hover:text-emerald-500"
+                  >
+                    Forgot password?
+                  </Link>
+                </div>
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Enter your password"
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="bg-white pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {error && <p className="text-sm text-red-600">{error}</p>}
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full rounded-md bg-emerald-700 px-3 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-emerald-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? "Signing in..." : "Sign in"}
+              </button>
+            </form>
+          </div>
+
+          <p className="mt-8 text-center text-sm text-slate-500">
+            Don&apos;t have an account?{" "}
+            <Link
+              href="/auth/signup"
+              className="font-semibold text-emerald-600 hover:text-emerald-500 hover:underline"
+            >
+              Sign up
+            </Link>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
 }
