@@ -1,0 +1,8 @@
+-- AlterTable
+ALTER TABLE "Event" ADD COLUMN     "price" DOUBLE PRECISION NOT NULL DEFAULT 0;
+
+-- AlterTable
+ALTER TABLE "EventRegistration" ADD COLUMN     "amountPaid" DOUBLE PRECISION NOT NULL DEFAULT 0,
+ADD COLUMN     "orderId" TEXT,
+ADD COLUMN     "paymentId" TEXT,
+ADD COLUMN     "paymentStatus" TEXT NOT NULL DEFAULT 'PENDING';
