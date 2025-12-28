@@ -94,7 +94,6 @@ export default function ContactPage() {
                             </div>
                             <div className="text-base text-slate-600">
                                 <p>New Delhi, India</p>
-                                <a href="tel:+919999999999" className="hover:text-emerald-700 transition-colors">+91 99999 99999</a>
                             </div>
                             <div className="flex gap-4">
                                 <a href="https://www.linkedin.com/company/growthyari" target="_blank" rel="noopener noreferrer" className="rounded-full bg-white/50 p-2 text-slate-600 hover:bg-white hover:text-emerald-700 transition-all">
