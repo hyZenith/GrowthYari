@@ -46,7 +46,7 @@ export function HeroSection() {
               className="text-[70px] font-semibold sm:text-[90px] md:text-[1100px] lg:text-[130px]"
             >
               <VariableProximity
-                label={'Where Founders'}
+                label={'Where Builders Grow'}
                 className={'text-center '}
                 fromFontVariationSettings="'wght' 400, 'opsz' 12"
                 toFontVariationSettings="'wght' 700, 'opsz' 144"
@@ -57,7 +57,7 @@ export function HeroSection() {
 
             </div>
           </div>
-          <span className="font-serif italic text-emerald-700 text-[90px]">Belong</span>
+          <span className="font-serif italic text-emerald-700 text-[90px]">Together</span>
         </div>
 
         <p className="mt-4 max-w-2xl text-pretty text-base text-slate-600 sm:mt-6 sm:text-lg md:text-xl">
