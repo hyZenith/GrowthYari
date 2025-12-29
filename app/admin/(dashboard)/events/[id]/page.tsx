@@ -1,9 +1,10 @@
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
-import { MapPin, Video, Calendar, Users, Globe } from "lucide-react";
+import { MapPin, Video, Calendar, Users, Globe, Edit } from "lucide-react";
+import Link from "next/link";
 
 export default async function EventDetailsPage({ params }: { params: { id: string } }) {
-    const { id } = await params; // Awaiting params as per Next.js 15+ reqs if applicable, safe pattern
+    const { id } = await params;
 
     const event = await prisma.event.findUnique({
         where: { id },
@@ -31,31 +32,41 @@ export default async function EventDetailsPage({ params }: { params: { id: strin
     return (
         <div className="space-y-8">
             {/* Header */}
-            <div>
-                <h1 className="text-3xl font-bold text-slate-900">{event.title}</h1>
-                <div className="mt-2 flex flex-wrap gap-4 text-sm text-slate-500">
-                    <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${event.status === 'SCHEDULED' ? 'bg-blue-100 text-blue-800' :
-                        event.status === 'ONGOING' ? 'bg-green-100 text-green-800' :
-                            event.status === 'UPCOMING' ? 'bg-purple-100 text-purple-800' :
-                                'bg-red-100 text-red-800'
-                        }`}>
-                        {event.status}
-                    </span>
-                    <span className="flex items-center gap-1">
-                        <Calendar className="h-4 w-4" />
-                        {new Date(event.date).toLocaleDateString()}
-                    </span>
-                    <span className="flex items-center gap-1">
-                        {event.mode === "ONLINE" ? <Video className="h-4 w-4" /> : <MapPin className="h-4 w-4" />}
-                        {event.mode}
-                    </span>
-                    {event.capacity && (
-                        <span className="flex items-center gap-1">
-                            <Users className="h-4 w-4" />
-                            Max {event.capacity}
+            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                <div>
+                    <h1 className="text-3xl font-bold text-slate-900">{event.title}</h1>
+                    <div className="mt-2 flex flex-wrap gap-4 text-sm text-slate-500">
+                        <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${event.status === 'SCHEDULED' ? 'bg-blue-100 text-blue-800' :
+                            event.status === 'ONGOING' ? 'bg-green-100 text-green-800' :
+                                event.status === 'UPCOMING' ? 'bg-purple-100 text-purple-800' :
+                                    'bg-red-100 text-red-800'
+                            }`}>
+                            {event.status}
                         </span>
-                    )}
+                        <span className="flex items-center gap-1">
+                            <Calendar className="h-4 w-4" />
+                            {new Date(event.date).toLocaleDateString()}
+                        </span>
+                        <span className="flex items-center gap-1">
+                            {event.mode === "ONLINE" ? <Video className="h-4 w-4" /> : <MapPin className="h-4 w-4" />}
+                            {event.mode}
+                        </span>
+                        {event.capacity && (
+                            <span className="flex items-center gap-1">
+                                <Users className="h-4 w-4" />
+                                Max {event.capacity}
+                            </span>
+                        )}
+                    </div>
                 </div>
+
+                <Link
+                    href={`/admin/events/${id}/edit`}
+                    className="flex w-full items-center justify-center gap-2 rounded-lg bg-white px-4 py-2.5 text-sm font-semibold text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 hover:bg-slate-50 md:w-auto"
+                >
+                    <Edit className="h-4 w-4" />
+                    Edit Event
+                </Link>
             </div>
 
             {/* Details Grid */}

@@ -105,9 +105,15 @@ export default async function EventsPage() {
                                             <div className="flex items-center gap-3">
                                                 <Link
                                                     href={`/admin/events/${event.id}`}
-                                                    className="font-medium text-emerald-600 hover:text-emerald-500"
+                                                    className="font-medium text-slate-600 hover:text-slate-900"
                                                 >
                                                     View
+                                                </Link>
+                                                <Link
+                                                    href={`/admin/events/${event.id}/edit`}
+                                                    className="font-medium text-emerald-600 hover:text-emerald-500"
+                                                >
+                                                    Edit
                                                 </Link>
                                                 <DeleteEventButton eventId={event.id} eventTitle={event.title} />
                                             </div>

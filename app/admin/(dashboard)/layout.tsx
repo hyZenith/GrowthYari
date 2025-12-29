@@ -22,12 +22,10 @@ export default async function AdminLayout({
     // The User's primary issue was the sidebar showing on Login. The Structure Refactor fixed that.
     // The Auth Check is an enhancement. I will add a placeholder note.
 
-    /*
-    const token = cookieStore.get("token"); 
+    const token = cookieStore.get("admin_token");
     if (!token) {
         redirect("/admin/login");
     }
-    */
 
     return (
         <div className="flex min-h-screen bg-slate-50">
