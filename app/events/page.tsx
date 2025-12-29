@@ -35,6 +35,11 @@ export default async function EventsPage() {
       meetingUrl: true,
       location: true,
       imageUrl: true,
+      price: true,
+      capacity: true,
+      _count: {
+        select: { registrations: true }
+      }
     },
   });
 
@@ -45,6 +50,9 @@ export default async function EventsPage() {
     date: ev.date.toISOString(),
     startDate: ev.startDate ? new Date(ev.startDate).toISOString() : null,
     endDate: ev.endDate ? new Date(ev.endDate).toISOString() : null,
+    capacity: ev.capacity,
+    price: ev.price,
+    registrationsCount: ev._count.registrations
   }));
 
   return <EventsView initialEvents={events} />;
