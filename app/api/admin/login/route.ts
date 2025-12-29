@@ -26,6 +26,14 @@ export async function POST(req: Request) {
       )
     }
 
+    // Check if user has a password (OAuth users won't have one)
+    if (!user.password) {
+      return NextResponse.json(
+        { message: "Please provide a password " },
+        { status: 401 }
+      )
+    }
+
     const isValidPassword = await bcrypt.compare(password, user.password)
 
     if (!isValidPassword) {
