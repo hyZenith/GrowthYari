@@ -43,13 +43,13 @@ export function HeroSection() {
             />
             <div
               ref={containerRef}
-              className="text-[70px] font-semibold sm:text-[90px] md:text-[1100px] lg:text-[130px]"
+              className="text-[50px] font-semibold sm:text-[70px] md:text-[90px] lg:text-[110px]"
             >
               <VariableProximity
                 label={'Where Builders Grow'}
                 className={'text-center '}
-                fromFontVariationSettings="'wght' 400, 'opsz' 12"
-                toFontVariationSettings="'wght' 700, 'opsz' 144"
+                fromFontVariationSettings="'wght' 500, 'opsz' 12"
+                toFontVariationSettings="'wght' 800, 'opsz' 144"
                 containerRef={containerRef}
                 radius={120}
                 falloff='linear'
@@ -57,7 +57,7 @@ export function HeroSection() {
 
             </div>
           </div>
-          <span className="font-serif italic text-emerald-700 text-[90px]">Together</span>
+          <span className="font-serif italic text-emerald-700 text-[50px] sm:text-[70px] md:text-[90px]">Together</span>
         </div>
 
         <p className="mt-4 max-w-2xl text-pretty text-base text-slate-600 sm:mt-6 sm:text-lg md:text-xl">
@@ -101,7 +101,7 @@ export function HeroSection() {
           </LiquidButton>
         </div>
 
-        <div className="mt-10 text-lg text-slate-500 sm:mt-14 sm:text-2xl">Trusted by professionals </div>
+        <div className="mt-10 text-base text-slate-500 sm:mt-14 sm:text-lg md:text-xl">Trusted by professionals </div>
         {/* <div className="mt-6 flex flex-wrap items-center justify-center gap-x-10 gap-y-4 text-sm font-semibold text-slate-400">
           <span>Google</span>
           <span>Microsoft</span>
