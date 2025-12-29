@@ -28,6 +28,10 @@ export async function registerForEvent(eventId: string) {
 
      if (!event) return { error: "Event not found", status: 404 };
 
+     if (event.price > 0) {
+        return { error: "This is a paid event. Please complete payment to register.", status: 402 };
+     }
+
      if (event.capacity && event._count.registrations >= event.capacity) {
          return { error: "Event is fully booked", status: 400 };
      }

@@ -49,6 +49,63 @@ export async function createEvent(formData: FormData) {
   });
 
   revalidatePath("/admin/events");
+  revalidatePath("/events");
+  redirect("/admin/events");
+}
+
+export async function updateEvent(id: string, formData: FormData) {
+  const title = formData.get("title") as string;
+  const description = formData.get("description") as string;
+  const dateStr = formData.get("date") as string;
+  const mode = formData.get("mode") as "ONLINE" | "OFFLINE";
+  const location = formData.get("location") as string;
+  const meetingUrl = formData.get("meetingUrl") as string;
+  const capacityStr = formData.get("capacity") as string;
+  const status = formData.get("status") as "SCHEDULED" | "ONGOING" | "UPCOMING" | "CANCELLED";
+  const priceStr = formData.get("price") as string;
+
+  if (!title || !description || !dateStr || !mode) {
+    throw new Error("Missing required fields");
+  }
+
+  const date = new Date(dateStr);
+  const capacity = capacityStr ? parseInt(capacityStr) : null;
+  const price = priceStr ? parseFloat(priceStr) : 0;
+  
+  // Basic slug generation (only if title changed)
+  const currentEvent = await prisma.event.findUnique({ where: { id } });
+  if (!currentEvent) throw new Error("Event not found");
+
+  let slug = currentEvent.slug;
+  if (title !== currentEvent.title) {
+    slug = title.toLowerCase().replace(/ /g, "-").replace(/[^\w-]+/g, "");
+    const existing = await prisma.event.findFirst({ where: { slug, id: { not: id } } });
+    if (existing) {
+        slug = `${slug}-${Date.now()}`;
+    }
+  }
+
+  await prisma.event.update({
+    where: { id },
+    data: {
+      title,
+      slug,
+      description,
+      date,
+      mode,
+      price,
+      imageUrl: formData.get("imageUrl") as string || null,
+      status: status || "SCHEDULED",
+      location: mode === "OFFLINE" ? location : null,
+      meetingUrl: mode === "ONLINE" ? meetingUrl : null,
+      capacity,
+    },
+  });
+
+  revalidatePath("/admin/events");
+  revalidatePath(`/admin/events/${id}`);
+  revalidatePath("/events");
+  revalidatePath(`/events/${slug}`);
   redirect("/admin/events");
 }
 
