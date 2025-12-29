@@ -130,7 +130,7 @@ export function EventsView({ initialEvents }: EventsViewProps) {
                 <div className="mx-auto max-w-5xl">
 
                     {/* Filters Bar */}
-                    <div className="relative z-[50] mb-8 flex flex-col gap-4 rounded-2xl bg-white/80 p-4 shadow-xl shadow-slate-200/50 backdrop-blur-xl ring-1 ring-slate-200/60 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="relative z-[40] mb-8 flex flex-col gap-4 rounded-2xl bg-white/80 p-4 shadow-xl shadow-slate-200/50 backdrop-blur-xl ring-1 ring-slate-200/60 sm:flex-row sm:items-center sm:justify-between">
                         <div className="flex gap-1 overflow-x-auto pb-2 sm:pb-0 no-scrollbar">
                             {(["all", "ongoing", "upcoming"] as UIStatus[]).map((status) => (
                                 <button
