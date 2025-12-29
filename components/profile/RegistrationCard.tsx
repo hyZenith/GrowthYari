@@ -23,7 +23,10 @@ export function RegistrationCard({ registration }: { registration: any }) {
 
     const event = registration.event;
     const isOnline = event.mode === "ONLINE";
-    const isActive = status === 'ACTIVE';
+
+    // Check if payment is required and completed
+    const isPaid = event.price === 0 || registration.paymentStatus === "COMPLETED" || registration.amountPaid >= event.price;
+    const isActive = status === 'ACTIVE' && isPaid;
 
     // Dummy ticket logic (using ID)
     const ticketId = registration.id.split('-')[0].toUpperCase();
