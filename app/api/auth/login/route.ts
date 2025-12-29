@@ -23,6 +23,14 @@ export async function POST(req: Request) {
       );
     }
 
+    // Check if user has a password (OAuth users won't have one)
+    if (!user.password) {
+      return NextResponse.json(
+        { message: "Please use Google Sign-In for this account" },
+        { status: 401 }
+      );
+    }
+
     const ispasswordValid = await bcrypt.compare(password, user.password);
     if (!ispasswordValid) {
       return NextResponse.json(

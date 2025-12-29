@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { Eye, EyeOff, UserCircle, Users, Video, LineChart } from "lucide-react";
 import { Input } from "@/components/ui/Input";
 import { FaGoogle } from "react-icons/fa6";
+import { signIn } from "next-auth/react";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -162,6 +163,9 @@ export default function LoginPage() {
           <div className="space-y-4">
             <button
               type="button"
+              onClick={() => {
+                signIn("google", { callbackUrl: "/events" });
+              }}
               className="flex w-full items-center justify-center gap-3 rounded-md border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 hover:text-slate-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400"
             >
               <FaGoogle className="h-4 w-4" />

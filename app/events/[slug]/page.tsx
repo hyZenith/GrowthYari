@@ -1,10 +1,9 @@
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
-import { cookies } from "next/headers";
+import { getUser } from "@/lib/user-auth";
 import { Header } from "@/components/header"; // Assuming header is reusable
 import { EventRegistration } from "@/components/events/EventRegistration";
 import { Calendar, MapPin, Video, Clock } from "lucide-react";
-import jwt from "jsonwebtoken";
 
 export default async function EventDetailPage({ params }: { params: { slug: string } }) {
   const { slug } = await params;
@@ -18,16 +17,14 @@ export default async function EventDetailPage({ params }: { params: { slug: stri
   }
 
   // Auth & Registration Check
-  const cookieStore = await cookies();
-  const token = cookieStore.get("user_token")?.value;
+  const userPayload = await getUser();
 
   let userId: string | null = null;
   let userDetails: { name: string; email: string; phone: string } | null = null;
 
-  if (token) {
+  if (userPayload) {
     try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { userId: string };
-      userId = decoded.userId;
+      userId = userPayload.userId;
 
       // Fetch user details for Razorpay prefill
       const user = await prisma.user.findUnique({

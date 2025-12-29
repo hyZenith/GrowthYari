@@ -2,8 +2,7 @@
 import { NextResponse } from "next/server";
 import Razorpay from "razorpay";
 import { prisma } from "@/lib/prisma";
-import { cookies } from "next/headers";
-import jwt from "jsonwebtoken";
+import { getUser } from "@/lib/user-auth";
 
 export async function POST(req: Request) {
   try {
@@ -19,17 +18,9 @@ export async function POST(req: Request) {
     const { eventId } = await req.json();
 
     // 1. Auth Check
-    const cookieStore = await cookies();
-    const token = cookieStore.get("user_token")?.value;
-    if (!token) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
-    let userId: string;
-    try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { userId: string };
-      userId = decoded.userId;
-    } catch (err) {
-      return NextResponse.json({ error: "Invalid session" }, { status: 401 });
-    }
+    const userPayload = await getUser();
+    if (!userPayload) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    const userId = userPayload.userId;
 
     // 2. Fetch Event
     const event = await prisma.event.findUnique({ where: { id: eventId } });

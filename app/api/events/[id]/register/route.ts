@@ -1,11 +1,6 @@
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import jwt from "jsonwebtoken";
+import { getUser } from "@/lib/user-auth";
 import { prisma } from "@/lib/prisma";
-
-interface JwtPayload {
-  userId: string;
-}
 
 export async function POST(
   _req: Request,
@@ -13,25 +8,11 @@ export async function POST(
 ) {
   const { id: eventId } = await context.params;
 
-  const cookieStore = await cookies();
-  const token = cookieStore.get("user_token")?.value;
+  const userPayload = await getUser();
 
-  if (!token) {
+  if (!userPayload) {
     return NextResponse.json(
       { error: "UNAUTHENTICATED" },
-      { status: 401 }
-    );
-  }
-
-  let payload: JwtPayload;
-  try {
-    payload = jwt.verify(
-      token,
-      process.env.JWT_SECRET!
-    ) as JwtPayload;
-  } catch {
-    return NextResponse.json(
-      { error: "INVALID_TOKEN" },
       { status: 401 }
     );
   }
@@ -47,7 +28,7 @@ export async function POST(
   const existing = await prisma.eventRegistration.findUnique({
     where: {
       userId_eventId: {
-        userId: payload.userId,
+        userId: userPayload.userId,
         eventId,
       },
     },
@@ -71,7 +52,7 @@ export async function POST(
   // Case 3: Does not exist → create once
   await prisma.eventRegistration.create({
     data: {
-      userId: payload.userId,
+      userId: userPayload.userId,
       eventId,
       status: "ACTIVE",
     },

@@ -1,11 +1,6 @@
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import jwt from "jsonwebtoken";
+import { getUser } from "@/lib/user-auth";
 import { prisma } from "@/lib/prisma";
-
-interface JwtPayload {
-  userId: string;
-}
 
 export async function GET(
   _req: Request,
@@ -13,27 +8,16 @@ export async function GET(
 ) {
   const { id: eventId } = await context.params;
 
-  const cookieStore = await cookies();
-  const token = cookieStore.get("user_token")?.value;
+  const userPayload = await getUser();
 
-  if (!token) {
-    return NextResponse.json({ registered: false });
-  }
-
-  let payload: JwtPayload;
-  try {
-    payload = jwt.verify(
-      token,
-      process.env.JWT_SECRET!
-    ) as JwtPayload;
-  } catch {
+  if (!userPayload) {
     return NextResponse.json({ registered: false });
   }
 
   const registration =
     await prisma.eventRegistration.findFirst({
       where: {
-        userId: payload.userId,
+        userId: userPayload.userId,
         eventId,
         status: "ACTIVE",
       },

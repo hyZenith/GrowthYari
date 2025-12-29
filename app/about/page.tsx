@@ -61,9 +61,9 @@ export default function AboutPage() {
                                     falloff='linear'
                                 />
                                 <VariableProximity
-                                    label={'relationships'}
+                                    label={'Relationships'}
                                     className={'tracking-tight leading-none'}
-                                    fromFontVariationSettings="'wght' 400, 'opsz' 8"
+                                    fromFontVariationSettings="'wght' 700, 'opsz' 8"
                                     toFontVariationSettings="'wght' 900, 'opsz' 144"
                                     containerRef={containerRef}
                                     radius={200}

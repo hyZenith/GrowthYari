@@ -1,25 +1,16 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { cookies } from "next/headers";
-import jwt from "jsonwebtoken";
+import { getUser } from "@/lib/user-auth";
 import { revalidatePath } from "next/cache";
 
 export async function updateProfile(formData: FormData) {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("user_token")?.value;
+  const userPayload = await getUser();
 
-  if (!token) {
+  if (!userPayload) {
     return { error: "Unauthorized", status: 401 };
   }
-
-  let userId: string;
-  try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { userId: string };
-      userId = decoded.userId;
-  } catch (err) {
-      return { error: "Invalid session", status: 401 };
-  }
+  const userId = userPayload.userId;
 
   const name = formData.get("name") as string;
   const phone = formData.get("phone") as string;
