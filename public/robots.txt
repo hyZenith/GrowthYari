@@ -2,4 +2,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.growthyari.com//sitemap.xml
+Sitemap: https://www.growthyari.com/sitemap.xml

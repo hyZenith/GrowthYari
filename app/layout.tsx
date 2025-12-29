@@ -40,12 +40,6 @@ export const metadata: Metadata = {
     canonical: SITE_URL,
   },
 
-  icons: {
-    icon: "/icon.png",
-    shortcut: "/favicon.ico",
-    apple: "/icon.png",
-  },
-
   openGraph: {
     title: SITE_NAME,
     description: SITE_DESCRIPTION,
