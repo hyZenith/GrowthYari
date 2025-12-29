@@ -1,27 +1,43 @@
 import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
+import { auth } from "@/lib/auth";
 
-interface JwtPayload {
+interface UserPayload {
   userId: string;
-  role: "USER" | "ADMIN";
+  role: string;
+}
+
+export async function getUser(): Promise<UserPayload | null> {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("user_token")?.value;
+
+  if (token) {
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { userId: string; role: string };
+      return { userId: decoded.userId, role: decoded.role };
+    } catch (e) {
+      // ignore
+    }
+  }
+
+  const session = await auth();
+  if (session?.user) {
+    return { userId: session.user.id, role: session.user.role };
+  }
+
+  return null;
 }
 
 export async function requireUser() {
-    const cookieStore = await cookies();
-  const token = cookieStore.get("user_token")?.value;
+  const user = await getUser();
 
-  if (!token) {
+  if (!user) {
     throw new Error("UNAUTHENTICATED");
   }
 
-  const payload = jwt.verify(
-    token,
-    process.env.JWT_SECRET!
-  ) as JwtPayload;
-
-  if (payload.role !== "USER") {
+  if (user.role !== "USER") {
     throw new Error("FORBIDDEN");
   }
 
-  return payload;
+  return user;
 }
