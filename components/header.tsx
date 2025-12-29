@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { User, Settings, LogOut } from "lucide-react";
+import { signOut } from "next-auth/react";
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -44,6 +45,7 @@ export function Header() {
   async function handleLogout() {
     try {
       await fetch("/api/auth/logout", { method: "POST" });
+      await signOut({ redirect: false });
       setUser(null);
       setDropdownOpen(false);
       router.refresh();
@@ -225,7 +227,7 @@ export function Header() {
                       View Profile
                     </Link>
                     <Link
-                      href="/profile"
+                      href="/settings"
                       className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-emerald-700 transition-colors"
                       onClick={() => setDropdownOpen(false)}
                     >
