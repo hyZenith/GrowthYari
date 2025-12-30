@@ -90,7 +90,7 @@ export default async function ProfilePage() {
             ) : (
               <div className="grid gap-4">
                 {user.registrations.map(reg => (
-                  <RegistrationCard key={reg.id} registration={reg} />
+                  <RegistrationCard key={reg.id} registration={reg} userName={user.name} />
                 ))}
               </div>
             )}
