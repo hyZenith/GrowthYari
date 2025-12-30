@@ -249,24 +249,26 @@ export function Header() {
               )}
             </div>
           ) : (
-            <Link
-              href="/auth/login"
-              className="group hidden items-center rounded-full bg-emerald-700 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 sm:inline-flex sm:px-5 sm:py-2.5 md:ml-auto"
-            >
-              Get Started
-              <svg
-                aria-hidden="true"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-                className="h-4 w-0 overflow-hidden opacity-0 transition-all duration-300 group-hover:ml-2 group-hover:w-4 group-hover:opacity-100"
+            <div className="md:ml-auto md:flex md:w-[160px] md:justify-end md:items-center">
+              <Link
+                href="/auth/login"
+                className="group hidden items-center rounded-full bg-emerald-700 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-emerald-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 sm:inline-flex sm:px-5 sm:py-2.5"
               >
-                <path
-                  fillRule="evenodd"
-                  d="M4 10a.75.75 0 0 1 .75-.75h8.69L10.22 6.03a.75.75 0 1 1 1.06-1.06l4.5 4.5c.3.3.3.77 0 1.06l-4.5 4.5a.75.75 0 0 1-1.06-1.06l3.22-3.22H4.75A.75.75 0 0 1 4 10Z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </Link>
+                Get Started
+                <svg
+                  aria-hidden="true"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  className="h-4 w-0 overflow-hidden opacity-0 transition-all duration-300 group-hover:ml-2 group-hover:w-4 group-hover:opacity-100"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M4 10a.75.75 0 0 1 .75-.75h8.69L10.22 6.03a.75.75 0 1 1 1.06-1.06l4.5 4.5c.3.3.3.77 0 1.06l-4.5 4.5a.75.75 0 0 1-1.06-1.06l3.22-3.22H4.75A.75.75 0 0 1 4 10Z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </Link>
+            </div>
           )
         )}
       </div>
