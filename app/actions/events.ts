@@ -16,6 +16,12 @@ export async function registerForEvent(eventId: string) {
   }
   const userId = userPayload.userId;
 
+  // Verify user exists in DB to prevent foreign key errors (stale session)
+  const userExists = await prisma.user.findUnique({ where: { id: userId } });
+  if (!userExists) {
+      return { error: "Invalid session or user not found. Please log in again.", status: 401 };
+  }
+
   try {
      const event = await prisma.event.findUnique({
         where: { id: eventId },
@@ -53,7 +59,7 @@ export async function registerForEvent(eventId: string) {
                  data: { status: "ACTIVE" }
              });
              revalidatePath(`/events`);
-             revalidatePath(`/events/[slug]`);
+             revalidatePath(`/events/${event.slug}`);
              return { message: "Welcome back! You have successfully re-registered.", success: true };
          }
          return { message: "Already registered", success: true };
@@ -68,7 +74,7 @@ export async function registerForEvent(eventId: string) {
      });
      
      revalidatePath(`/events`); // Revalidate lists
-     revalidatePath(`/events/[slug]`); 
+     revalidatePath(`/events/${event.slug}`); 
      
      return { message: "Thank you Registering for This event", success: true };
 
@@ -99,8 +105,15 @@ export async function cancelRegistration(eventId: string) {
           data: { status: "CANCELLED" }
       });
 
+      const event = await prisma.event.findUnique({
+          where: { id: eventId },
+          select: { slug: true }
+      });
+
       revalidatePath(`/events`);
-      revalidatePath(`/events/[slug]`);
+      if (event?.slug) {
+         revalidatePath(`/events/${event.slug}`);
+      }
 
       return { message: "Registration cancelled. Seat vacated.", success: true };
 
