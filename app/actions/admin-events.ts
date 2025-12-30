@@ -3,6 +3,8 @@
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { supabase } from "@/lib/supabase-client";
+import { createClient } from "@supabase/supabase-js";
 
 
 export async function createEvent(formData: FormData) {
@@ -109,17 +111,45 @@ export async function updateEvent(id: string, formData: FormData) {
   redirect("/admin/events");
 }
 
+
 export async function deleteEvent(id: string) {
   try {
-    // Delete registrations first if cascading isn't set up, but Prisma usually handles it or throws.
-    // Ideally use onCascade: delete in schema, but for safety lets try explicit delete.
-    // Actually, schema relation allows cascade usually or we can just try delete event.
-    // Let's assume standard cascading or simple deletion for now.
-    
-    // Deleting the event. If there are foreign key constraints without cascade, this might fail.
-    // But standard Prisma relation definition usually defaults or User can assume Cascade behavior if configured.
-    // Looking at schema: registrations EventRegistration[]
-    // If we need to delete registrations manually:
+    const event = await prisma.event.findUnique({
+      where: { id },
+      select: { imageUrl: true },
+    });
+
+    if (event?.imageUrl) {
+      // Use Service Role Key if available for admin privileges (bypasses RLS)
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+      const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+      
+      let storageClient = supabase;
+
+      if (supabaseUrl && serviceRoleKey) {
+        storageClient = createClient(supabaseUrl, serviceRoleKey);
+      }
+
+      // Extract file path from URL
+      const urlParts = event.imageUrl.split("/events/");
+      if (urlParts.length > 1) {
+        const filePath = urlParts[1]; // Should be "folder/filename" or just "filename" inside the bucket
+        
+        console.log(`[deleteEvent] Attempting to delete image: ${filePath}`);
+
+        if (filePath) {
+            const { error: storageError } = await storageClient.storage.from("events").remove([filePath]);
+            if (storageError) {
+                 console.error("[deleteEvent] Failed to delete image from Supabase:", storageError);
+            } else {
+                 console.log("[deleteEvent] Image deleted successfully");
+            }
+        }
+      } else {
+          console.warn("[deleteEvent] Could not parse file path from URL:", event.imageUrl);
+      }
+    }
+
     await prisma.eventRegistration.deleteMany({
       where: { eventId: id }
     });
