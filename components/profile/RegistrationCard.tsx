@@ -1,13 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { cancelRegistration } from "@/app/actions/events";
-import { MapPin, Video, Calendar, Clock, Ticket, ExternalLink } from "lucide-react";
+import { MapPin, Video, Calendar, Clock, Ticket, ExternalLink, Download } from "lucide-react";
 import Link from "next/link";
+import { TicketDesign } from "@/components/events/TicketDesign";
+import { generateTicketPDF } from "@/lib/ticket-generator";
 
-export function RegistrationCard({ registration }: { registration: any }) {
+export function RegistrationCard({ registration, userName }: { registration: any, userName?: string }) {
     const [status, setStatus] = useState(registration.status);
     const [loading, setLoading] = useState(false);
+    const [generating, setGenerating] = useState(false);
+    const ticketRef = useRef<HTMLDivElement>(null);
 
     async function handleCancel() {
         if (!confirm("Are you sure? This will free up your seat.")) return;
@@ -82,16 +86,37 @@ export function RegistrationCard({ registration }: { registration: any }) {
                                 </a>
                             ) : (
                                 <button
-                                    onClick={() => alert(`Ticket ID: ${ticketId}\nPlease show this at the venue entry.`)}
-                                    className="inline-flex items-center gap-2 text-sm font-medium text-emerald-600 hover:text-emerald-700 hover:underline"
+                                    onClick={async () => {
+                                        if (ticketRef.current) {
+                                            setGenerating(true);
+                                            await generateTicketPDF(ticketRef.current, `ticket-${ticketId}.pdf`);
+                                            setGenerating(false);
+                                        }
+                                    }}
+                                    disabled={generating}
+                                    className="inline-flex items-center gap-2 text-sm font-medium text-emerald-600 hover:text-emerald-700 hover:underline disabled:opacity-50"
                                 >
-                                    <Ticket className="h-4 w-4" />
-                                    View Ticket
+                                    {generating ? (
+                                        <>Generating...</>
+                                    ) : (
+                                        <>
+                                            <Ticket className="h-4 w-4" />
+                                            View Ticket
+                                        </>
+                                    )}
                                 </button>
                             )}
                         </div>
                     )}
                 </div>
+
+                {/* Hidden Ticket Design for PDF Generation */}
+                <TicketDesign
+                    ref={ticketRef}
+                    event={event}
+                    attendeeName={userName || registration.user?.name || "Guest"}
+                    ticketId={ticketId}
+                />
 
                 <div className="flex items-center gap-3">
                     <Link
