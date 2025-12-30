@@ -1,12 +1,15 @@
 "use client";
 
+import { useState } from "react";
 import { createEvent } from "@/app/actions/admin-events";
 import { Input } from "@/components/ui/Input";
+import ImageUpload from "@/components/ui/ImageUpload";
 // Assuming Button exists or reusing standard HTML button with styles
 // Assuming Textarea exists or using standard HTML textarea
 // Assuming Select exists or using standard HTML select
 
 export default function CreateEventPage() {
+    const [imageUrl, setImageUrl] = useState("");
     return (
         <div className="max-w-2xl mx-auto">
             <div className="mb-8">
@@ -36,10 +39,13 @@ export default function CreateEventPage() {
                 </div>
 
                 <div className="space-y-2">
-                    <label htmlFor="imageUrl" className="text-sm font-medium text-slate-900">
-                        Image URL (from Supabase)
+                    <label className="text-sm font-medium text-slate-900">
+                        Event Image
                     </label>
-                    <Input id="imageUrl" name="imageUrl" type="url" placeholder="https://..." />
+                    <div className="mt-2">
+                        <ImageUpload value={imageUrl} onChange={setImageUrl} />
+                        <input type="hidden" name="imageUrl" value={imageUrl} />
+                    </div>
                 </div>
 
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
