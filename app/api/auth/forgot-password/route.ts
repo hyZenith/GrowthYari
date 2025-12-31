@@ -45,7 +45,7 @@ export async function POST(req: Request) {
     const resetUrl = `${appUrl}/auth/reset-password?token=${rawToken}&email=${email}`;
 
     const { data, error } = await resend.emails.send({
-      from: 'GrowthYari <onboarding@resend.dev>', 
+      from: 'GrowthYari <onboarding@growthyari.com>', 
       to: email,
       subject: 'Reset your GrowthYari password',
       html: `
@@ -65,15 +65,15 @@ export async function POST(req: Request) {
 
     if (error) {
       console.error("Resend API Error:", error);
-      return NextResponse.json({ error: "Failed to send email. Check server logs." }, { status: 500 });
+      return NextResponse.json({ error: error.message || "Resend Error" }, { status: 500 });
     }
 
     console.log("Resend Email Sent Successfully:", data);
 
     return NextResponse.json({ success: true, message: "If an account exists, a reset link has been sent." });
 
-  } catch (error) {
+  } catch (error: any) {
     console.error("Forgot Password Error:", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json({ error: error.message || "Internal Server Error" }, { status: 500 });
   }
 }
