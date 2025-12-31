@@ -4,9 +4,7 @@ import { useState } from "react";
 import { createEvent } from "@/app/actions/admin-events";
 import { Input } from "@/components/ui/Input";
 import ImageUpload from "@/components/ui/ImageUpload";
-// Assuming Button exists or reusing standard HTML button with styles
-// Assuming Textarea exists or using standard HTML textarea
-// Assuming Select exists or using standard HTML select
+import { DateTimePicker } from "@/components/ui/DateTimePicker";
 
 export default function CreateEventPage() {
     const [imageUrl, setImageUrl] = useState("");
@@ -53,7 +51,7 @@ export default function CreateEventPage() {
                         <label htmlFor="date" className="text-sm font-medium text-slate-900">
                             Date & Time
                         </label>
-                        <Input id="date" name="date" type="datetime-local" required />
+                        <DateTimePicker name="date" required />
                     </div>
 
                     <div className="space-y-2">
