@@ -98,3 +98,13 @@ model EventRegistration {
   @@index([userId])
   @@index([eventId])
 }
+
+model PasswordResetToken {
+  id        String   @id @default(uuid())
+  email     String
+  token     String   @unique // Hashed version of the token
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@unique([email, token])
+}
