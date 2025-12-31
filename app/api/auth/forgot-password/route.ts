@@ -41,7 +41,8 @@ export async function POST(req: Request) {
     });
 
     // 5. Send Email via Resend
-    const resetUrl = `${process.env.NEXT_PUBLIC_APP_URL}/auth/reset-password?token=${rawToken}&email=${email}`;
+    const appUrl = process.env.NEXTAUTH_URL;
+    const resetUrl = `${appUrl}/auth/reset-password?token=${rawToken}&email=${email}`;
 
     await resend.emails.send({
       from: 'GrowthYari <onboarding@resend.dev>', 
