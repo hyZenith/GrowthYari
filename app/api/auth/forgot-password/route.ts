@@ -44,7 +44,7 @@ export async function POST(req: Request) {
     const appUrl = process.env.NEXTAUTH_URL;
     const resetUrl = `${appUrl}/auth/reset-password?token=${rawToken}&email=${email}`;
 
-    await resend.emails.send({
+    const { data, error } = await resend.emails.send({
       from: 'GrowthYari <onboarding@resend.dev>', 
       to: email,
       subject: 'Reset your GrowthYari password',
@@ -58,9 +58,17 @@ export async function POST(req: Request) {
           <p>If you didn't request this, you can safely ignore this email.</p>
           <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;" />
           <p style="font-size: 12px; color: #999;">GrowthYari - Empowering your professional growth.</p>
+          <p style="font-size: 10px; color: #aaa;">Debug Info: Sent to ${email}</p>
         </div>
       `,
     });
+
+    if (error) {
+      console.error("Resend API Error:", error);
+      return NextResponse.json({ error: "Failed to send email. Check server logs." }, { status: 500 });
+    }
+
+    console.log("Resend Email Sent Successfully:", data);
 
     return NextResponse.json({ success: true, message: "If an account exists, a reset link has been sent." });
 
