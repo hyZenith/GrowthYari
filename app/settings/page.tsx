@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Header } from "@/components/header";
 import { User } from "lucide-react";
+import { Toast, ToastType } from "@/components/ui/Toast";
 
 interface UserData {
     name: string;
@@ -22,6 +23,21 @@ export default function SettingsPage() {
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
 
+    // Toast state
+    const [toast, setToast] = useState<{ message: string; type: ToastType; visible: boolean }>({
+        message: "",
+        type: "info",
+        visible: false,
+    });
+
+    const showToast = (message: string, type: ToastType = "info") => {
+        setToast({ message, type, visible: true });
+    };
+
+    const hideToast = () => {
+        setToast((prev) => ({ ...prev, visible: false }));
+    };
+
     useEffect(() => {
         async function fetchUser() {
             try {
@@ -31,10 +47,11 @@ export default function SettingsPage() {
                     return;
                 }
                 const data = await res.json();
-                setUser(data.user);
-                setName(data.user.name || "");
-                setEmail(data.user.email || "");
-                setPhone(data.user.phone || "");
+                const u = data.user;
+                setUser(u);
+                setName(u.name || "");
+                setEmail(u.email || "");
+                setPhone(u.phone || "");
             } catch (error) {
                 console.error("Failed to fetch user", error);
                 router.push("/auth/login");
@@ -58,13 +75,13 @@ export default function SettingsPage() {
             if (res.ok) {
                 const data = await res.json();
                 setUser(data.user);
-                alert("Profile updated successfully!");
+                showToast("Profile updated successfully!", "success");
             } else {
-                alert("Failed to update profile");
+                showToast("Failed to update profile", "error");
             }
         } catch (error) {
             console.error("Error updating profile", error);
-            alert("An error occurred while updating profile");
+            showToast("An error occurred while updating profile", "error");
         } finally {
             setSaving(false);
         }
@@ -220,6 +237,13 @@ export default function SettingsPage() {
                     </div>
                 </div>
             </main>
+
+            <Toast
+                isVisible={toast.visible}
+                message={toast.message}
+                type={toast.type}
+                onClose={hideToast}
+            />
         </div>
     );
 }
