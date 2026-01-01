@@ -1,7 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import { getUser } from "@/lib/user-auth";
-import { Header } from "@/components/header"; // Assuming header is reusable
 import { EventRegistration } from "@/components/events/EventRegistration";
 import { Calendar, MapPin, Video, Clock } from "lucide-react";
 
@@ -63,7 +62,6 @@ export default async function EventDetailPage({ params }: { params: { slug: stri
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-900">
-      <Header />
       <main className="mx-auto max-w-4xl px-4 py-12">
 
         {/* Breadcrumb / Status */}
@@ -101,6 +99,10 @@ export default async function EventDetailPage({ params }: { params: { slug: stri
           <div className="flex items-center gap-2">
             <Clock className="h-5 w-5 text-slate-400" />
             {new Date(event.date).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-slate-400">Hosted by</span>
+            <span className="font-semibold text-slate-700">{event.hostedBy || "GrowthYari"}</span>
           </div>
           <div className="flex items-center gap-2">
             {event.mode === "ONLINE" ? <Video className="h-5 w-5 text-slate-400" /> : <MapPin className="h-5 w-5 text-slate-400" />}
