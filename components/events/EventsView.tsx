@@ -2,7 +2,6 @@
 
 import { useMemo, useState, useRef } from "react";
 import Link from "next/link";
-import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { Calendar, MapPin, Video, Users, ChevronLeft, ChevronRight, X } from "lucide-react";
 import dynamic from 'next/dynamic';
@@ -33,6 +32,7 @@ export interface Event {
     capacity?: number | null;
     price: number;
     registrationsCount: number;
+    hostedBy?: string;
 }
 
 /* ---------- Helpers ---------- */
@@ -73,8 +73,9 @@ export function EventsView({ initialEvents }: EventsViewProps) {
             }
 
             if (filterDate) {
-                const compareDate = event.startDate ?? event.date;
-                return compareDate >= filterDate;
+                const eventDate = new Date(event.startDate ?? event.date);
+                const eventDateStr = `${eventDate.getFullYear()}-${String(eventDate.getMonth() + 1).padStart(2, '0')}-${String(eventDate.getDate()).padStart(2, '0')}`;
+                return eventDateStr === filterDate;
             }
 
             return true;
@@ -83,7 +84,6 @@ export function EventsView({ initialEvents }: EventsViewProps) {
 
     return (
         <div className="min-h-screen bg-slate-50 font-sans text-slate-900">
-            <Header />
 
             {/* Load Roboto Flex for VariableProximity */}
             <link
@@ -338,6 +338,11 @@ export function EventsView({ initialEvents }: EventsViewProps) {
 
                                                             {/* Badges */}
                                                             <div className="flex flex-wrap gap-2 justify-end">
+                                                                <span className="inline-flex items-center gap-1 rounded-full bg-slate-50 px-2.5 py-1 text-xs font-medium text-slate-600 ring-1 ring-inset ring-slate-500/10">
+                                                                    <span className="text-slate-400">by</span>
+                                                                    <span className="text-slate-900">{event.hostedBy || "GrowthYari"}</span>
+                                                                </span>
+
                                                                 <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${event.status === "ONGOING"
                                                                     ? "bg-emerald-100 text-emerald-800"
                                                                     : "bg-blue-100 text-blue-800"
@@ -362,7 +367,7 @@ export function EventsView({ initialEvents }: EventsViewProps) {
                                                             <div className="flex flex-row items-center justify-between gap-x-2">
                                                                 {/* Location - Enlarged and Prioritized */}
                                                                 <div className="flex flex-col gap-1.5 flex-[1.6] min-w-0">
-                                                                    <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Location</span>
+                                                                    <span className="text-[10px] uppercase font-semibold text-slate-400 tracking-wider">Location</span>
                                                                     <div className="flex items-center gap-2 grayscale brightness-75 group-hover:grayscale-0 group-hover:brightness-100 transition-all overflow-hidden">
                                                                         {event.mode === "ONLINE" ? <Video className="h-4 w-4 text-emerald-600 shrink-0" /> : <MapPin className="h-4 w-4 text-emerald-600 shrink-0" />}
                                                                         <span className="font-bold text-slate-800 text-sm truncate">{event.mode === "ONLINE" ? "Online Stream" : event.location || "TBA"}</span>
@@ -373,7 +378,7 @@ export function EventsView({ initialEvents }: EventsViewProps) {
                                                                 <div className="flex flex-col gap-1.5 sm:border-l sm:border-slate-100 sm:pl-6 flex-1">
                                                                     <span className="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Entry Fee</span>
                                                                     <div className="flex items-center gap-1">
-                                                                        <span className={`text-sm font-bold ${event.price === 0 ? "text-emerald-600" : "text-slate-900"}`}>
+                                                                        <span className={`text-sm font-semibold ${event.price === 0 ? "text-emerald-600" : "text-slate-900"}`}>
                                                                             {event.price === 0 ? "FREE" : `₹${event.price}`}
                                                                         </span>
                                                                         {event.price > 0 && <span className="text-[9px] font-bold text-slate-400">/ person</span>}
@@ -386,7 +391,7 @@ export function EventsView({ initialEvents }: EventsViewProps) {
                                                                     <div className="flex items-center gap-3">
                                                                         <div className="flex flex-col">
                                                                             <div className="flex items-baseline gap-0.5">
-                                                                                <span className={`text-sm font-black ${isFull ? "text-red-600" : isNearCapacity ? "text-amber-600" : "text-slate-900"}`}>
+                                                                                <span className={`text-sm font-bold ${isFull ? "text-red-600" : isNearCapacity ? "text-amber-600" : "text-slate-900"}`}>
                                                                                     {event.capacity || "∞"}
                                                                                 </span>
                                                                                 <span className="text-slate-400 font-bold text-[8px] uppercase tracking-tighter leading-none">Seats</span>
