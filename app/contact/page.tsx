@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { Input } from "@/components/ui/Input";
 import { Linkedin, Mail, Instagram, MapPin, Phone, Send } from "lucide-react";
@@ -31,7 +30,6 @@ export default function ContactPage() {
 
     return (
         <main className="min-h-screen bg-white font-sans text-slate-900">
-            <Header />
 
             {/* Load Roboto Flex for VariableProximity */}
             <link

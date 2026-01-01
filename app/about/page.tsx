@@ -2,7 +2,6 @@
 
 import { useRef } from "react";
 import Image from "next/image";
-import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import dynamic from 'next/dynamic';
 import { LiquidButton } from "@/components/ui/shadcn-io/liquid-button";
@@ -19,7 +18,6 @@ export default function AboutPage() {
 
     return (
         <main className="min-h-screen bg-white font-sans text-slate-900">
-            <Header />
 
             {/* Load Roboto Flex for VariableProximity */}
             <link
