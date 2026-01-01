@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Header } from "@/components/header";
 import { User } from "lucide-react";
 import { Toast, ToastType } from "@/components/ui/Toast";
 
@@ -90,7 +89,6 @@ export default function SettingsPage() {
     if (loading) {
         return (
             <div className="min-h-screen bg-slate-50">
-                <Header />
                 <div className="flex items-center justify-center py-32">
                     <div className="h-8 w-8 animate-spin rounded-full border-4 border-emerald-600 border-t-transparent" />
                 </div>
@@ -100,7 +98,7 @@ export default function SettingsPage() {
 
     return (
         <div className="min-h-screen bg-slate-50 font-sans text-slate-900">
-            <Header />
+
 
             <main className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
                 {/* Header */}
