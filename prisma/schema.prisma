@@ -59,6 +59,7 @@ model Event {
   slug        String @unique
   description String
   imageUrl    String?
+  hostedBy    String  @default("GrowthYari")
   date     DateTime
   mode     EventMode
   status   EventStatus @default(SCHEDULED)
