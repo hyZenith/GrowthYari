@@ -1,5 +1,6 @@
 import NextAuth from "next-auth"
 import Google from "next-auth/providers/google"
+import LinkedIn from "next-auth/providers/linkedin"
 import Credentials from "next-auth/providers/credentials"
 import { prisma } from "./prisma"
 import bcrypt from "bcryptjs"
@@ -16,6 +17,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           response_type: "code"
         }
       }
+    }),
+    LinkedIn({
+      clientId: process.env.LINKEDIN_CLIENT_ID!,
+      clientSecret: process.env.LINKEDIN_CLIENT_SECRET!,
+      authorization: {
+        params: {
+          scope: 'openid profile email', // Ensure these scopes are enabled in your app
+        },
+      },
     }),
     Credentials({
       name: "credentials",
@@ -56,8 +66,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   ],
   callbacks: {
     async signIn({ user, account, profile }) {
-      // For Google OAuth
-      if (account?.provider === "google" && profile) {
+      // For Google/LinkedIn OAuth
+      if ((account?.provider === "google" || account?.provider === "linkedin") && profile) {
         try {
           // Check if user already exists
           const existingUser = await prisma.user.findUnique({
@@ -65,28 +75,43 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           })
 
           if (existingUser) {
-            // Prevent Admin from logging in via Google
+            // Prevent Admin from logging in via Google/LinkedIn if they shouldn't (logic is fine)
             if (existingUser.role === "ADMIN") {
+              // Allow admin to link? Maybe not for now. Original logic returned false.
+              // We will keep original behavior:
               return false
             }
 
-            // Update googleId if not set
-            if (!existingUser.googleId) {
+            // Update googleId if not set (for Google)
+            if (account.provider === "google" && !existingUser.googleId) {
               await prisma.user.update({
                 where: { id: existingUser.id },
                 data: {
                   googleId: account.providerAccountId,
-                  image: user.image
+                  image: user.image || existingUser.image // Update image if not set or user wants new one? Best to keep existing if available or update if empty.
                 }
               })
             }
+
+            // Update linkedinId if not set (for LinkedIn)
+            if (account.provider === "linkedin" && !existingUser.linkedinId) {
+              await prisma.user.update({
+                where: { id: existingUser.id },
+                data: {
+                  linkedinId: account.providerAccountId,
+                  image: user.image || existingUser.image // Same logic
+                }
+              })
+            }
+
           } else {
-            // Create new user with Google data
+            // Create new user
             await prisma.user.create({
               data: {
                 email: user.email!,
                 name: user.name || "User",
-                googleId: account.providerAccountId,
+                googleId: account.provider === "google" ? account.providerAccountId : null,
+                linkedinId: account.provider === "linkedin" ? account.providerAccountId : null,
                 image: user.image,
                 role: "USER"
               }
