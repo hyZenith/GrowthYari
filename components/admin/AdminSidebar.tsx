@@ -1,12 +1,27 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { LayoutDashboard, Calendar, LogOut } from "lucide-react";
 import Image from "next/image";
 
 export function AdminSidebar() {
     const pathname = usePathname();
+    const router = useRouter();
+
+    const handleLogout = async (e: React.MouseEvent) => {
+        e.preventDefault();
+        try {
+            const res = await fetch("/api/admin/logout", {
+                method: "POST",
+            });
+            if (res.ok) {
+                router.push("/admin/login");
+            }
+        } catch (error) {
+            console.error("Logout failed:", error);
+        }
+    };
 
     const navigation = [
         { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
@@ -53,13 +68,13 @@ export function AdminSidebar() {
             </nav>
 
             <div className="border-t border-slate-200 p-4">
-                <Link
-                    href="/api/admin/logout"
-                    className="group flex items-center rounded-md px-3 py-2 text-sm font-medium text-slate-700 hover:bg-red-50 hover:text-red-600"
+                <button
+                    onClick={handleLogout}
+                    className="group flex w-full items-center rounded-md px-3 py-2 text-sm font-medium text-slate-700 hover:bg-red-50 hover:text-red-600"
                 >
                     <LogOut className="mr-3 h-5 w-5 text-slate-400 group-hover:text-red-500" />
                     Log Out
-                </Link>
+                </button>
             </div>
         </div>
     );
