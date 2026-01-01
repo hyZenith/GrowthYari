@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { User, Settings, LogOut } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { useAuth } from "@/components/providers/AuthProvider";
@@ -13,6 +13,7 @@ export function Header() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const pathname = usePathname();
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -37,6 +38,8 @@ export function Header() {
       console.error("Failed to logout", error);
     }
   }
+
+  if (pathname?.startsWith("/admin") || pathname?.startsWith("/auth")) return null;
 
   return (
     <header className="sticky top-0 z-[100] w-full border-b border-slate-900/10 bg-white/70 backdrop-blur-md">
