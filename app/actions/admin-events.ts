@@ -17,6 +17,7 @@ export async function createEvent(formData: FormData) {
   const capacityStr = formData.get("capacity") as string;
   const status = formData.get("status") as "SCHEDULED" | "ONGOING" | "UPCOMING" | "CANCELLED";
   const priceStr = formData.get("price") as string; // Added priceStr extraction
+  const hostedBy = formData.get("hostedBy") as string || "GrowthYari";
 
   if (!title || !description || !dateStr || !mode) {
     throw new Error("Missing required fields");
@@ -25,13 +26,13 @@ export async function createEvent(formData: FormData) {
   const date = new Date(dateStr);
   const capacity = capacityStr ? parseInt(capacityStr) : null;
   const price = priceStr ? parseFloat(priceStr) : 0; // Added price parsing
-  
+
   // Basic slug generation
   let slug = title.toLowerCase().replace(/ /g, "-").replace(/[^\w-]+/g, "");
   // Ensure uniqueness (simple check, for production might want a loop or UUID fallback)
   const existing = await prisma.event.findUnique({ where: { slug } });
   if (existing) {
-      slug = `${slug}-${Date.now()}`;
+    slug = `${slug}-${Date.now()}`;
   }
 
   await prisma.event.create({
@@ -42,6 +43,7 @@ export async function createEvent(formData: FormData) {
       date,
       mode,
       price, // Added price to data
+      hostedBy,
       imageUrl: formData.get("imageUrl") as string || null,
       status: status || "SCHEDULED",
       location: mode === "OFFLINE" ? location : null,
@@ -65,6 +67,7 @@ export async function updateEvent(id: string, formData: FormData) {
   const capacityStr = formData.get("capacity") as string;
   const status = formData.get("status") as "SCHEDULED" | "ONGOING" | "UPCOMING" | "CANCELLED";
   const priceStr = formData.get("price") as string;
+  const hostedBy = formData.get("hostedBy") as string || "GrowthYari";
 
   if (!title || !description || !dateStr || !mode) {
     throw new Error("Missing required fields");
@@ -73,7 +76,7 @@ export async function updateEvent(id: string, formData: FormData) {
   const date = new Date(dateStr);
   const capacity = capacityStr ? parseInt(capacityStr) : null;
   const price = priceStr ? parseFloat(priceStr) : 0;
-  
+
   // Basic slug generation (only if title changed)
   const currentEvent = await prisma.event.findUnique({ where: { id } });
   if (!currentEvent) throw new Error("Event not found");
@@ -83,7 +86,7 @@ export async function updateEvent(id: string, formData: FormData) {
     slug = title.toLowerCase().replace(/ /g, "-").replace(/[^\w-]+/g, "");
     const existing = await prisma.event.findFirst({ where: { slug, id: { not: id } } });
     if (existing) {
-        slug = `${slug}-${Date.now()}`;
+      slug = `${slug}-${Date.now()}`;
     }
   }
 
@@ -96,6 +99,7 @@ export async function updateEvent(id: string, formData: FormData) {
       date,
       mode,
       price,
+      hostedBy,
       imageUrl: formData.get("imageUrl") as string || null,
       status: status || "SCHEDULED",
       location: mode === "OFFLINE" ? location : null,
@@ -123,7 +127,7 @@ export async function deleteEvent(id: string) {
       // Use Service Role Key if available for admin privileges (bypasses RLS)
       const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
       const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-      
+
       let storageClient = supabase;
 
       if (supabaseUrl && serviceRoleKey) {
@@ -134,19 +138,19 @@ export async function deleteEvent(id: string) {
       const urlParts = event.imageUrl.split("/events/");
       if (urlParts.length > 1) {
         const filePath = urlParts[1]; // Should be "folder/filename" or just "filename" inside the bucket
-        
+
         console.log(`[deleteEvent] Attempting to delete image: ${filePath}`);
 
         if (filePath) {
-            const { error: storageError } = await storageClient.storage.from("events").remove([filePath]);
-            if (storageError) {
-                 console.error("[deleteEvent] Failed to delete image from Supabase:", storageError);
-            } else {
-                 console.log("[deleteEvent] Image deleted successfully");
-            }
+          const { error: storageError } = await storageClient.storage.from("events").remove([filePath]);
+          if (storageError) {
+            console.error("[deleteEvent] Failed to delete image from Supabase:", storageError);
+          } else {
+            console.log("[deleteEvent] Image deleted successfully");
+          }
         }
       } else {
-          console.warn("[deleteEvent] Could not parse file path from URL:", event.imageUrl);
+        console.warn("[deleteEvent] Could not parse file path from URL:", event.imageUrl);
       }
     }
 
