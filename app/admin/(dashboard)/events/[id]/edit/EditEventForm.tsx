@@ -11,11 +11,20 @@ export default function EditEventForm({ event }: { event: any }) {
 
     return (
         <form action={updateEventWithId} className="space-y-6 bg-white p-8 rounded-lg border border-slate-200 shadow-sm">
-            <div className="space-y-2">
-                <label htmlFor="title" className="text-sm font-medium text-slate-900">
-                    Event Title
-                </label>
-                <Input id="title" name="title" defaultValue={event.title} required />
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                <div className="space-y-2">
+                    <label htmlFor="title" className="text-sm font-medium text-slate-900">
+                        Event Title
+                    </label>
+                    <Input id="title" name="title" defaultValue={event.title} required />
+                </div>
+
+                <div className="space-y-2">
+                    <label htmlFor="hostedBy" className="text-sm font-medium text-slate-900">
+                        Hosted By
+                    </label>
+                    <Input id="hostedBy" name="hostedBy" defaultValue={event.hostedBy || "GrowthYari"} required />
+                </div>
             </div>
 
             <div className="space-y-2">
