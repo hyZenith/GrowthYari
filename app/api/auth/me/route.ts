@@ -8,7 +8,7 @@ import { auth } from "@/lib/auth";
 export async function GET() {
   try {
     const cookieStore = await cookies();
-    const token = cookieStore.get("user_token")?.value 
+    const token = cookieStore.get("user_token")?.value
 
     // 1. Check Custom JWT (Email/Password login)
     if (token) {
@@ -17,7 +17,7 @@ export async function GET() {
 
         const user = await prisma.user.findUnique({
           where: { id: decoded.userId },
-          select: { id: true, name: true, email: true, role: true },
+          select: { id: true, name: true, email: true, role: true, phone: true, googleId: true, linkedinId: true },
         });
 
         if (user) {
@@ -33,7 +33,7 @@ export async function GET() {
     if (session?.user?.email) {
       const user = await prisma.user.findUnique({
         where: { email: session.user.email },
-        select: { id: true, name: true, email: true, role: true },
+        select: { id: true, name: true, email: true, role: true, phone: true, googleId: true, linkedinId: true },
       });
 
       if (user) {
