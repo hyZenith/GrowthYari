@@ -1,7 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { getUser } from "@/lib/user-auth";
-import { Header } from "@/components/header";
 import { ProfileActions } from "@/components/profile/ProfileActions";
 import { Calendar, MapPin, Video, User } from "lucide-react";
 import Link from "next/link";
@@ -37,7 +36,6 @@ export default async function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-900">
-      <Header />
 
       <main className="mx-auto max-w-5xl px-4 py-12">
         <div className="grid gap-8 lg:grid-cols-3">
