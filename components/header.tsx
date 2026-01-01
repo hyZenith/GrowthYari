@@ -5,31 +5,14 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { User, Settings, LogOut } from "lucide-react";
 import { signOut } from "next-auth/react";
+import { useAuth } from "@/components/providers/AuthProvider";
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [user, setUser] = useState<{ name: string; email: string } | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { user, loading, setUser } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
-
-  useEffect(() => {
-    async function checkAuth() {
-      try {
-        const res = await fetch("/api/auth/me");
-        if (res.ok) {
-          const data = await res.json();
-          setUser(data.user);
-        }
-      } catch (err) {
-        console.error("Failed to fetch auth status", err);
-      } finally {
-        setLoading(false);
-      }
-    }
-    checkAuth();
-  }, []);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -58,7 +41,7 @@ export function Header() {
   return (
     <header className="sticky top-0 z-[100] w-full border-b border-slate-900/10 bg-white/70 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-7xl items-center gap-4 px-4 sm:gap-6 sm:px-6 lg:px-8">
-        <a href="/" className="flex items-center gap-2">
+        <Link href="/" className="flex items-center gap-2">
           <img
             src="/images/logo.png"
             alt="GrowthYari logo"
@@ -67,11 +50,11 @@ export function Header() {
           <span className="text-base font-semibold tracking-tight text-slate-900 sm:text-lg">
             GrowthYari
           </span>
-        </a>
+        </Link>
 
         <nav aria-label="Primary" className="hidden flex-1 md:flex">
           <div className="mx-auto flex items-center gap-8">
-            <a
+            <Link
               href="/"
               className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 transition-colors hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
             >
@@ -89,7 +72,7 @@ export function Header() {
                 <path d="M9 22.5V15a1.5 1.5 0 0 1 1.5-1.5h3A1.5 1.5 0 0 1 15 15v7.5" />
               </svg>
               Home
-            </a>
+            </Link>
 
             {/* <a
               href="/Dashboard"
@@ -111,7 +94,7 @@ export function Header() {
               Dashboard
             </a> */}
 
-            <a
+            <Link
               href="/events"
               className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 transition-colors hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
             >
@@ -131,9 +114,9 @@ export function Header() {
                 <path d="M18.5 18.5 21 21" />
               </svg>
               Events
-            </a>
+            </Link>
 
-            <a
+            <Link
               href="/about"
               className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 transition-colors hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
             >
@@ -152,9 +135,9 @@ export function Header() {
                 <path d="M11 12h1v4h1" />
               </svg>
               About
-            </a>
+            </Link>
 
-            <a
+            <Link
               href="/contact"
               className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 transition-colors hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
             >
@@ -171,7 +154,7 @@ export function Header() {
                 <path d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
               </svg>
               Contact
-            </a>
+            </Link>
           </div>
         </nav>
 
@@ -279,7 +262,7 @@ export function Header() {
         className={`border-t border-slate-900/10 bg-white/95 backdrop-blur-md md:hidden ${mobileMenuOpen ? "block" : "hidden"}`}
       >
         <div className="space-y-1 px-4 py-4">
-          <a
+          <Link
             href="/"
             className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-base font-medium text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900"
           >
@@ -297,7 +280,7 @@ export function Header() {
               <path d="M9 22.5V15a1.5 1.5 0 0 1 1.5-1.5h3A1.5 1.5 0 0 1 15 15v7.5" />
             </svg>
             Home
-          </a>
+          </Link>
           {/* <a
             href="/Dashboard"
             className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-base font-medium text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900"
@@ -317,7 +300,7 @@ export function Header() {
             </svg>
             Dashboard
           </a> */}
-          <a
+          <Link
             href="/events"
             className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-base font-medium text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900"
           >
@@ -337,8 +320,8 @@ export function Header() {
               <path d="M18.5 18.5 21 21" />
             </svg>
             Events
-          </a>
-          <a
+          </Link>
+          <Link
             href="/about"
             className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-base font-medium text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900"
           >
@@ -357,8 +340,8 @@ export function Header() {
               <path d="M11 12h1v4h1" />
             </svg>
             About
-          </a>
-          <a
+          </Link>
+          <Link
             href="/contact"
             className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-base font-medium text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900"
           >
@@ -375,7 +358,7 @@ export function Header() {
               <path d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
             </svg>
             Contact
-          </a>
+          </Link>
 
           {!loading && (
             user ? (

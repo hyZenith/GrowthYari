@@ -2,6 +2,7 @@
 
 import { Linkedin, Mail, Instagram } from "lucide-react";
 import { FaXTwitter } from "react-icons/fa6";
+import Link from "next/link";
 
 export function Footer() {
   return (
@@ -13,7 +14,7 @@ export function Footer() {
           <div className="grid gap-8 sm:gap-12 md:grid-cols-3 lg:gap-16">
             {/* logo*/}
             <div className="md:col-span-1">
-              <a href="/" className="flex items-center gap-2">
+              <Link href="/" className="flex items-center gap-2">
                 <img
                   src="/images/logo.png"
                   alt="GrowthYari logo"
@@ -22,7 +23,7 @@ export function Footer() {
                 <span className="text-base font-semibold tracking-tight text-slate-900 sm:text-lg">
                   GrowthYari
                 </span>
-              </a>
+              </Link>
               <p className="mt-3 text-sm leading-6 text-slate-600 sm:mt-4">
                 Real networks built through real conversations. Making professional networking accessible and meaningful.
               </p>
@@ -71,36 +72,36 @@ export function Footer() {
                 <h3 className="text-sm font-semibold text-slate-900">Products</h3>
                 <ul className="mt-3 space-y-2.5 sm:mt-4 sm:space-y-3">
                   <li>
-                    <a
-                      href="#yariconnect"
+                    <Link
+                      href="/#yariconnect"
                       className="text-sm text-slate-600 transition-colors hover:text-slate-900"
                     >
                       YariConnect
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a
-                      href="#clarity-connect"
+                    <Link
+                      href="/#clarity-connect"
                       className="text-sm text-slate-600 transition-colors hover:text-slate-900"
                     >
                       Clarity Connect
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a
-                      href="#pricing"
+                    <Link
+                      href="/#pricing"
                       className="text-sm text-slate-600 transition-colors hover:text-slate-900"
                     >
                       Pricing
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a
-                      href="#for-teams"
+                    <Link
+                      href="/#for-teams"
                       className="text-sm text-slate-600 transition-colors hover:text-slate-900"
                     >
                       For Teams
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </div>
@@ -110,36 +111,36 @@ export function Footer() {
                 <h3 className="text-sm font-semibold text-slate-900">Company</h3>
                 <ul className="mt-3 space-y-2.5 sm:mt-4 sm:space-y-3">
                   <li>
-                    <a
-                      href="#about-us"
+                    <Link
+                      href="/about"
                       className="text-sm text-slate-600 transition-colors hover:text-slate-900"
                     >
                       About Us
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a
-                      href="#blog"
+                    <Link
+                      href="/#blog"
                       className="text-sm text-slate-600 transition-colors hover:text-slate-900"
                     >
                       Blog
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a
-                      href="#careers"
+                    <Link
+                      href="/#careers"
                       className="text-sm text-slate-600 transition-colors hover:text-slate-900"
                     >
                       Careers
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a
-                      href="#contact"
+                    <Link
+                      href="/contact"
                       className="text-sm text-slate-600 transition-colors hover:text-slate-900"
                     >
                       Contact
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </div>
