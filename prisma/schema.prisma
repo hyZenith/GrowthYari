@@ -45,8 +45,9 @@ model User {
   role      Role     @default(USER)
   
   // OAuth fields
-  googleId String?    @unique  // Google user ID
-  image    String?    // Profile picture URL
+  googleId   String?    @unique  // Google user ID
+  linkedinId String?    @unique  // LinkedIn user ID
+  image      String?    // Profile picture URL
   
   registrations EventRegistration[]
   createdAt DateTime @default(now())
