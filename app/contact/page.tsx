@@ -86,8 +86,8 @@ export default function ContactPage() {
                         {/* Contact Details */}
                         <div className="relative z-10 mt-12 space-y-6 lg:mt-0">
                             <div>
-                                <a href="mailto:contact@growthyari.com" className="text-xl font-medium text-slate-900 hover:underline hover:text-emerald-700 transition-colors">
-                                    contact@growthyari.com
+                                <a href="mailto:partnerships@growthyari.com" className="text-xl font-medium text-slate-900 hover:underline hover:text-emerald-700 transition-colors">
+                                    partnerships@growthyari.com
                                 </a>
                             </div>
                             <div className="text-base text-slate-600">
