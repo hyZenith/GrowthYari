@@ -19,6 +19,8 @@ export async function GET() {
       name: true,
       email: true,
       phone: true,
+      image: true,
+      bio: true,
       createdAt: true,
       registrations: {
         where: { status: "ACTIVE" }, // ✅ FIX
