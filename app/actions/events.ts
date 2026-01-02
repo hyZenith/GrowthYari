@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { getUser } from "@/lib/user-auth";
 import { revalidatePath } from "next/cache";
+import { sendEventRegistrationEmail } from "@/lib/emails";
 
 export async function registerForEvent(eventId: string) {
   // 1. Get User ID from cookie (mock auth or real auth)
@@ -17,7 +18,10 @@ export async function registerForEvent(eventId: string) {
   const userId = userPayload.userId;
 
   // Verify user exists in DB to prevent foreign key errors (stale session)
-  const userExists = await prisma.user.findUnique({ where: { id: userId } });
+  const userExists = await prisma.user.findUnique({ 
+    where: { id: userId },
+    select: { id: true, email: true, name: true }
+  });
   if (!userExists) {
       return { error: "Invalid session or user not found. Please log in again.", status: 401 };
   }
@@ -65,13 +69,25 @@ export async function registerForEvent(eventId: string) {
          return { message: "Already registered", success: true };
      }
 
-     await prisma.eventRegistration.create({
+     const newRegistration = await prisma.eventRegistration.create({
          data: {
              userId,
              eventId,
              status: "ACTIVE"
          }
      });
+
+     // Send Email
+     if (userExists.email) {
+       await sendEventRegistrationEmail({
+         email: userExists.email,
+         name: userExists.name || "User",
+         eventTitle: event.title,
+         eventDate: event.date,
+         eventLocation: event.location || "Online",
+         ticketId: newRegistration.id
+       });
+     }
      
      revalidatePath(`/events`); // Revalidate lists
      revalidatePath(`/events/${event.slug}`); 
