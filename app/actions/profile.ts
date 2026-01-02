@@ -14,6 +14,7 @@ export async function updateProfile(formData: FormData) {
 
   const name = formData.get("name") as string;
   const phone = formData.get("phone") as string;
+  const bio = formData.get("bio") as string;
 
   if (!name) {
       return { error: "Name is required", success: false };
@@ -24,7 +25,8 @@ export async function updateProfile(formData: FormData) {
           where: { id: userId },
           data: {
               name,
-              phone
+              phone,
+              bio
           }
       });
 
