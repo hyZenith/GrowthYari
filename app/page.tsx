@@ -2,6 +2,7 @@ import { HeroSection } from "@/components/heroSection";
 import { FeatureSection } from "@/components/featureSection";
 import { SolutionSection } from "@/components/solutionSection";
 import { YariConnect } from "@/components/yariConnect";
+import { UpcomingEventsSection } from "@/components/upcomingEventsSection";
 import { ConnectionSection } from "@/components/connectionSection";
 import { Footer } from "@/components/footer";
 
@@ -13,6 +14,7 @@ export default function Home() {
       <SolutionSection />
       <YariConnect />
       <ConnectionSection />
+      <UpcomingEventsSection />
       <Footer />
     </main>
 
