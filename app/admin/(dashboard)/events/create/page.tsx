@@ -5,9 +5,12 @@ import { createEvent } from "@/app/actions/admin-events";
 import { Input } from "@/components/ui/Input";
 import ImageUpload from "@/components/ui/ImageUpload";
 import { DateTimePicker } from "@/components/ui/DateTimePicker";
+import { CategorySelector } from "@/components/admin/CategorySelector";
 
 export default function CreateEventPage() {
     const [imageUrl, setImageUrl] = useState("");
+    const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+
     return (
         <div className="max-w-2xl mx-auto">
             <div className="mb-8">
@@ -42,6 +45,16 @@ export default function CreateEventPage() {
                         rows={4}
                         className="flex w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:border-transparent disabled:cursor-not-allowed disabled:opacity-50"
                         required
+                    />
+                </div>
+
+                <div className="space-y-2">
+                    <label className="text-sm font-medium text-slate-900">
+                        Categories
+                    </label>
+                    <CategorySelector
+                        selectedCategories={selectedCategories}
+                        onChange={setSelectedCategories}
                     />
                 </div>
 
