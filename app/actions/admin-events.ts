@@ -16,8 +16,18 @@ export async function createEvent(formData: FormData) {
   const meetingUrl = formData.get("meetingUrl") as string;
   const capacityStr = formData.get("capacity") as string;
   const status = formData.get("status") as "SCHEDULED" | "ONGOING" | "UPCOMING" | "CANCELLED";
-  const priceStr = formData.get("price") as string; // Added priceStr extraction
+  const priceStr = formData.get("price") as string;
   const hostedBy = formData.get("hostedBy") as string || "GrowthYari";
+  
+  let categories: string[] = [];
+  const categoriesJson = formData.get("categories") as string;
+  if (categoriesJson) {
+      try {
+          categories = JSON.parse(categoriesJson);
+      } catch (e) {
+          console.error("Failed to parse categories:", e);
+      }
+  }
 
   if (!title || !description || !dateStr || !mode) {
     throw new Error("Missing required fields");
@@ -25,11 +35,11 @@ export async function createEvent(formData: FormData) {
 
   const date = new Date(dateStr);
   const capacity = capacityStr ? parseInt(capacityStr) : null;
-  const price = priceStr ? parseFloat(priceStr) : 0; // Added price parsing
+  const price = priceStr ? parseFloat(priceStr) : 0;
 
   // Basic slug generation
   let slug = title.toLowerCase().replace(/ /g, "-").replace(/[^\w-]+/g, "");
-  // Ensure uniqueness (simple check, for production might want a loop or UUID fallback)
+  // Ensure uniqueness
   const existing = await prisma.event.findUnique({ where: { slug } });
   if (existing) {
     slug = `${slug}-${Date.now()}`;
@@ -42,7 +52,8 @@ export async function createEvent(formData: FormData) {
       description,
       date,
       mode,
-      price, // Added price to data
+      price,
+      categories,
       hostedBy,
       imageUrl: formData.get("imageUrl") as string || null,
       status: status || "SCHEDULED",
@@ -68,6 +79,16 @@ export async function updateEvent(id: string, formData: FormData) {
   const status = formData.get("status") as "SCHEDULED" | "ONGOING" | "UPCOMING" | "CANCELLED";
   const priceStr = formData.get("price") as string;
   const hostedBy = formData.get("hostedBy") as string || "GrowthYari";
+
+  let categories: string[] = [];
+  const categoriesJson = formData.get("categories") as string;
+  if (categoriesJson) {
+      try {
+          categories = JSON.parse(categoriesJson);
+      } catch (e) {
+          console.error("Failed to parse categories:", e);
+      }
+  }
 
   if (!title || !description || !dateStr || !mode) {
     throw new Error("Missing required fields");
@@ -99,6 +120,7 @@ export async function updateEvent(id: string, formData: FormData) {
       date,
       mode,
       price,
+      categories,
       hostedBy,
       imageUrl: formData.get("imageUrl") as string || null,
       status: status || "SCHEDULED",
