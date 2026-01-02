@@ -2,6 +2,7 @@
 import { NextResponse } from "next/server";
 import crypto from "crypto";
 import { prisma } from "@/lib/prisma";
+import { sendEventRegistrationEmail } from "@/lib/emails";
 
 export async function POST(req: Request) {
   try {
@@ -20,7 +21,8 @@ export async function POST(req: Request) {
       // Payment Successful
       // Find registration by orderId and update
       const registration = await prisma.eventRegistration.findFirst({
-        where: { orderId: razorpay_order_id }
+        where: { orderId: razorpay_order_id },
+        include: { user: true, event: true }
       });
 
       if (registration) {
@@ -32,6 +34,18 @@ export async function POST(req: Request) {
             status: "ACTIVE"
           }
         });
+
+        // Send Email
+        if (registration.user.email) {
+           await sendEventRegistrationEmail({
+             email: registration.user.email,
+             name: registration.user.name || "User",
+             eventTitle: registration.event.title,
+             eventDate: registration.event.date,
+             eventLocation: registration.event.location || "Online",
+             ticketId: registration.id
+           });
+        }
       }
 
       return NextResponse.json({ success: true });
