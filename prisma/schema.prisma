@@ -48,6 +48,7 @@ model User {
   googleId   String?    @unique  // Google user ID
   linkedinId String?    @unique  // LinkedIn user ID
   image      String?    // Profile picture URL
+  bio        String?    // User bio/description
   
   registrations EventRegistration[]
   createdAt DateTime @default(now())
