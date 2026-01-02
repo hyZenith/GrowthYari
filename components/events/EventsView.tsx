@@ -1,9 +1,9 @@
 "use client";
 
-import { useMemo, useState, useRef } from "react";
+import { useMemo, useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { Footer } from "@/components/footer";
-import { Calendar, MapPin, Video, Users, ChevronLeft, ChevronRight, X } from "lucide-react";
+import { Calendar, MapPin, Video, Users, ChevronLeft, ChevronRight, X, Search, ChevronDown, Check } from "lucide-react";
 import dynamic from 'next/dynamic';
 import { motion, AnimatePresence } from "motion/react";
 
@@ -15,7 +15,6 @@ const VariableProximity = dynamic(
 /* ---------- Types ---------- */
 
 type BackendStatus = "UPCOMING" | "ONGOING";
-type UIStatus = "all" | "ongoing" | "upcoming";
 
 export interface Event {
     id: string;
@@ -33,16 +32,22 @@ export interface Event {
     price: number;
     registrationsCount: number;
     hostedBy?: string;
+    categories: string[];
 }
+
+const PREDEFINED_CATEGORIES = [
+    "Entrepreneurship",
+    "Product Management",
+    "Engineering",
+    "Design",
+    "Marketing",
+    "Community",
+    "Leadership"
+];
 
 /* ---------- Helpers ---------- */
 
-function mapStatus(status: BackendStatus): Exclude<UIStatus, "all"> {
-    return status === "ONGOING" ? "ongoing" : "upcoming";
-}
-
 function formatDisplayDate(event: Event) {
-    // For the "Big Date" display
     const dateObj = new Date(event.startDate ?? event.date);
     return {
         day: dateObj.getDate(),
@@ -56,31 +61,67 @@ interface EventsViewProps {
 }
 
 export function EventsView({ initialEvents }: EventsViewProps) {
-    const [filterStatus, setFilterStatus] = useState<UIStatus>("all");
+    const [searchQuery, setSearchQuery] = useState("");
+    const [selectedCategory, setSelectedCategory] = useState("All Categories");
     const [filterDate, setFilterDate] = useState("");
+
+    // UI States
     const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+    const [isCategoryOpen, setIsCategoryOpen] = useState(false);
     const [viewDate, setViewDate] = useState(new Date());
-    const calendarRef = useRef<HTMLDivElement>(null);
+
     const containerRef = useRef(null);
+    const categoryDropdownRef = useRef<HTMLDivElement>(null);
+
+    // Close category dropdown on click outside
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (categoryDropdownRef.current && !categoryDropdownRef.current.contains(event.target as Node)) {
+                setIsCategoryOpen(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
 
     /* Filtering */
     const filteredEvents = useMemo(() => {
         return initialEvents.filter((event) => {
-            const uiStatus = mapStatus(event.status);
+            // Search Filter
+            if (searchQuery) {
+                const searchLower = searchQuery.toLowerCase().trim();
+                const matchesSearch =
+                    event.title.toLowerCase().includes(searchLower) ||
+                    (event.location && event.location.toLowerCase().includes(searchLower)) ||
+                    (event.description && event.description.toLowerCase().includes(searchLower));
 
-            if (filterStatus !== "all" && uiStatus !== filterStatus) {
-                return false;
+                if (!matchesSearch) return false;
             }
 
+            // Category Filter
+            if (selectedCategory !== "All Categories") {
+                // Ensure categories exist and check for inclusion
+                if (!event.categories || !Array.isArray(event.categories) || !event.categories.some(cat => cat === selectedCategory)) {
+                    return false;
+                }
+            }
+
+            // Date Filter
             if (filterDate) {
+                // Safely handle date comparison
                 const eventDate = new Date(event.startDate ?? event.date);
-                const eventDateStr = `${eventDate.getFullYear()}-${String(eventDate.getMonth() + 1).padStart(2, '0')}-${String(eventDate.getDate()).padStart(2, '0')}`;
-                return eventDateStr === filterDate;
+                // Create local date string YYYY-MM-DD
+                const year = eventDate.getFullYear();
+                const month = String(eventDate.getMonth() + 1).padStart(2, '0');
+                const day = String(eventDate.getDate()).padStart(2, '0');
+                const eventDateStr = `${year}-${month}-${day}`;
+
+                if (eventDateStr !== filterDate) return false;
             }
 
             return true;
         });
-    }, [initialEvents, filterStatus, filterDate]);
+    }, [initialEvents, searchQuery, selectedCategory, filterDate]);
 
     return (
         <div className="min-h-screen bg-slate-50 font-sans text-slate-900">
@@ -96,7 +137,7 @@ export function EventsView({ initialEvents }: EventsViewProps) {
                 ref={containerRef}
                 className="relative overflow-hidden bg-gradient-to-b from-white to-slate-100 px-4 py-20 text-center md:px-8 pb-32"
             >
-                {/* Decorative blobs - More subtle */}
+                {/* Decorative blobs */}
                 <div className="absolute top-0 right-0 -mr-20 -mt-20 h-96 w-96 rounded-full bg-emerald-100/40 blur-3xl"></div>
                 <div className="absolute bottom-0 left-0 -ml-20 -mb-20 h-96 w-96 rounded-full bg-teal-100/40 blur-3xl"></div>
 
@@ -129,34 +170,77 @@ export function EventsView({ initialEvents }: EventsViewProps) {
             <section className="relative -mt-20 px-4 pb-20 md:px-8">
                 <div className="mx-auto max-w-5xl">
 
-                    {/* Filters Bar */}
-                    <div className="relative z-[40] mb-8 flex flex-col gap-4 rounded-2xl bg-white/80 p-4 shadow-xl shadow-slate-200/50 backdrop-blur-xl ring-1 ring-slate-200/60 sm:flex-row sm:items-center sm:justify-between">
-                        <div className="flex gap-1 overflow-x-auto pb-2 sm:pb-0 no-scrollbar">
-                            {(["all", "ongoing", "upcoming"] as UIStatus[]).map((status) => (
-                                <button
-                                    key={status}
-                                    onClick={() => setFilterStatus(status)}
-                                    className={`whitespace-nowrap rounded-xl px-5 py-2.5 text-sm font-medium transition-all duration-200 ${filterStatus === status
-                                        ? "bg-emerald-100 text-emerald-800 shadow-sm ring-1 ring-emerald-500/20"
-                                        : "bg-transparent text-slate-600 hover:bg-emerald-50 hover:text-emerald-600"
-                                        }`}
-                                >
-                                    {status === 'all' ? 'All Events' : status.charAt(0).toUpperCase() + status.slice(1)}
-                                </button>
-                            ))}
+                    {/* Filter Bar v2: Search & Categories */}
+                    <div className="relative z-[40] mb-8 flex flex-col gap-4 rounded-2xl bg-white/80 p-4 shadow-xl shadow-slate-200/50 backdrop-blur-xl ring-1 ring-slate-200/60 lg:flex-row lg:items-center">
+
+                        {/* Search Bar */}
+                        <div className="relative flex-1 group">
+                            <Search className="absolute left-3.5 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400 group-focus-within:text-emerald-500 transition-colors" />
+                            <input
+                                type="text"
+                                placeholder="Search events, locations..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                className="h-12 w-full rounded-xl border-2 border-slate-200 bg-white pl-11 pr-4 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-emerald-600 transition-all"
+                            />
                         </div>
 
-                        <div className="flex items-center gap-3 border-l border-slate-200 pl-0 sm:pl-4">
-                            <div className="relative w-full sm:w-auto">
+                        {/* Filters Group */}
+                        <div className="flex flex-col sm:flex-row gap-3 lg:w-auto">
+
+                            {/* Category Dropdown */}
+                            <div className="relative min-w-[200px]" ref={categoryDropdownRef}>
+                                <button
+                                    onClick={() => setIsCategoryOpen(!isCategoryOpen)}
+                                    className="flex h-12 w-full items-center justify-between rounded-xl border border-emerald-100 bg-white px-4 text-sm font-medium text-slate-700 hover:border-emerald-500 hover:bg-emerald-50/50 hover:text-emerald-700 transition-all focus:outline-none focus:ring-4 focus:ring-emerald-500/10"
+                                >
+                                    <span className="truncate">{selectedCategory}</span>
+                                    <ChevronDown className={`ml-2 h-4 w-4 text-emerald-400 transition-transform ${isCategoryOpen ? "rotate-180" : ""}`} />
+                                </button>
+
+                                <AnimatePresence>
+                                    {isCategoryOpen && (
+                                        <motion.div
+                                            initial={{ opacity: 0, y: 5, scale: 0.95 }}
+                                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                                            exit={{ opacity: 0, y: 5, scale: 0.95 }}
+                                            transition={{ duration: 0.1 }}
+                                            className="absolute right-0 top-full z-50 mt-2 w-full min-w-[220px] overflow-hidden rounded-xl border border-emerald-100 bg-white p-1 shadow-xl shadow-emerald-900/10 ring-1 ring-emerald-900/5"
+                                        >
+                                            <button
+                                                onClick={() => { setSelectedCategory("All Categories"); setIsCategoryOpen(false); }}
+                                                className={`flex w-full items-center rounded-lg px-3 py-2 text-sm transition-colors ${selectedCategory === "All Categories" ? "bg-emerald-50 text-emerald-700 font-medium" : "text-slate-700 hover:bg-emerald-50/50"}`}
+                                            >
+                                                <span className="flex-1 text-left">All Categories</span>
+                                                {selectedCategory === "All Categories" && <Check className="h-3.5 w-3.5 text-emerald-600" />}
+                                            </button>
+                                            <div className="my-1 border-t border-emerald-50" />
+                                            {PREDEFINED_CATEGORIES.map((cat) => (
+                                                <button
+                                                    key={cat}
+                                                    onClick={() => { setSelectedCategory(cat); setIsCategoryOpen(false); }}
+                                                    className={`flex w-full items-center rounded-lg px-3 py-2 text-sm transition-colors ${selectedCategory === cat ? "bg-emerald-50 text-emerald-700 font-medium" : "text-slate-700 hover:bg-emerald-50/50"}`}
+                                                >
+                                                    <span className="flex-1 text-left">{cat}</span>
+                                                    {selectedCategory === cat && <Check className="h-3.5 w-3.5 text-emerald-600" />}
+                                                </button>
+                                            ))}
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+                            </div>
+
+                            {/* Date Picker */}
+                            <div className="relative">
                                 <button
                                     onClick={() => setIsCalendarOpen(!isCalendarOpen)}
-                                    className="flex w-full items-center gap-2.5 rounded-xl bg-slate-100 px-4 py-2.5 text-sm font-medium text-slate-900 transition-all hover:bg-slate-200 sm:w-44"
+                                    className="flex h-12 w-full items-center gap-2.5 rounded-xl border border-emerald-100 bg-white px-4 text-sm font-medium text-slate-700 hover:border-emerald-500 hover:bg-emerald-50/50 hover:text-emerald-700 transition-all min-w-[160px] focus:outline-none focus:ring-4 focus:ring-emerald-500/10"
                                 >
-                                    <Calendar className="h-4 w-4 text-emerald-600" />
-                                    <span>{filterDate ? new Date(filterDate).toLocaleDateString('default', { month: 'short', day: 'numeric', year: 'numeric' }) : "Pick a date"}</span>
+                                    <Calendar className="h-4 w-4 text-emerald-500" />
+                                    <span>{filterDate ? new Date(filterDate).toLocaleDateString('default', { month: 'short', day: 'numeric' }) : "Date"}</span>
                                     {filterDate && (
                                         <X
-                                            className="ml-auto h-3.5 w-3.5 text-slate-400 hover:text-red-500"
+                                            className="ml-auto h-3.5 w-3.5 text-emerald-400 hover:text-red-500"
                                             onClick={(e) => { e.stopPropagation(); setFilterDate(""); }}
                                         />
                                     )}
@@ -165,33 +249,36 @@ export function EventsView({ initialEvents }: EventsViewProps) {
                                 <AnimatePresence mode="wait">
                                     {isCalendarOpen && (
                                         <>
-                                            {/* Backdrop for closing */}
-                                            <div
-                                                className="fixed inset-0 z-[60]"
-                                                onClick={() => setIsCalendarOpen(false)}
-                                            />
-
+                                            <div className="fixed inset-0 z-[60]" onClick={() => setIsCalendarOpen(false)} />
                                             <motion.div
                                                 initial={{ opacity: 0, y: 10, scale: 0.95 }}
                                                 animate={{ opacity: 1, y: 0, scale: 1 }}
                                                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
                                                 className="absolute right-0 top-full z-[70] mt-3 w-72 overflow-hidden rounded-3xl bg-white p-4.5 text-slate-900 shadow-2xl ring-1 ring-slate-200"
                                             >
-                                                {/* Calendar Header */}
+                                                {/* Minimal Calendar Implementation Reuse */}
                                                 <div className="mb-4 flex items-center justify-between">
                                                     <h4 className="text-lg font-bold tracking-tight text-slate-900">
                                                         {viewDate.toLocaleString('default', { month: 'long', year: 'numeric' })}
                                                     </h4>
                                                     <div className="flex items-center gap-1.5">
                                                         <button
-                                                            onClick={() => setViewDate(new Date(viewDate.setMonth(viewDate.getMonth() - 1)))}
+                                                            onClick={() => {
+                                                                const newDate = new Date(viewDate);
+                                                                newDate.setMonth(newDate.getMonth() - 1);
+                                                                setViewDate(newDate);
+                                                            }}
                                                             className="rounded-full p-1 hover:bg-slate-100 transition-colors text-slate-600"
                                                         >
                                                             <ChevronLeft className="h-4.5 w-4.5" />
                                                         </button>
                                                         <div className="h-1 w-1 rounded-full bg-slate-200"></div>
                                                         <button
-                                                            onClick={() => setViewDate(new Date(viewDate.setMonth(viewDate.getMonth() + 1)))}
+                                                            onClick={() => {
+                                                                const newDate = new Date(viewDate);
+                                                                newDate.setMonth(newDate.getMonth() + 1);
+                                                                setViewDate(newDate);
+                                                            }}
                                                             className="rounded-full p-1 hover:bg-slate-100 transition-colors text-slate-600"
                                                         >
                                                             <ChevronRight className="h-4.5 w-4.5" />
@@ -199,14 +286,12 @@ export function EventsView({ initialEvents }: EventsViewProps) {
                                                     </div>
                                                 </div>
 
-                                                {/* Weekday Headers */}
                                                 <div className="mb-1.5 grid grid-cols-7 text-center">
                                                     {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, i) => (
                                                         <span key={i} className="text-[9px] font-black text-slate-400 uppercase tracking-widest">{day}</span>
                                                     ))}
                                                 </div>
 
-                                                {/* Days Grid */}
                                                 <div className="grid grid-cols-7 gap-y-0.5">
                                                     {Array.from({ length: new Date(viewDate.getFullYear(), viewDate.getMonth(), 1).getDay() }).map((_, i) => (
                                                         <div key={`empty-${i}`} />
@@ -220,42 +305,21 @@ export function EventsView({ initialEvents }: EventsViewProps) {
                                                         return (
                                                             <button
                                                                 key={day}
-                                                                onClick={() => {
-                                                                    setFilterDate(dateStr);
-                                                                    setIsCalendarOpen(false);
-                                                                }}
-                                                                className={`relative flex h-8 w-8 items-center justify-center text-xs font-bold transition-all duration-200
-                                                                    ${isSelected ? "text-white z-10" : "text-slate-700 hover:bg-slate-100 rounded-lg"}
-                                                                `}
+                                                                onClick={() => { setFilterDate(dateStr); setIsCalendarOpen(false); }}
+                                                                className={`relative flex h-8 w-8 items-center justify-center text-xs font-bold transition-all duration-200 ${isSelected ? "text-white z-10" : "text-slate-700 hover:bg-slate-100 rounded-lg"}`}
                                                             >
                                                                 {isSelected && (
-                                                                    <motion.div
-                                                                        layoutId="highlight"
-                                                                        className="absolute inset-0 rounded-xl bg-emerald-600 shadow-md shadow-emerald-100"
-                                                                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                                                                    />
+                                                                    <motion.div layoutId="highlight" className="absolute inset-0 rounded-xl bg-emerald-600 shadow-md shadow-emerald-100" />
                                                                 )}
                                                                 <span className="relative z-10">{day}</span>
-                                                                {isToday && !isSelected && (
-                                                                    <div className="absolute bottom-1 h-0.5 w-0.5 rounded-full bg-emerald-500" />
-                                                                )}
+                                                                {isToday && !isSelected && <div className="absolute bottom-1 h-0.5 w-0.5 rounded-full bg-emerald-500" />}
                                                             </button>
                                                         );
                                                     })}
                                                 </div>
 
-                                                {/* Footer Stats? Optional - let's keep it clean */}
                                                 <div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-3">
-                                                    <button
-                                                        onClick={() => { setFilterDate(""); setIsCalendarOpen(false); }}
-                                                        className="text-[9px] font-bold uppercase tracking-widest text-slate-400 hover:text-slate-900 transition-colors"
-                                                    >
-                                                        Clear Filter
-                                                    </button>
-                                                    <div className="flex items-center gap-1.5">
-                                                        <div className="h-1 w-1 rounded-full bg-emerald-500" />
-                                                        <span className="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">Today</span>
-                                                    </div>
+                                                    <button onClick={() => { setFilterDate(""); setIsCalendarOpen(false); }} className="text-[9px] font-bold uppercase tracking-widest text-slate-400 hover:text-slate-900 transition-colors">Clear</button>
                                                 </div>
                                             </motion.div>
                                         </>
@@ -267,16 +331,12 @@ export function EventsView({ initialEvents }: EventsViewProps) {
 
                     {/* Events List */}
                     <motion.div
+                        key={`events-${filteredEvents.length}-${filteredEvents[0]?.id ?? 'empty'}`}
                         initial="hidden"
                         animate="visible"
                         variants={{
                             hidden: { opacity: 0 },
-                            visible: {
-                                opacity: 1,
-                                transition: {
-                                    staggerChildren: 0.1
-                                }
-                            }
+                            visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
                         }}
                         className="flex flex-col gap-6"
                     >
@@ -289,15 +349,15 @@ export function EventsView({ initialEvents }: EventsViewProps) {
                                 className="rounded-3xl bg-white p-16 text-center shadow-sm ring-1 ring-slate-100"
                             >
                                 <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-slate-50">
-                                    <Calendar className="h-8 w-8 text-slate-300" />
+                                    <Search className="h-8 w-8 text-slate-300" />
                                 </div>
                                 <h3 className="text-xl font-semibold text-slate-900">No events found</h3>
-                                <p className="mt-2 text-slate-500">We couldn't find any events matching your criteria.</p>
+                                <p className="mt-2 text-slate-500">Try adjusting your search or filters.</p>
                                 <button
-                                    onClick={() => { setFilterStatus("all"); setFilterDate(""); }}
+                                    onClick={() => { setSearchQuery(""); setSelectedCategory("All Categories"); setFilterDate(""); }}
                                     className="mt-6 text-sm font-semibold text-emerald-600 hover:text-emerald-700"
                                 >
-                                    Clear all filters
+                                    Reset all filters
                                 </button>
                             </motion.div>
                         ) : (
@@ -338,10 +398,25 @@ export function EventsView({ initialEvents }: EventsViewProps) {
 
                                                             {/* Badges */}
                                                             <div className="flex flex-wrap gap-2 justify-end">
-                                                                <span className="inline-flex items-center gap-1 rounded-full bg-slate-50 px-2.5 py-1 text-xs font-medium text-slate-600 ring-1 ring-inset ring-slate-500/10">
-                                                                    <span className="text-slate-400">by</span>
-                                                                    <span className="text-slate-900">{event.hostedBy || "GrowthYari"}</span>
-                                                                </span>
+                                                                {/* Category Badges */}
+                                                                {event.categories && event.categories.slice(0, 2).map(cat => (
+                                                                    <span key={cat} className="inline-flex items-center rounded-full bg-violet-50 px-2.5 py-1 text-xs font-medium text-violet-700 ring-1 ring-inset ring-violet-700/10">
+                                                                        {cat}
+                                                                    </span>
+                                                                ))}
+                                                                {/* +N More Badge with Tooltip */}
+                                                                {event.categories && event.categories.length > 2 && (
+                                                                    <span className="relative group/tooltip inline-flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600 ring-1 ring-inset ring-slate-500/10 cursor-default">
+                                                                        +{event.categories.length - 2}
+                                                                        {/* Tooltip */}
+                                                                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover/tooltip:block z-50">
+                                                                            <div className="bg-slate-900 text-white text-xs rounded-lg px-3 py-2 whitespace-nowrap shadow-lg">
+                                                                                {event.categories.slice(2).join(', ')}
+                                                                            </div>
+                                                                            <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-900"></div>
+                                                                        </div>
+                                                                    </span>
+                                                                )}
 
                                                                 <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${event.status === "ONGOING"
                                                                     ? "bg-emerald-100 text-emerald-800"
@@ -360,12 +435,20 @@ export function EventsView({ initialEvents }: EventsViewProps) {
                                                             <p className="text-slate-600 text-sm line-clamp-2 max-w-xl">
                                                                 {event.description}
                                                             </p>
+
+                                                            {/* Hosted By Badge */}
+                                                            <div className="mt-6 flex items-center">
+                                                                <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-100/80 px-3 py-1 text-xs font-medium text-slate-600 ring-1 ring-inset ring-slate-500/10">
+                                                                    <span className="text-slate-400">by</span>
+                                                                    <span className="font-semibold text-slate-900">{event.hostedBy || "GrowthYari"}</span>
+                                                                </span>
+                                                            </div>
                                                         </div>
 
                                                         {/* Footer: Metadata & Registration Info */}
-                                                        <div className="mt-6 border-t border-slate-100 pt-5">
+                                                        <div className="mt-2 border-t border-slate-100 pt-5">
                                                             <div className="flex flex-row items-center justify-between gap-x-2">
-                                                                {/* Location - Enlarged and Prioritized */}
+                                                                {/* Location */}
                                                                 <div className="flex flex-col gap-1.5 flex-[1.6] min-w-0">
                                                                     <span className="text-[10px] uppercase font-semibold text-slate-400 tracking-wider">Location</span>
                                                                     <div className="flex items-center gap-2 grayscale brightness-75 group-hover:grayscale-0 group-hover:brightness-100 transition-all overflow-hidden">
@@ -426,7 +509,6 @@ export function EventsView({ initialEvents }: EventsViewProps) {
                                                             </div>
                                                         )}
 
-                                                        {/* Action Overlay on Desktop */}
                                                         <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                                                             <span className="rounded-full bg-emerald-100 px-5 py-2.5 text-sm font-bold text-emerald-900 shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
                                                                 View Event
