@@ -1281,8 +1281,8 @@ export default function SplashCursor({
   ]);
 
   return (
-    <div className="fixed top-0 left-0 z-50 pointer-events-none w-full h-full">
-      <canvas ref={canvasRef} id="fluid" className="w-screen h-screen block"></canvas>
+    <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+      <canvas ref={canvasRef} id="fluid" className="w-full h-full block"></canvas>
     </div>
   );
 }
