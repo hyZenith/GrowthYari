@@ -37,6 +37,7 @@ export default async function EventsPage() {
       imageUrl: true,
       price: true,
       capacity: true,
+      categories: true,
       _count: {
         select: { registrations: true }
       }
@@ -52,6 +53,7 @@ export default async function EventsPage() {
     endDate: ev.endDate ? new Date(ev.endDate).toISOString() : null,
     capacity: ev.capacity,
     price: ev.price,
+    categories: ev.categories,
     registrationsCount: ev._count.registrations
   }));
 
