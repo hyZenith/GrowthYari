@@ -186,16 +186,24 @@ export function Header() {
             <div className="hidden md:ml-auto md:block md:relative" ref={dropdownRef}>
               <button
                 onClick={() => setDropdownOpen(!dropdownOpen)}
-                className="flex items-center justify-center h-10 w-10 rounded-full bg-emerald-100 ring-2 ring-emerald-600/20 text-emerald-800 font-semibold text-lg uppercase focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
+                className="flex items-center justify-center h-10 w-10 rounded-full bg-emerald-100 ring-2 ring-emerald-600/20 text-emerald-800 font-semibold text-lg uppercase focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 overflow-hidden"
               >
-                {user.name ? user.name.charAt(0) : "U"}
+                {user.image ? (
+                  <img src={user.image} alt={user.name} className="h-full w-full object-cover" />
+                ) : (
+                  user.name ? user.name.charAt(0) : "U"
+                )}
               </button>
 
               {dropdownOpen && (
                 <div className="absolute right-0 mt-3 w-60 origin-top-right rounded-xl bg-white p-2 shadow-xl ring-1 ring-slate-200 focus:outline-none animate-in fade-in zoom-in-95 duration-100">
                   <div className="mb-2 flex items-center gap-3 rounded-lg bg-slate-50 p-3">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 font-bold">
-                      {user.name ? user.name.charAt(0).toUpperCase() : "U"}
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 font-bold overflow-hidden">
+                      {user.image ? (
+                        <img src={user.image} alt={user.name} className="h-full w-full object-cover" />
+                      ) : (
+                        user.name ? user.name.charAt(0).toUpperCase() : "U"
+                      )}
                     </div>
                     <div className="overflow-hidden">
                       <p className="truncate text-sm font-semibold text-slate-900">{user.name}</p>
@@ -368,8 +376,12 @@ export function Header() {
               <div className="px-3 pt-3">
                 <div className="flex w-full flex-col gap-2 rounded-lg bg-emerald-50 p-4">
                   <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-200 text-emerald-800 font-bold">
-                      {user.name ? user.name.charAt(0) : "U"}
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-200 text-emerald-800 font-bold overflow-hidden">
+                      {user.image ? (
+                        <img src={user.image} alt={user.name} className="h-full w-full object-cover" />
+                      ) : (
+                        user.name ? user.name.charAt(0) : "U"
+                      )}
                     </div>
                     <div className="flex flex-col">
                       <Link href="/profile" className="font-semibold text-emerald-900">{user.name}</Link>
