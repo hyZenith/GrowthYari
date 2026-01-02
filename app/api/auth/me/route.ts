@@ -17,7 +17,7 @@ export async function GET() {
 
         const user = await prisma.user.findUnique({
           where: { id: decoded.userId },
-          select: { id: true, name: true, email: true, role: true, phone: true, googleId: true, linkedinId: true },
+          select: { id: true, name: true, email: true, role: true, phone: true, googleId: true, linkedinId: true, image: true },
         });
 
         if (user) {
@@ -33,7 +33,7 @@ export async function GET() {
     if (session?.user?.email) {
       const user = await prisma.user.findUnique({
         where: { email: session.user.email },
-        select: { id: true, name: true, email: true, role: true, phone: true, googleId: true, linkedinId: true },
+        select: { id: true, name: true, email: true, role: true, phone: true, googleId: true, linkedinId: true, image: true },
       });
 
       if (user) {
