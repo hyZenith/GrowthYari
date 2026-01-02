@@ -71,6 +71,7 @@ model Event {
   endDate     DateTime?
   capacity    Int?  // null = unlimited capacity
   price       Float    @default(0)
+  categories  String[]
 
   registrations EventRegistration[]
   createdAt DateTime @default(now())
