@@ -11,6 +11,7 @@ interface UserData {
     phone: string | null;
     googleId?: string | null;
     linkedinId?: string | null;
+    image?: string | null;
 }
 
 import { Suspense } from "react";
@@ -142,8 +143,12 @@ function SettingsContent() {
                             <div className="mt-6 space-y-5">
                                 {/* Profile Picture */}
                                 <div className="flex items-center gap-6">
-                                    <div className="flex h-20 w-20 items-center justify-center rounded-full bg-emerald-100 text-2xl font-bold text-emerald-700 ring-4 ring-white shadow-sm">
-                                        {user?.name ? user.name.charAt(0).toUpperCase() : "U"}
+                                    <div className="flex h-20 w-20 items-center justify-center rounded-full bg-emerald-100 text-2xl font-bold text-emerald-700 ring-4 ring-white shadow-sm overflow-hidden">
+                                        {user?.image ? (
+                                            <img src={user.image} alt={user.name} className="h-full w-full object-cover" />
+                                        ) : (
+                                            user?.name ? user.name.charAt(0).toUpperCase() : "U"
+                                        )}
                                     </div>
                                     <div>
                                         <p className="text-sm font-medium text-slate-700">Profile Picture</p>
