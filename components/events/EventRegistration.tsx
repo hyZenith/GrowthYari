@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { registerForEvent, cancelRegistration } from "@/app/actions/events";
 import { useRouter } from "next/navigation";
+import { Toast, ToastType } from "../ui/Toast";
 
 interface UserDetails {
     name: string;
@@ -28,7 +29,26 @@ export function EventRegistration({ eventId, isRegistered: initialStatus, isLogg
     const [isRegistered, setIsRegistered] = useState(initialStatus);
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState("");
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
     const router = useRouter();
+
+    const [toastState, setToastState] = useState<{
+        isVisible: boolean;
+        message: string;
+        type: ToastType;
+    }>({
+        isVisible: false,
+        message: "",
+        type: "info",
+    });
+
+    const showToast = (message: string, type: ToastType) => {
+        setToastState({ isVisible: true, message, type });
+    };
+
+    const hideToast = () => {
+        setToastState((prev) => ({ ...prev, isVisible: false }));
+    };
 
     useEffect(() => {
         // Load Razorpay Script
@@ -56,10 +76,10 @@ export function EventRegistration({ eventId, isRegistered: initialStatus, isLogg
                 const result = await registerForEvent(eventId);
                 if (result.success) {
                     setIsRegistered(true);
-                    setMessage(result.message || "Thank you Registering for This event");
-                    router.push("/profile");
+                    showToast("Thank you Registering for This event", "success");
+                    // router.push("/profile");
                 } else {
-                    alert(result.error || result.message);
+                    showToast(result.error || result.message || "An unknown error occurred", "error");
                 }
                 setLoading(false);
                 return;
@@ -79,6 +99,12 @@ export function EventRegistration({ eventId, isRegistered: initialStatus, isLogg
             }
 
             // 3. Open Razorpay Modal
+            if (!window.Razorpay) {
+                alert("Payment system failed to load. Please check your internet connection.");
+                setLoading(false);
+                return;
+            }
+
             const options = {
                 key: orderData.keyId,
                 amount: orderData.amount,
@@ -137,20 +163,51 @@ export function EventRegistration({ eventId, isRegistered: initialStatus, isLogg
         }
     }
 
-    async function handleCancel() {
-        if (!confirm("Are you sure you want to cancel your registration? This will free up your seat.")) return;
+    function handleCancel() {
+        setShowConfirmModal(true);
+    }
 
+    async function confirmCancelRegistration() {
         setLoading(true);
         const result = await cancelRegistration(eventId);
         setLoading(false);
+        setShowConfirmModal(false);
 
         if (result.success) {
             setIsRegistered(false);
-            setMessage("Registration cancelled.");
+            showToast("Registration cancelled", "info");
         } else {
-            alert(result.error || result.message);
+            showToast(result.error || result.message || "Failed to cancel", "error");
         }
     }
+
+    const confirmModal = showConfirmModal ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+            <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-6 transform transition-all scale-100">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Cancel Registration?</h3>
+                <p className="text-gray-600 mb-6">
+                    Are you sure you want to cancel your registration? This will free up your seat.
+                </p>
+                <div className="flex justify-end gap-3">
+                    <button
+                        onClick={() => setShowConfirmModal(false)}
+                        className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                        disabled={loading}
+                    >
+                        No, Keep it
+                    </button>
+                    <button
+                        onClick={confirmCancelRegistration}
+                        className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors flex items-center gap-2"
+                        disabled={loading}
+                    >
+                        {loading && <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />}
+                        Yes, Cancel Registration
+                    </button>
+                </div>
+            </div>
+        </div>
+    ) : null;
 
     if (isRegistered) {
         return (
@@ -167,6 +224,13 @@ export function EventRegistration({ eventId, isRegistered: initialStatus, isLogg
                 >
                     {loading ? "Cancelling..." : "Cancel Registration"}
                 </button>
+                {confirmModal}
+                <Toast
+                    message={toastState.message}
+                    type={toastState.type}
+                    isVisible={toastState.isVisible}
+                    onClose={hideToast}
+                />
             </div>
         );
     }
@@ -180,6 +244,13 @@ export function EventRegistration({ eventId, isRegistered: initialStatus, isLogg
             >
                 {loading ? "Processing..." : (price > 0 ? `Pay ₹${price} & Register` : "Register Now")}
             </button>
-        </div>
+            {confirmModal}
+            <Toast
+                message={toastState.message}
+                type={toastState.type}
+                isVisible={toastState.isVisible}
+                onClose={hideToast}
+            />
+        </div >
     );
 }
