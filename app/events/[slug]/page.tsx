@@ -4,7 +4,7 @@ import { getUser } from "@/lib/user-auth";
 import { EventRegistration } from "@/components/events/EventRegistration";
 import { Calendar, MapPin, Video, Clock } from "lucide-react";
 
-export default async function EventDetailPage({ params }: { params: { slug: string } }) {
+export default async function EventDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
 
   const event = await prisma.event.findUnique({
