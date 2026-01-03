@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { Calendar, Users, Globe, TrendingUp, Shield, Activity } from "lucide-react";
+import Link from "next/link";
 
 async function getStats() {
     const [totalEvents, totalRegistrations, upcomingEvents] = await Promise.all([
@@ -31,9 +32,9 @@ export default async function AdminDashboard() {
                     </p>
 
                     <div className="mt-8 flex gap-4">
-                        <button className="rounded-full bg-slate-900 px-6 py-3 text-sm font-semibold text-white transition-transform hover:scale-105">
+                        <Link href="/admin/events/create" className="rounded-full bg-slate-900 px-6 py-3 text-sm font-semibold text-white transition-transform hover:scale-105">
                             Create Event
-                        </button>
+                        </Link>
                         <button className="rounded-full border border-slate-900 px-6 py-3 text-sm font-semibold text-slate-900 transition-colors hover:bg-slate-50">
                             View Reports
                         </button>
