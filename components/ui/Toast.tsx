@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "motion/react";
 import { CheckCircle2, AlertCircle, Info, X } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -43,10 +44,18 @@ export function Toast({
         info: "bg-blue-50 border-blue-100",
     };
 
-    return (
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    if (!mounted) return null;
+
+    return createPortal(
         <AnimatePresence>
             {isVisible && (
-                <div className="fixed inset-x-0 top-8 z-[100] flex justify-center px-4 pointer-events-none">
+                <div className="fixed inset-x-0 top-8 z-[99999] flex justify-center px-4 pointer-events-none">
                     <motion.div
                         initial={{ opacity: 0, y: -20, scale: 0.9 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -70,5 +79,5 @@ export function Toast({
                 </div>
             )}
         </AnimatePresence>
-    );
+        , document.body);
 }
