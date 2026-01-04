@@ -11,12 +11,19 @@ interface UserDetails {
     phone: string;
 }
 
+interface Ticket {
+    id: string;
+    title: string;
+    description: string | null;
+    price: number;
+}
+
 interface EventRegistrationProps {
     eventId: string;
     isRegistered: boolean;
     isLoggedIn: boolean;
-    price: number;
     userDetails: UserDetails | null;
+    tickets?: Ticket[];
 }
 
 declare global {
@@ -25,11 +32,12 @@ declare global {
     }
 }
 
-export function EventRegistration({ eventId, isRegistered: initialStatus, isLoggedIn, price, userDetails }: EventRegistrationProps) {
+export function EventRegistration({ eventId, isRegistered: initialStatus, isLoggedIn, userDetails, tickets = [] }: EventRegistrationProps) {
     const [isRegistered, setIsRegistered] = useState(initialStatus);
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState("");
     const [showConfirmModal, setShowConfirmModal] = useState(false);
+    const [selectedTicketId, setSelectedTicketId] = useState<string | null>(null);
     const router = useRouter();
 
     const [toastState, setToastState] = useState<{
@@ -62,21 +70,46 @@ export function EventRegistration({ eventId, isRegistered: initialStatus, isLogg
         };
     }, []);
 
+    // Auto-select if only one ticket
+    useEffect(() => {
+        if (tickets.length === 1 && !selectedTicketId) {
+            setSelectedTicketId(tickets[0].id);
+        }
+    }, [tickets]);
+
     async function handleRegister() {
         if (!isLoggedIn) {
             router.push("/auth/login?redirect=/events");
             return;
         }
 
+        let currentPrice = 0;
+        let finalTicketId = selectedTicketId;
+
+        // If tickets exist, ensure one is selected
+        if (tickets.length > 0) {
+            if (!selectedTicketId) {
+                showToast("Please select a ticket type", "error");
+                return;
+            }
+            const selectedTicket = tickets.find(t => t.id === selectedTicketId);
+            if (selectedTicket) {
+                currentPrice = selectedTicket.price;
+            }
+        } else {
+            // No tickets - assume free event? (Verified by backend check isFree)
+            currentPrice = 0;
+        }
+
         setLoading(true);
 
         try {
-            // 1. If Free Event -> Direct Register
-            if (price === 0) {
-                const result = await registerForEvent(eventId);
+            // 1. If Free Event (Price 0) -> Direct Register
+            if (currentPrice === 0) {
+                const result = await registerForEvent(eventId, finalTicketId); // Pass ticketId
                 if (result.success) {
                     setIsRegistered(true);
-                    showToast("Thank you Registering for This event", "success");
+                    showToast("Thank you for Registering!", "success");
                     // router.push("/profile");
                 } else {
                     showToast(result.error || result.message || "An unknown error occurred", "error");
@@ -89,7 +122,7 @@ export function EventRegistration({ eventId, isRegistered: initialStatus, isLogg
             const orderRes = await fetch("/api/payments/create-order", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ eventId }),
+                body: JSON.stringify({ eventId, ticketId: finalTicketId, amount: currentPrice }), // Pass ticket details
             });
 
             const orderData = await orderRes.json();
@@ -120,7 +153,8 @@ export function EventRegistration({ eventId, isRegistered: initialStatus, isLogg
                         body: JSON.stringify({
                             razorpay_payment_id: response.razorpay_payment_id,
                             razorpay_order_id: response.razorpay_order_id,
-                            razorpay_signature: response.razorpay_signature
+                            razorpay_signature: response.razorpay_signature,
+                            ticketId: finalTicketId // Pass ticketId for verification record
                         })
                     });
 
@@ -143,17 +177,24 @@ export function EventRegistration({ eventId, isRegistered: initialStatus, isLogg
                 },
                 theme: {
                     color: "#059669" // Emerald 600
+                },
+                modal: {
+                    ondismiss: function () {
+                        setLoading(false);
+                    }
                 }
             };
 
             const paymentObject = new window.Razorpay(options);
             paymentObject.open();
 
-            // Handle modal close by user without payment?
             paymentObject.on('payment.failed', function (response: any) {
                 alert("Payment Failed: " + response.error.description);
                 setLoading(false);
             });
+
+            // Handle user closing/dismissing the payment modal (handled in options.modal.ondismiss)
+
 
 
         } catch (error: any) {
@@ -186,7 +227,7 @@ export function EventRegistration({ eventId, isRegistered: initialStatus, isLogg
             <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-6 transform transition-all scale-100">
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">Cancel Registration?</h3>
                 <p className="text-gray-600 mb-6">
-                    Are you sure you want to cancel your registration? This will free up your seat.
+                    Are you sure you want to cancel your registration?
                 </p>
                 <div className="flex justify-end gap-3">
                     <button
@@ -237,12 +278,45 @@ export function EventRegistration({ eventId, isRegistered: initialStatus, isLogg
 
     return (
         <div>
+            {/* Ticket Selection */}
+            {tickets.length > 0 && (
+                <div className="mb-6 space-y-3">
+                    <p className="text-sm font-medium text-slate-700">Select Ticket Type</p>
+                    <div className="grid gap-3">
+                        {tickets.map((ticket) => (
+                            <div
+                                key={ticket.id}
+                                onClick={() => setSelectedTicketId(ticket.id)}
+                                className={`cursor-pointer rounded-lg border p-3 transition-all ${selectedTicketId === ticket.id
+                                    ? "border-emerald-500 bg-emerald-50 ring-1 ring-emerald-500"
+                                    : "border-slate-200 hover:border-emerald-300"
+                                    }`}
+                            >
+                                <div className="flex justify-between items-center">
+                                    <div>
+                                        <p className="font-semibold text-slate-900">{ticket.title}</p>
+                                        {ticket.description && <p className="text-xs text-slate-500">{ticket.description}</p>}
+                                    </div>
+                                    <div className="font-bold text-emerald-700">
+                                        {ticket.price === 0 ? "Free" : `₹${ticket.price}`}
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+
             <button
                 onClick={handleRegister}
                 disabled={loading}
                 className="w-full rounded-lg bg-emerald-700 px-8 py-3 font-semibold text-white hover:bg-emerald-800 disabled:opacity-50 transition-colors shadow-lg hover:shadow-xl hover:-translate-y-0.5 duration-200"
             >
-                {loading ? "Processing..." : (price > 0 ? `Pay ₹${price} & Register` : "Register Now")}
+                {loading ? "Processing..." : (
+                    tickets.length > 0 && selectedTicketId
+                        ? `Pay ₹${tickets.find(t => t.id === selectedTicketId)?.price} & Register`
+                        : "Register Now" // simplified fallback
+                )}
             </button>
             {confirmModal}
             <Toast
