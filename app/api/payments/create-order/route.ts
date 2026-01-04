@@ -15,7 +15,7 @@ export async function POST(req: Request) {
       key_secret: process.env.RAZORPAY_KEY_SECRET,
     });
 
-    const { eventId } = await req.json();
+    const { eventId, ticketId } = await req.json();
 
     // 1. Auth Check
     const userPayload = await getUser();
@@ -26,13 +26,28 @@ export async function POST(req: Request) {
     const event = await prisma.event.findUnique({ where: { id: eventId } });
     if (!event) return NextResponse.json({ error: "Event not found" }, { status: 404 });
 
-    if (event.price === 0) {
-      return NextResponse.json({ error: "Event is free" }, { status: 400 });
-    }
+
 
     // 3. Create Razorpay Order
+    let price = 0;
+
+    if (ticketId) {
+      const ticket = await prisma.ticket.findUnique({ where: { id: ticketId } });
+      if (ticket) {
+        price = ticket.price;
+      }
+    } else if (!event.isFree) {
+        // If it's not free and no ticket selected, we cannot determine price.
+        // This should probably be an error, or we assume frontend ensures ticketId.
+         return NextResponse.json({ error: "Ticket selection required for paid events" }, { status: 400 });
+    }
+
     // Amount is in shortest currency unit (paise for INR). So price * 100.
-    const amount = Math.round(event.price * 100); 
+    const amount = Math.round(price * 100);
+
+    if (amount === 0) {
+       return NextResponse.json({ error: "Total amount is 0", status: 400 });
+    } 
     const options = {
       amount: amount,
       currency: "INR",
@@ -54,8 +69,9 @@ export async function POST(req: Request) {
       update: {
         paymentStatus: "PENDING",
         orderId: order.id,
-        amountPaid: event.price,
-        status: "ACTIVE" // Temporarily ACTIVE or PENDING? Schema says ACTIVE/CANCELLED. 
+        amountPaid: price,
+        status: "ACTIVE",
+        ticketId: ticketId || null 
         // Logic: Keep it active but paymentStatus pending? 
         // Or strictly add PENDING to RegistrationStatus?
         // Schema only has ACTIVE/CANCELLED. 
@@ -68,8 +84,9 @@ export async function POST(req: Request) {
         eventId,
         paymentStatus: "PENDING",
         orderId: order.id,
-        amountPaid: event.price,
-        status: "ACTIVE" 
+        amountPaid: price,
+        status: "ACTIVE",
+        ticketId: ticketId || null 
       }
     });
 
