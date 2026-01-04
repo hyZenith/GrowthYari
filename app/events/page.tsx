@@ -35,7 +35,7 @@ export default async function EventsPage() {
       meetingUrl: true,
       location: true,
       imageUrl: true,
-      price: true,
+      isFree: true,
       capacity: true,
       categories: true,
       _count: {
@@ -52,7 +52,7 @@ export default async function EventsPage() {
     startDate: ev.startDate ? new Date(ev.startDate).toISOString() : null,
     endDate: ev.endDate ? new Date(ev.endDate).toISOString() : null,
     capacity: ev.capacity,
-    price: ev.price,
+    isFree: ev.isFree,
     categories: ev.categories,
     registrationsCount: ev._count.registrations
   }));

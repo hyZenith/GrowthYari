@@ -10,6 +10,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
 
   const event = await prisma.event.findUnique({
     where: { slug },
+    include: { tickets: true },
   });
 
   if (!event) {
@@ -57,8 +58,17 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
         }
       }
     });
-    // Check if not cancelled
-    isRegistered = !!registration && registration.status === "ACTIVE";
+    // Check if not cancelled AND payment is complete (or event is free)
+    // For paid events, paymentStatus must be COMPLETED
+    // For free events, just checking status === ACTIVE is enough
+    if (registration && registration.status === "ACTIVE") {
+      if (event.isFree) {
+        isRegistered = true;
+      } else {
+        // Paid event - must have completed payment
+        isRegistered = registration.paymentStatus === "COMPLETED";
+      }
+    }
   }
 
   return (
@@ -88,7 +98,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
                 <div className="flex justify-between text-sm">
                   <span className="text-slate-500">Price</span>
                   <span className="font-medium text-slate-900">
-                    {event.price > 0 ? `₹${event.price}` : "Free"}
+                    {event.isFree ? "Free" : "Price varies by ticket"}
                   </span>
                 </div>
                 {event.capacity && (
@@ -104,8 +114,8 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
                   eventId={event.id}
                   isRegistered={isRegistered}
                   isLoggedIn={isLoggedIn}
-                  price={event.price}
                   userDetails={userDetails}
+                  tickets={event.tickets || []}
                 />
               </div>
             </div>
