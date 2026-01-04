@@ -67,7 +67,7 @@ export default function ImageUpload({ value, onChange, disabled }: ImageUploadPr
         <div className="w-full space-y-4">
             <div
                 {...getRootProps()}
-                className={`group relative flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed px-5 py-10 transition-colors ${isDragActive ? 'border-emerald-600 bg-emerald-50' : 'border-slate-300 hover:border-emerald-500 hover:bg-slate-50'
+                className={`group relative flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed transition-colors ${isDragActive ? 'border-emerald-600 bg-emerald-50' : 'border-slate-300 hover:border-emerald-500 hover:bg-slate-50'
                     } ${disabled || loading ? 'cursor-not-allowed opacity-60' : ''}`}
             >
                 <input {...getInputProps()} />
@@ -78,12 +78,11 @@ export default function ImageUpload({ value, onChange, disabled }: ImageUploadPr
                         <p className="text-sm text-slate-500">Uploading...</p>
                     </div>
                 ) : value ? (
-                    <div className="relative aspect-video w-full max-w-md overflow-hidden rounded-md border border-slate-200">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <div className="relative w-full overflow-hidden rounded-md border border-slate-200">
                         <img
                             src={value}
                             alt="Uploaded event image"
-                            className="h-full w-full object-cover"
+                            className="w-full h-full object-cover"
                         />
                         <button
                             onClick={removeImage}
