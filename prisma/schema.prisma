@@ -71,8 +71,10 @@ model Event {
   startDate   DateTime?
   endDate     DateTime?
   capacity    Int?  // null = unlimited capacity
-  price       Float    @default(0)
+  isFree      Boolean  @default(false)
   categories  String[]
+
+  tickets     Ticket[]
 
   registrations EventRegistration[]
   createdAt DateTime @default(now())
@@ -87,6 +89,9 @@ model EventRegistration {
   userId   String
   eventId  String
   status   RegistrationStatus @default(ACTIVE)
+
+  ticketId String?
+  ticket   Ticket? @relation(fields: [ticketId], references: [id])
 
   // Payment Details
   paymentId     String? // Razorpay Payment ID
@@ -111,4 +116,14 @@ model PasswordResetToken {
   createdAt DateTime @default(now())
 
   @@unique([email, token])
+}
+
+model Ticket {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  price       Float
+  eventId     String
+  event       Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  registrations EventRegistration[]
 }
