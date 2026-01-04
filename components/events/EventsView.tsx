@@ -29,7 +29,10 @@ export interface Event {
     mode: "ONLINE" | "OFFLINE";
     imageUrl?: string | null;
     capacity?: number | null;
-    price: number;
+    isFree: boolean;
+    price?: number; // Optional now, or removed. Let's make it optional for now to avoid breaking too much code if it still comes from somewhere? 
+    // Actually schema removed it. So we should remove it here.
+    // But we need to update usage below.
     registrationsCount: number;
     hostedBy?: string;
     categories: string[];
@@ -461,10 +464,10 @@ export function EventsView({ initialEvents }: EventsViewProps) {
                                                                 <div className="flex flex-col gap-1.5 sm:border-l sm:border-slate-100 sm:pl-6 flex-1">
                                                                     <span className="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Entry Fee</span>
                                                                     <div className="flex items-center gap-1">
-                                                                        <span className={`text-sm font-semibold ${event.price === 0 ? "text-emerald-600" : "text-slate-900"}`}>
-                                                                            {event.price === 0 ? "FREE" : `₹${event.price}`}
+                                                                        <span className={`text-sm font-semibold ${event.isFree ? "text-emerald-600" : "text-slate-900"}`}>
+                                                                            {event.isFree ? "FREE" : "Price Varies"}
                                                                         </span>
-                                                                        {event.price > 0 && <span className="text-[9px] font-bold text-slate-400">/ person</span>}
+                                                                        {!event.isFree && <span className="text-[9px] font-bold text-slate-400">/ person</span>}
                                                                     </div>
                                                                 </div>
 
