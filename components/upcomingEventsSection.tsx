@@ -13,7 +13,7 @@ interface UpcomingEvent {
     mode: "ONLINE" | "OFFLINE";
     location: string | null;
     imageUrl: string | null;
-    price: number;
+    isFree: boolean;
     hostedBy: string;
     categories: string[];
 }
@@ -48,7 +48,7 @@ export async function UpcomingEventsSection() {
             mode: true,
             location: true,
             imageUrl: true,
-            price: true,
+            isFree: true,
             hostedBy: true,
             categories: true,
         },
