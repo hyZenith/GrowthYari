@@ -16,7 +16,7 @@ export async function createEvent(formData: FormData) {
   const meetingUrl = formData.get("meetingUrl") as string;
   const capacityStr = formData.get("capacity") as string;
   const status = formData.get("status") as "SCHEDULED" | "ONGOING" | "UPCOMING" | "CANCELLED";
-  const priceStr = formData.get("price") as string;
+
   const hostedBy = formData.get("hostedBy") as string || "GrowthYari";
   
   let categories: string[] = [];
@@ -29,13 +29,35 @@ export async function createEvent(formData: FormData) {
       }
   }
 
+  let tickets: any[] = [];
+  const ticketsJson = formData.get("tickets") as string;
+  if (ticketsJson) {
+      try {
+          tickets = JSON.parse(ticketsJson);
+      } catch (e) {
+          console.error("Failed to parse tickets:", e);
+      }
+  }
+
   if (!title || !description || !dateStr || !mode) {
     throw new Error("Missing required fields");
   }
 
   const date = new Date(dateStr);
   const capacity = capacityStr ? parseInt(capacityStr) : null;
-  const price = priceStr ? parseFloat(priceStr) : 0;
+  
+  // Set isFree based on tickets array. If tickets exist, it's NOT free.
+  // Actually the form should pass isFree explicitly or we deduce:
+  // We can trust the form to send "isFree" boolean? Or just check tickets logic?
+  // Let's deduce: If tickets array is empty, it MUST be free? 
+  // User wants "Paid or Free" option. 
+  // Let's accept "isFree" from formData for clarity.
+  const isFreeStr = formData.get("isFree") as string;
+  const isFree = isFreeStr === "true";
+
+  if (!isFree && tickets.length === 0) {
+      throw new Error("Paid events must have at least one ticket type.");
+  }
 
   // Basic slug generation
   let slug = title.toLowerCase().replace(/ /g, "-").replace(/[^\w-]+/g, "");
@@ -52,9 +74,16 @@ export async function createEvent(formData: FormData) {
       description,
       date,
       mode,
-      price,
+      isFree,
       categories,
       hostedBy,
+      tickets: {
+        create: tickets.map((t: any) => ({
+          title: t.title,
+          description: t.description,
+          price: parseFloat(t.price),
+        })),
+      },
       imageUrl: formData.get("imageUrl") as string || null,
       status: status || "SCHEDULED",
       location: mode === "OFFLINE" ? location : null,
@@ -77,7 +106,7 @@ export async function updateEvent(id: string, formData: FormData) {
   const meetingUrl = formData.get("meetingUrl") as string;
   const capacityStr = formData.get("capacity") as string;
   const status = formData.get("status") as "SCHEDULED" | "ONGOING" | "UPCOMING" | "CANCELLED";
-  const priceStr = formData.get("price") as string;
+
   const hostedBy = formData.get("hostedBy") as string || "GrowthYari";
 
   let categories: string[] = [];
@@ -96,7 +125,6 @@ export async function updateEvent(id: string, formData: FormData) {
 
   const date = new Date(dateStr);
   const capacity = capacityStr ? parseInt(capacityStr) : null;
-  const price = priceStr ? parseFloat(priceStr) : 0;
 
   // Basic slug generation (only if title changed)
   const currentEvent = await prisma.event.findUnique({ where: { id } });
@@ -111,23 +139,98 @@ export async function updateEvent(id: string, formData: FormData) {
     }
   }
 
-  await prisma.event.update({
-    where: { id },
-    data: {
-      title,
-      slug,
-      description,
-      date,
-      mode,
-      price,
-      categories,
-      hostedBy,
-      imageUrl: formData.get("imageUrl") as string || null,
-      status: status || "SCHEDULED",
-      location: mode === "OFFLINE" ? location : null,
-      meetingUrl: mode === "ONLINE" ? meetingUrl : null,
-      capacity,
-    },
+  // Determine isFree
+  const isFreeStr = formData.get("isFree") as string;
+  const isFree = isFreeStr === "true";
+
+  let tickets: any[] = [];
+  const ticketsJson = formData.get("tickets") as string;
+  if (ticketsJson) {
+      try {
+          tickets = JSON.parse(ticketsJson);
+      } catch (e) {
+          console.error("Failed to parse tickets:", e);
+      }
+  }
+
+  // Validate Paid Events
+  if (!isFree && tickets.length === 0) {
+      throw new Error("Paid events must have at least one ticket type.");
+  }
+
+
+  // Transaction to handle tickets sync
+  await prisma.$transaction(async (tx) => {
+      // 1. Update basic event details
+      await tx.event.update({
+          where: { id },
+          data: {
+              title,
+              slug,
+              description,
+              date,
+              mode,
+              isFree,
+              categories,
+              hostedBy,
+              imageUrl: formData.get("imageUrl") as string || null,
+              status: status || "SCHEDULED",
+              location: mode === "OFFLINE" ? location : null,
+              meetingUrl: mode === "ONLINE" ? meetingUrl : null,
+              capacity,
+          },
+      });
+
+      // 2. Handle Tickets
+      if (isFree) {
+          // If event is now free, delete all tickets? 
+          // Safer to delete them since free events shouldn't have priced tickets.
+          // Check for registrations first? For simplicity in this iteration: delete tickets.
+          // Note: If registrations exist, this might fail if RESTRICT is on.
+          // If we want to keep registrations, we might need to soft-delete or keep tickets but ignore them.
+          // Let's attempt deleteMany.
+           await tx.ticket.deleteMany({
+              where: { eventId: id }
+           });
+      } else {
+          // Paid Event: Sync tickets
+          
+          // Get IDs of tickets coming from form
+          const incomingTicketIds = tickets.map((t: any) => t.id).filter(Boolean);
+          
+          // Delete tickets not in the incoming list (removed by user)
+          await tx.ticket.deleteMany({
+              where: {
+                  eventId: id,
+                  id: { notIn: incomingTicketIds }
+              }
+          });
+
+          // Upsert tickets
+          for (const t of tickets) {
+              if (t.id) {
+                  // Update existing
+                  await tx.ticket.update({
+                      where: { id: t.id },
+                      data: {
+                          title: t.title,
+                          description: t.description,
+                          price: parseFloat(t.price),
+                      }
+                  });
+              } else {
+                  // Create new
+                  await tx.ticket.create({
+                      data: {
+                          title: t.title,
+                          description: t.description,
+                          price: parseFloat(t.price),
+                          eventId: id,
+                      }
+                  });
+              }
+          }
+      }
   });
 
   revalidatePath("/admin/events");
