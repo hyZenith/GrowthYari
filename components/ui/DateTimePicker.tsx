@@ -96,7 +96,19 @@ export function DateTimePicker({ name, required, defaultValue, className }: Date
                 </span>
             </button>
 
-            <input type="hidden" name={name} value={isoValue} required={required} />
+            <input
+                type="text"
+                name={name}
+                value={isoValue}
+                required={required}
+                className="sr-only"
+                tabIndex={-1}
+                onChange={() => { }}
+                onInvalid={(e) => {
+                    e.preventDefault();
+                    setIsOpen(true);
+                }}
+            />
 
             <AnimatePresence>
                 {isOpen && (
