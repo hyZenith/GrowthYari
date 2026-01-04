@@ -149,8 +149,8 @@ export const TicketDesign = React.forwardRef<HTMLDivElement, TicketDesignProps>(
 
                                 <div style={{ flex: '1', borderLeft: '1.5px solid #f1f5f9', paddingLeft: '32px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                                     <span style={{ fontSize: '12px', textTransform: 'uppercase', fontWeight: 'bold', color: '#94a3b8', letterSpacing: '0.08em' }}>Entry Fee</span>
-                                    <div style={{ fontSize: '17px', fontWeight: 'bold', color: event.price === 0 ? '#059669' : '#0f172a' }}>
-                                        {event.price === 0 ? "FREE" : `₹${event.price}`}
+                                    <div style={{ fontSize: '17px', fontWeight: 'bold', color: event.isFree ? '#059669' : '#0f172a' }}>
+                                        {event.isFree ? "FREE" : "Paid"}
                                     </div>
                                 </div>
 
