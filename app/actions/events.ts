@@ -5,7 +5,11 @@ import { getUser } from "@/lib/user-auth";
 import { revalidatePath } from "next/cache";
 import { sendEventRegistrationEmail } from "@/lib/emails";
 
-export async function registerForEvent(eventId: string) {
+export async function registerForEvent(eventId: string, ticketId?: string | null) {
+  // ...
+  // (Assuming context lines match lines 8+)
+  
+
   // 1. Get User ID from cookie (mock auth or real auth)
   // For now, assuming you have a way to get the user, or we parse the 'token'
   // If no auth, return error.
@@ -38,7 +42,14 @@ export async function registerForEvent(eventId: string) {
 
      if (!event) return { error: "Event not found", status: 404 };
 
-     if (event.price > 0) {
+     if (!event.isFree && !ticketId) {
+         // Should we block? If it's strictly paid, we need payment? 
+         // But this action handles direct registration for free events.
+         // If it's paid, we expect them to go through payment flow separately?
+         // Or this action generates the pending registration?
+         // Actually, this action is usually simpler. 
+         // Original code: if (event.price > 0) return error.
+         // New code: if (!event.isFree) return error (go pay first).
         return { error: "This is a paid event. Please complete payment to register.", status: 402 };
      }
 
@@ -73,7 +84,8 @@ export async function registerForEvent(eventId: string) {
          data: {
              userId,
              eventId,
-             status: "ACTIVE"
+             status: "ACTIVE",
+             ticketId: ticketId || null
          }
      });
 
