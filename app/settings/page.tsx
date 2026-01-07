@@ -4,15 +4,29 @@ import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { User } from "lucide-react";
 import { Toast, ToastType } from "@/components/ui/Toast";
+import { motion } from "framer-motion";
 
 interface UserData {
     name: string;
+    username?: string | null;
     email: string;
     phone: string | null;
     googleId?: string | null;
     linkedinId?: string | null;
     image?: string | null;
+    bio?: string | null;
+    location?: string | null;
+    headline?: string | null;
+    linkedinUrl?: string | null;
+    websiteUrl?: string | null;
+    twitterUrl?: string | null;
+    networkingAvailable: boolean;
+    industry?: string | null;
+    experienceLevel?: string | null;
+    interests: string[];
+    skills: string[];
 }
+import { MatchingProfile } from "@/components/settings/MatchingProfile";
 
 import { Suspense } from "react";
 
@@ -25,8 +39,22 @@ function SettingsContent() {
 
     // Form state
     const [name, setName] = useState("");
+    const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
+    const [headline, setHeadline] = useState("");
+    const [location, setLocation] = useState("");
+    const [bio, setBio] = useState("");
+    const [linkedinUrl, setLinkedinUrl] = useState("");
+    const [websiteUrl, setWebsiteUrl] = useState("");
+    const [twitterUrl, setTwitterUrl] = useState("");
+
+    // Networking Profile State
+    const [networkingAvailable, setNetworkingAvailable] = useState(false);
+    const [industry, setIndustry] = useState("");
+    const [experienceLevel, setExperienceLevel] = useState("");
+    const [interests, setInterests] = useState<string[]>([]);
+    const [skills, setSkills] = useState<string[]>([]);
 
     // Toast state
     const [toast, setToast] = useState<{ message: string; type: ToastType; visible: boolean }>({
@@ -68,8 +96,33 @@ function SettingsContent() {
                 const u = data.user;
                 setUser(u);
                 setName(u.name || "");
+
+                // Auto-generate username from name if not set
+                let defaultUsername = u.username;
+                if (!defaultUsername && u.name) {
+                    defaultUsername = u.name.toLowerCase()
+                        .trim()
+                        .replace(/\s+/g, '-')     // Replace spaces with -
+                        .replace(/[^\w-]+/g, '')  // Remove all non-word chars
+                        .replace(/--+/g, '-');    // Replace multiple - with single -
+                }
+                setUsername(defaultUsername || "");
+
                 setEmail(u.email || "");
                 setPhone(u.phone || "");
+                setHeadline(u.headline || "");
+                setLocation(u.location || "");
+                setBio(u.bio || "");
+                setLinkedinUrl(u.linkedinUrl || "");
+                setWebsiteUrl(u.websiteUrl || "");
+                setTwitterUrl(u.twitterUrl || "");
+
+                // Networking
+                setNetworkingAvailable(u.networkingAvailable || false);
+                setIndustry(u.industry || "");
+                setExperienceLevel(u.experienceLevel || "");
+                setInterests(u.interests || []);
+                setSkills(u.skills || []);
             } catch (error) {
                 console.error("Failed to fetch user", error);
                 router.push("/auth/login");
@@ -87,13 +140,33 @@ function SettingsContent() {
             const res = await fetch("/api/user/update", {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ name, phone }),
+                body: JSON.stringify({
+                    name,
+                    username,
+                    phone,
+                    headline,
+                    location,
+                    bio,
+                    linkedinUrl,
+                    websiteUrl,
+                    twitterUrl,
+                    networkingAvailable,
+                    industry,
+                    experienceLevel,
+                    interests,
+                    skills
+                }),
             });
 
             if (res.ok) {
                 const data = await res.json();
                 setUser(data.user);
-                showToast("Profile updated successfully!", "success");
+                showToast("Profile updated successfully! Redirecting...", "success");
+
+                // Redirect to profile page after a brief delay
+                setTimeout(() => {
+                    router.push("/profile");
+                }, 1500);
             } else {
                 showToast("Failed to update profile", "error");
             }
@@ -119,17 +192,27 @@ function SettingsContent() {
         <div className="min-h-screen bg-slate-50 font-sans text-slate-900">
             <main className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
                 {/* Header */}
-                <div className="mb-8">
+                <motion.div
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="mb-8"
+                >
                     <h1 className="text-3xl font-bold tracking-tight text-slate-900">
                         Account Settings
                     </h1>
                     <p className="mt-2 text-sm text-slate-600">
                         Manage your personal information and account preferences.
                     </p>
-                </div>
+                </motion.div>
 
                 {/* Settings Card */}
-                <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.1 }}
+                    className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm"
+                >
                     <form onSubmit={handleSaveChanges} className="space-y-8">
                         {/* Profile Section */}
                         <div>
@@ -177,6 +260,34 @@ function SettingsContent() {
                                     />
                                 </div>
 
+
+
+                                {/* Username */}
+                                <div>
+                                    <label
+                                        htmlFor="username"
+                                        className="block text-sm font-medium text-slate-700"
+                                    >
+                                        Username
+                                    </label>
+                                    <div className="mt-2 flex rounded-lg shadow-sm">
+                                        <span className="inline-flex items-center rounded-l-lg border border-r-0 border-slate-300 bg-slate-50 px-3 text-slate-500 sm:text-sm">
+                                            growthyari.com/u/
+                                        </span>
+                                        <input
+                                            id="username"
+                                            type="text"
+                                            value={username}
+                                            onChange={(e) => setUsername(e.target.value)}
+                                            className="block w-full min-w-0 flex-1 rounded-none rounded-r-lg border border-slate-300 px-3 py-2.5 text-slate-900 placeholder-slate-400 focus:border-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-600/20 sm:text-sm"
+                                            placeholder="username"
+                                        />
+                                    </div>
+                                    <p className="mt-1.5 text-xs text-slate-500">
+                                        Only letters, numbers, underscores, and dashes.
+                                    </p>
+                                </div>
+
                                 {/* Email */}
                                 <div>
                                     <label
@@ -214,8 +325,128 @@ function SettingsContent() {
                                         placeholder="Enter your phone number"
                                     />
                                 </div>
+
+                                {/* Headline */}
+                                <div>
+                                    <label
+                                        htmlFor="headline"
+                                        className="block text-sm font-medium text-slate-700"
+                                    >
+                                        Headline
+                                    </label>
+                                    <input
+                                        id="headline"
+                                        type="text"
+                                        value={headline}
+                                        onChange={(e) => setHeadline(e.target.value)}
+                                        className="mt-2 w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 placeholder-slate-400 shadow-sm transition-colors focus:border-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-600/20"
+                                        placeholder="Founder & CEO at YourCompany"
+                                    />
+                                </div>
+
+                                {/* Location */}
+                                <div>
+                                    <label
+                                        htmlFor="location"
+                                        className="block text-sm font-medium text-slate-700"
+                                    >
+                                        Location
+                                    </label>
+                                    <input
+                                        id="location"
+                                        type="text"
+                                        value={location}
+                                        onChange={(e) => setLocation(e.target.value)}
+                                        className="mt-2 w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 placeholder-slate-400 shadow-sm transition-colors focus:border-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-600/20"
+                                        placeholder="Mumbai, India"
+                                    />
+                                </div>
+
+                                {/* Bio */}
+                                <div>
+                                    <label
+                                        htmlFor="bio"
+                                        className="block text-sm font-medium text-slate-700"
+                                    >
+                                        Bio
+                                    </label>
+                                    <textarea
+                                        id="bio"
+                                        rows={4}
+                                        value={bio}
+                                        onChange={(e) => setBio(e.target.value)}
+                                        className="mt-2 w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-slate-900 placeholder-slate-400 shadow-sm transition-colors focus:border-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-600/20 resize-none"
+                                        placeholder="Tell others about yourself..."
+                                    />
+                                </div>
+
+                                {/* Social Links */}
+                                <div className="space-y-4 pt-4 border-t border-slate-100">
+                                    <h3 className="text-sm font-medium text-slate-900">Social Links</h3>
+
+                                    <div>
+                                        <label htmlFor="linkedin" className="block text-xs font-medium text-slate-500 mb-1">LinkedIn URL</label>
+                                        <input
+                                            id="linkedin"
+                                            type="url"
+                                            value={linkedinUrl}
+                                            onChange={(e) => setLinkedinUrl(e.target.value)}
+                                            className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm text-slate-900 placeholder-slate-400 shadow-sm focus:border-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-600/20"
+                                            placeholder="https://linkedin.com/in/yourprofile"
+                                        />
+                                    </div>
+
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label htmlFor="twitter" className="block text-xs font-medium text-slate-500 mb-1">Twitter URL</label>
+                                            <input
+                                                id="twitter"
+                                                type="url"
+                                                value={twitterUrl}
+                                                onChange={(e) => setTwitterUrl(e.target.value)}
+                                                className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm text-slate-900 placeholder-slate-400 shadow-sm focus:border-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-600/20"
+                                                placeholder="https://twitter.com/username"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label htmlFor="website" className="block text-xs font-medium text-slate-500 mb-1">Website URL</label>
+                                            <input
+                                                id="website"
+                                                type="url"
+                                                value={websiteUrl}
+                                                onChange={(e) => setWebsiteUrl(e.target.value)}
+                                                className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm text-slate-900 placeholder-slate-400 shadow-sm focus:border-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-600/20"
+                                                placeholder="https://yourwebsite.com"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+
+                        {/* Matching Profile Section */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, delay: 0.2 }}
+                            className="mt-8 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm"
+                        >
+                            <h2 className="text-lg font-semibold text-slate-900 mb-6 flex items-center gap-2">
+                                Matching Profile
+                            </h2>
+                            <MatchingProfile
+                                networkingAvailable={networkingAvailable}
+                                setNetworkingAvailable={setNetworkingAvailable}
+                                industry={industry}
+                                setIndustry={setIndustry}
+                                experienceLevel={experienceLevel}
+                                setExperienceLevel={setExperienceLevel}
+                                interests={interests}
+                                setInterests={setInterests}
+                                skills={skills}
+                                setSkills={setSkills}
+                            />
+                        </motion.div>
 
                         {/* Divider */}
                         <div className="border-t border-slate-200" />
@@ -319,7 +550,7 @@ function SettingsContent() {
                             </button>
                         </div>
                     </form>
-                </div>
+                </motion.div>
 
                 {/* Account Information */}
                 <div className="mt-6 rounded-xl border border-slate-200 bg-white px-6 py-4">
@@ -335,7 +566,7 @@ function SettingsContent() {
                         </div>
                     </div>
                 </div>
-            </main>
+            </main >
 
             <Toast
                 isVisible={toast.visible}
@@ -343,7 +574,7 @@ function SettingsContent() {
                 type={toast.type}
                 onClose={hideToast}
             />
-        </div>
+        </div >
     );
 }
 
