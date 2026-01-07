@@ -401,24 +401,33 @@ export function EventsView({ initialEvents }: EventsViewProps) {
 
                                                             {/* Badges */}
                                                             <div className="flex flex-wrap gap-2 justify-end">
-                                                                {/* Category Badges */}
+                                                                {/* Category Badges (Desktop: Show 2, Mobile: Hide) */}
                                                                 {event.categories && event.categories.slice(0, 2).map(cat => (
-                                                                    <span key={cat} className="inline-flex items-center rounded-full bg-violet-50 px-2.5 py-1 text-xs font-medium text-violet-700 ring-1 ring-inset ring-violet-700/10">
+                                                                    <span key={cat} className="hidden sm:inline-flex items-center rounded-full bg-violet-50 px-2.5 py-1 text-xs font-medium text-violet-700 ring-1 ring-inset ring-violet-700/10">
                                                                         {cat}
                                                                     </span>
                                                                 ))}
-                                                                {/* +N More Badge with Tooltip */}
-                                                                {event.categories && event.categories.length > 2 && (
-                                                                    <span className="relative group/tooltip inline-flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600 ring-1 ring-inset ring-slate-500/10 cursor-default">
-                                                                        +{event.categories.length - 2}
-                                                                        {/* Tooltip */}
-                                                                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover/tooltip:block z-50">
-                                                                            <div className="bg-slate-900 text-white text-xs rounded-lg px-3 py-2 whitespace-nowrap shadow-lg">
-                                                                                {event.categories.slice(2).join(', ')}
-                                                                            </div>
-                                                                            <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-900"></div>
-                                                                        </div>
-                                                                    </span>
+
+                                                                {/* +N More Badge (Desktop: Count > 2, Mobile: Count All) */}
+                                                                {event.categories && event.categories.length > 0 && (
+                                                                    <>
+                                                                        {/* Desktop Overflow */}
+                                                                        {event.categories.length > 2 && (
+                                                                            <span className="hidden sm:inline-flex relative group/tooltip items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600 ring-1 ring-inset ring-slate-500/10 cursor-default">
+                                                                                +{event.categories.length - 2}
+                                                                                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover/tooltip:block z-50">
+                                                                                    <div className="bg-slate-900 text-white text-xs rounded-lg px-3 py-2 whitespace-nowrap shadow-lg">
+                                                                                        {event.categories.slice(2).join(', ')}
+                                                                                    </div>
+                                                                                    <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-900"></div>
+                                                                                </div>
+                                                                            </span>
+                                                                        )}
+                                                                        {/* Mobile Summary (+N) */}
+                                                                        <span className="inline-flex sm:hidden items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600 ring-1 ring-inset ring-slate-500/10">
+                                                                            +{event.categories.length}
+                                                                        </span>
+                                                                    </>
                                                                 )}
 
                                                                 <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${event.status === "ONGOING"
@@ -450,9 +459,9 @@ export function EventsView({ initialEvents }: EventsViewProps) {
 
                                                         {/* Footer: Metadata & Registration Info */}
                                                         <div className="mt-2 border-t border-slate-100 pt-5">
-                                                            <div className="flex flex-row items-center justify-between gap-x-2">
+                                                            <div className="grid grid-cols-2 gap-y-4 gap-x-2 sm:flex sm:flex-row sm:items-center sm:justify-between">
                                                                 {/* Location */}
-                                                                <div className="flex flex-col gap-1.5 flex-[1.6] min-w-0">
+                                                                <div className="col-span-2 sm:col-span-1 flex flex-col gap-1.5 flex-[1.6] min-w-0">
                                                                     <span className="text-[10px] uppercase font-semibold text-slate-400 tracking-wider">Location</span>
                                                                     <div className="flex items-center gap-2 grayscale brightness-75 group-hover:grayscale-0 group-hover:brightness-100 transition-all overflow-hidden">
                                                                         {event.mode === "ONLINE" ? <Video className="h-4 w-4 text-emerald-600 shrink-0" /> : <MapPin className="h-4 w-4 text-emerald-600 shrink-0" />}
@@ -461,7 +470,7 @@ export function EventsView({ initialEvents }: EventsViewProps) {
                                                                 </div>
 
                                                                 {/* Entry Fee */}
-                                                                <div className="flex flex-col gap-1.5 sm:border-l sm:border-slate-100 sm:pl-6 flex-1">
+                                                                <div className="col-span-1 flex flex-col gap-1.5 sm:border-l sm:border-slate-100 sm:pl-6 flex-1">
                                                                     <span className="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Entry Fee</span>
                                                                     <div className="flex items-center gap-1">
                                                                         <span className={`text-sm font-semibold ${event.isFree ? "text-emerald-600" : "text-slate-900"}`}>
@@ -472,7 +481,7 @@ export function EventsView({ initialEvents }: EventsViewProps) {
                                                                 </div>
 
                                                                 {/* Total Seats */}
-                                                                <div className="flex flex-col gap-1.5 sm:border-l sm:border-slate-100 sm:pl-6 flex-1 min-w-[125px]">
+                                                                <div className="col-span-1 flex flex-col gap-1.5 sm:border-l sm:border-slate-100 sm:pl-6 flex-1 min-w-[125px]">
                                                                     <span className="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Total Seats</span>
                                                                     <div className="flex items-center gap-3">
                                                                         <div className="flex flex-col">
