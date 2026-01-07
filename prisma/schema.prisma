@@ -41,6 +41,7 @@ model User {
   name     String
   email    String   @unique
   phone    String?
+  username String?    @unique
   password String?    // Optional for OAuth users
   role      Role     @default(USER)
   
@@ -49,7 +50,19 @@ model User {
   linkedinId String?    @unique  // LinkedIn user ID
   image      String?    // Profile picture URL
   bio        String?    // User bio/description
+  location   String?
+  headline   String?
+  linkedinUrl String?
+  websiteUrl String?
+  twitterUrl String?
   
+  // Networking Profile
+  networkingAvailable Boolean @default(false) // Toggle for availability
+  industry            String?    // e.g. Technology, Finance
+  experienceLevel     String?    // e.g. Senior (6-10 years)
+  interests           String[]   // e.g. ["AI", "Startups"] - Postgres Array
+  skills              String[]   // e.g. ["React", "Sales"] - Postgres Array
+
   registrations EventRegistration[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
