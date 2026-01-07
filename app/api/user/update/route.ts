@@ -7,7 +7,8 @@ import { auth } from "@/lib/auth";
 
 export async function PUT(req: Request) {
   try {
-    const { name, phone } = await req.json();
+    const body = await req.json();
+    const { name, username, phone, bio, location, headline, linkedinUrl, websiteUrl, twitterUrl, networkingAvailable, industry, experienceLevel, interests, skills } = body;
 
     // 1. Get User ID from custom JWT or NextAuth
     const cookieStore = await cookies();
@@ -38,11 +39,62 @@ export async function PUT(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    // Validate Username if provided
+    if (username) {
+      if (username.length < 3) {
+        return NextResponse.json({ error: "Username must be at least 3 characters long" }, { status: 400 });
+      }
+      const usernameRegex = /^[a-zA-Z0-9_-]+$/;
+      if (!usernameRegex.test(username)) {
+        return NextResponse.json({ error: "Username can only contain letters, numbers, underscores, and dashes." }, { status: 400 });
+      }
+
+      // Check uniqueness
+      const existingUser = await prisma.user.findUnique({
+        where: { username }
+      });
+      if (existingUser && existingUser.id !== userId) {
+        return NextResponse.json({ error: "Username is already taken." }, { status: 400 });
+      }
+    }
+
     // 2. Update User
     const updatedUser = await prisma.user.update({
       where: { id: userId },
-      data: { name, phone },
-      select: { id: true, name: true, email: true, phone: true },
+      data: {
+        name,
+        username,
+        phone,
+        bio,
+        location,
+        headline,
+        linkedinUrl,
+        websiteUrl,
+        twitterUrl,
+        networkingAvailable,
+        industry,
+        experienceLevel,
+        interests,
+        skills
+      },
+      select: {
+        id: true,
+        name: true,
+        username: true,
+        email: true,
+        phone: true,
+        bio: true,
+        location: true,
+        headline: true,
+        linkedinUrl: true,
+        websiteUrl: true,
+        twitterUrl: true,
+        networkingAvailable: true,
+        industry: true,
+        experienceLevel: true,
+        interests: true,
+        skills: true
+      },
     });
 
     return NextResponse.json({ success: true, user: updatedUser });
