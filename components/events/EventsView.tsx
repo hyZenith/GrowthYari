@@ -440,16 +440,16 @@ export function EventsView({ initialEvents }: EventsViewProps) {
                                                         </div>
 
                                                         {/* Title & Desc */}
-                                                        <div>
+                                                        <div className="min-w-0">
                                                             <h3 className="font-serif text-2xl font-bold text-slate-900 group-hover:text-emerald-800 transition-colors mb-2">
                                                                 {event.title}
                                                             </h3>
-                                                            <p className="text-slate-600 text-sm line-clamp-2 max-w-xl">
+                                                            <p className="text-slate-600 text-sm line-clamp-2 max-w-xl overflow-hidden">
                                                                 {event.description}
                                                             </p>
 
                                                             {/* Hosted By Badge */}
-                                                            <div className="mt-6 flex items-center">
+                                                            <div className="mt-4 flex items-center">
                                                                 <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-100/80 px-3 py-1 text-xs font-medium text-slate-600 ring-1 ring-inset ring-slate-500/10">
                                                                     <span className="text-slate-400">by</span>
                                                                     <span className="font-semibold text-slate-900">{event.hostedBy || "GrowthYari"}</span>
@@ -461,11 +461,11 @@ export function EventsView({ initialEvents }: EventsViewProps) {
                                                         <div className="mt-2 border-t border-slate-100 pt-5">
                                                             <div className="grid grid-cols-2 gap-y-4 gap-x-2 sm:flex sm:flex-row sm:items-center sm:justify-between">
                                                                 {/* Location */}
-                                                                <div className="col-span-2 sm:col-span-1 flex flex-col gap-1.5 flex-[1.6] min-w-0">
+                                                                <div className="col-span-2 sm:col-span-1 flex flex-col gap-1.5 flex-[1.6] min-w-0 max-w-[200px]">
                                                                     <span className="text-[10px] uppercase font-semibold text-slate-400 tracking-wider">Location</span>
-                                                                    <div className="flex items-center gap-2 grayscale brightness-75 group-hover:grayscale-0 group-hover:brightness-100 transition-all overflow-hidden">
+                                                                    <div className="flex items-center gap-2 grayscale brightness-75 group-hover:grayscale-0 group-hover:brightness-100 transition-all min-w-0">
                                                                         {event.mode === "ONLINE" ? <Video className="h-4 w-4 text-emerald-600 shrink-0" /> : <MapPin className="h-4 w-4 text-emerald-600 shrink-0" />}
-                                                                        <span className="font-bold text-slate-800 text-sm truncate">{event.mode === "ONLINE" ? "Online Stream" : event.location || "TBA"}</span>
+                                                                        <span className="font-bold text-slate-800 text-sm truncate max-w-[160px]">{event.mode === "ONLINE" ? "Online Stream" : event.location || "TBA"}</span>
                                                                     </div>
                                                                 </div>
 
