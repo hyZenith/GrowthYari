@@ -8,9 +8,13 @@ import { auth } from "@/lib/auth";
 export async function GET() {
   try {
     const cookieStore = await cookies();
-    const token = cookieStore.get("user_token")?.value
+    const userToken = cookieStore.get("user_token")?.value;
+    const adminToken = cookieStore.get("admin_token")?.value;
+    
+    // Use whichever token is available (admin_token takes precedence)
+    const token = adminToken || userToken;
 
-    // 1. Check Custom JWT (Email/Password login)
+    // 1. Check Custom JWT (Email/Password login or Admin login)
     if (token) {
       try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { userId: string };
