@@ -151,6 +151,11 @@ export const TicketDesign = React.forwardRef<HTMLDivElement, TicketDesignProps>(
                                     <span style={{ fontSize: '12px', textTransform: 'uppercase', fontWeight: 'bold', color: '#94a3b8', letterSpacing: '0.08em' }}>Entry Fee</span>
                                     <div style={{ fontSize: '17px', fontWeight: 'bold', color: event.isFree ? '#059669' : '#0f172a' }}>
                                         {event.isFree ? "FREE" : "Paid"}
+                                        {!event.isFree && event.includeGst && (
+                                            <span style={{ display: 'block', fontSize: '10px', fontWeight: '500', color: '#64748b' }}>
+                                                (Inc. 18% GST)
+                                            </span>
+                                        )}
                                     </div>
                                 </div>
 

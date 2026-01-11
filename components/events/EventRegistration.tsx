@@ -24,6 +24,7 @@ interface EventRegistrationProps {
     isLoggedIn: boolean;
     userDetails: UserDetails | null;
     tickets?: Ticket[];
+    includeGst?: boolean;
 }
 
 declare global {
@@ -32,7 +33,7 @@ declare global {
     }
 }
 
-export function EventRegistration({ eventId, isRegistered: initialStatus, isLoggedIn, userDetails, tickets = [] }: EventRegistrationProps) {
+export function EventRegistration({ eventId, isRegistered: initialStatus, isLoggedIn, userDetails, tickets = [], includeGst = false }: EventRegistrationProps) {
     const [isRegistered, setIsRegistered] = useState(initialStatus);
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState("");
@@ -95,6 +96,20 @@ export function EventRegistration({ eventId, isRegistered: initialStatus, isLogg
             const selectedTicket = tickets.find(t => t.id === selectedTicketId);
             if (selectedTicket) {
                 currentPrice = selectedTicket.price;
+                if (includeGst) {
+                    currentPrice = Math.round((currentPrice * 1.18) * 100) / 100; // Client-side estimate for display/check. Backend works on base price.
+                    // Wait, create-order expects amount? No, backend recalculates based on ID. 
+                    // So we just need to send ticketId. 
+                    // But for the confirmation or UI, we should show the total.
+                    // Actually, let's keep currentPrice as Base here for logic, or use a separate variable?
+                    // The backend ignores our amount. So we don't need to change logic here EXCEPT for display?
+                    // Wait, previously I calculated `currentPrice` for `amount` body.
+                    // `body: JSON.stringify({ ... amount: currentPrice })`.
+                    // Does backend uses it?
+                    // Backend: `const { eventId, ticketId } = await req.json();` ... `price = ticket.price`.
+                    // Backend ignores `amount` from body. So we are safe.
+                    // BUT, I should update the UI to show the user the REAL amount they will pay.
+                }
             }
         } else {
             // No tickets - assume free event? (Verified by backend check isFree)
@@ -297,8 +312,13 @@ export function EventRegistration({ eventId, isRegistered: initialStatus, isLogg
                                         <p className="font-semibold text-slate-900">{ticket.title}</p>
                                         {ticket.description && <p className="text-xs text-slate-500">{ticket.description}</p>}
                                     </div>
-                                    <div className="font-bold text-emerald-700">
+                                    <div className="font-bold text-emerald-700 text-right">
                                         {ticket.price === 0 ? "Free" : `₹${ticket.price}`}
+                                        {ticket.price > 0 && includeGst && (
+                                            <div className="text-[10px] text-slate-500 font-normal">
+                                                + 18% GST = ₹{Math.round(ticket.price * 1.18)}
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             </div>
@@ -314,7 +334,12 @@ export function EventRegistration({ eventId, isRegistered: initialStatus, isLogg
             >
                 {loading ? "Processing..." : (
                     tickets.length > 0 && selectedTicketId
-                        ? `Pay ₹${tickets.find(t => t.id === selectedTicketId)?.price} & Register`
+                        ? (() => {
+                            const t = tickets.find(t => t.id === selectedTicketId);
+                            if (!t) return "Register Now";
+                            const total = includeGst ? Math.round(t.price * 1.18) : t.price;
+                            return `Pay ₹${total} & Register`;
+                        })()
                         : "Register Now" // simplified fallback
                 )}
             </button>
