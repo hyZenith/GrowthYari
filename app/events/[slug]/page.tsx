@@ -99,6 +99,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
                   <span className="text-slate-500">Price</span>
                   <span className="font-medium text-slate-900">
                     {event.isFree ? "Free" : "Price varies by ticket"}
+                    {!event.isFree && event.includeGst && <span className="text-xs text-slate-500 ml-1">(+ 18% GST)</span>}
                   </span>
                 </div>
                 {event.capacity && (
@@ -116,6 +117,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
                   isLoggedIn={isLoggedIn}
                   userDetails={userDetails}
                   tickets={event.tickets || []}
+                  includeGst={event.includeGst}
                 />
               </div>
             </div>

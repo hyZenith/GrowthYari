@@ -59,6 +59,9 @@ export async function createEvent(formData: FormData) {
       throw new Error("Paid events must have at least one ticket type.");
   }
 
+  const includeGstStr = formData.get("includeGst") as string;
+  const includeGst = includeGstStr === "true";
+
   // Basic slug generation
   let slug = title.toLowerCase().replace(/ /g, "-").replace(/[^\w-]+/g, "");
   // Ensure uniqueness
@@ -75,6 +78,7 @@ export async function createEvent(formData: FormData) {
       date,
       mode,
       isFree,
+      includeGst,
       categories,
       hostedBy,
       tickets: {
@@ -143,6 +147,9 @@ export async function updateEvent(id: string, formData: FormData) {
   const isFreeStr = formData.get("isFree") as string;
   const isFree = isFreeStr === "true";
 
+  const includeGstStr = formData.get("includeGst") as string;
+  const includeGst = includeGstStr === "true";
+
   let tickets: any[] = [];
   const ticketsJson = formData.get("tickets") as string;
   if (ticketsJson) {
@@ -171,6 +178,7 @@ export async function updateEvent(id: string, formData: FormData) {
               date,
               mode,
               isFree,
+              includeGst,
               categories,
               hostedBy,
               imageUrl: formData.get("imageUrl") as string || null,

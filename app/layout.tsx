@@ -1,17 +1,17 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter, Roboto_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/header";
 import { AuthProvider } from "@/components/providers/AuthProvider";
 
-const geistSans = Geist({
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-geist-sans",
+  variable: "--font-inter",
 });
 
-const geistMono = Geist_Mono({
+const robotoMono = Roboto_Mono({
   subsets: ["latin"],
-  variable: "--font-geist-mono",
+  variable: "--font-roboto-mono",
 });
 
 const SITE_URL = "https://www.growthyari.com";
@@ -40,6 +40,12 @@ export const metadata: Metadata = {
 
   alternates: {
     canonical: SITE_URL,
+  },
+
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/images/logo.png",
   },
 
   openGraph: {
@@ -102,7 +108,7 @@ export default function RootLayout({
         />
       </head>
 
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body className={`${inter.className} ${robotoMono.variable} antialiased`}>
         <AuthProvider>
           <Header />
           {children}

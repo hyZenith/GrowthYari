@@ -26,6 +26,7 @@ export async function POST(req: Request) {
         endDate: new Date(body.endDate),
 
         capacity: body.capacity ?? null,
+        includeGst: body.includeGst ?? false,
       },
     })
 

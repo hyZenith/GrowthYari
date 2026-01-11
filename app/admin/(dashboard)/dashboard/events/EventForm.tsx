@@ -15,6 +15,9 @@ export function EventForm({ initialData }: { initialData?: any }) {
   const [location, setLocation] = useState(
     initialData?.location ?? ""
   )
+  const [includeGst, setIncludeGst] = useState(
+    initialData?.includeGst ?? false
+  )
 
   const router = useRouter()
 
@@ -30,6 +33,7 @@ export function EventForm({ initialData }: { initialData?: any }) {
         mode,
         meetingUrl,
         location,
+        includeGst,
       }),
     })
 
@@ -77,6 +81,17 @@ export function EventForm({ initialData }: { initialData?: any }) {
           required
         />
       )}
+
+      <div style={{ marginTop: "10px", marginBottom: "20px" }}>
+        <label style={{ display: "flex", alignItems: "center", gap: "10px", cursor: "pointer" }}>
+          <input
+            type="checkbox"
+            checked={includeGst}
+            onChange={(e) => setIncludeGst(e.target.checked)}
+          />
+          <span style={{ fontSize: "14px" }}>Include 18% GST in Ticket Price</span>
+        </label>
+      </div>
 
       <button type="submit">
         {initialData ? "Update Event" : "Create Event"}

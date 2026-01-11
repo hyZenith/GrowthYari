@@ -42,6 +42,11 @@ export async function POST(req: Request) {
          return NextResponse.json({ error: "Ticket selection required for paid events" }, { status: 400 });
     }
 
+    if (event.includeGst) {
+        const gstAmount = price * 0.18;
+        price = price + gstAmount;
+    }
+
     // Amount is in shortest currency unit (paise for INR). So price * 100.
     const amount = Math.round(price * 100);
 

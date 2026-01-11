@@ -37,6 +37,7 @@ export default function EditEventForm({ event }: { event: any }) {
     // Only set as Free if explicitly true. If false or undefined, it relies on tickets logic, but we want explicit boolean now.
     // If legacy event has no isFree field (it's false by default), check tickets.
     const [isFree, setIsFree] = useState(event.isFree ?? false);
+    const [includeGst, setIncludeGst] = useState(event.includeGst ?? false);
 
     // Parse tickets if they exist, or empty array
     const [tickets, setTickets] = useState<{ id?: string; title: string; description: string; price: string }[]>(
@@ -138,32 +139,48 @@ export default function EditEventForm({ event }: { event: any }) {
                 <label className="text-sm font-medium text-slate-900 block">
                     Event Type
                 </label>
-                <div className="flex items-center gap-6">
-                    <label className="flex items-center gap-2 cursor-pointer">
-                        <input
-                            type="radio"
-                            name="isFree"
-                            value="true"
-                            checked={isFree}
-                            onChange={() => {
-                                setIsFree(true);
-                                setTickets([]);
-                            }}
-                            className="h-4 w-4 text-emerald-600 focus:ring-emerald-600 border-gray-300"
-                        />
-                        <span className="text-sm text-slate-700">Free Event</span>
-                    </label>
-                    <label className="flex items-center gap-2 cursor-pointer">
-                        <input
-                            type="radio"
-                            name="isFree"
-                            value="false"
-                            checked={!isFree}
-                            onChange={() => setIsFree(false)}
-                            className="h-4 w-4 text-emerald-600 focus:ring-emerald-600 border-gray-300"
-                        />
-                        <span className="text-sm text-slate-700">Paid Event</span>
-                    </label>
+                <div className="flex flex-col gap-4">
+                    <div className="flex items-center gap-6">
+                        <label className="flex items-center gap-2 cursor-pointer">
+                            <input
+                                type="radio"
+                                name="isFree"
+                                value="true"
+                                checked={isFree}
+                                onChange={() => {
+                                    setIsFree(true);
+                                    setTickets([]);
+                                }}
+                                className="h-4 w-4 text-emerald-600 focus:ring-emerald-600 border-gray-300"
+                            />
+                            <span className="text-sm text-slate-700">Free Event</span>
+                        </label>
+                        <label className="flex items-center gap-2 cursor-pointer">
+                            <input
+                                type="radio"
+                                name="isFree"
+                                value="false"
+                                checked={!isFree}
+                                onChange={() => setIsFree(false)}
+                                className="h-4 w-4 text-emerald-600 focus:ring-emerald-600 border-gray-300"
+                            />
+                            <span className="text-sm text-slate-700">Paid Event</span>
+                        </label>
+                    </div>
+
+                    {!isFree && (
+                        <label className="flex items-center gap-2 cursor-pointer">
+                            <input
+                                type="checkbox"
+                                name="includeGst"
+                                value="true"
+                                checked={includeGst}
+                                onChange={(e) => setIncludeGst(e.target.checked)}
+                                className="h-4 w-4 text-emerald-600 focus:ring-emerald-600 border-gray-300 rounded"
+                            />
+                            <span className="text-sm text-slate-700">Include 18% GST in Ticket Price</span>
+                        </label>
+                    )}
                 </div>
             </div>
 
