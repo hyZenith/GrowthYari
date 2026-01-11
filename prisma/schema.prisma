@@ -85,6 +85,7 @@ model Event {
   endDate     DateTime?
   capacity    Int?  // null = unlimited capacity
   isFree      Boolean  @default(false)
+  includeGst  Boolean  @default(false)
   categories  String[]
 
   tickets     Ticket[]
