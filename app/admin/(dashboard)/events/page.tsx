@@ -5,7 +5,16 @@ import { DeleteEventButton } from "@/components/admin/DeleteEventButton";
 
 
 export default async function EventsPage() {
+    const now = new Date();
+
+    // Only show events that haven't ended yet (not past events)
     const events = await prisma.event.findMany({
+        where: {
+            OR: [
+                { endDate: { gte: now } },
+                { endDate: null, date: { gte: now } },
+            ],
+        },
         orderBy: { date: "desc" },
         include: {
             _count: {

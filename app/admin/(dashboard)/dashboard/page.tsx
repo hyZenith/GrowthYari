@@ -3,16 +3,27 @@ import { Calendar, Users, Globe, TrendingUp, Shield, Activity } from "lucide-rea
 import Link from "next/link";
 
 async function getStats() {
-    const [totalEvents, totalRegistrations, upcomingEvents] = await Promise.all([
+    const now = new Date();
+
+    const [totalEvents, totalRegistrations, upcomingEvents, pastEvents] = await Promise.all([
         prisma.event.count(),
         prisma.eventRegistration.count(),
         prisma.event.count({ where: { status: "UPCOMING" } }),
+        prisma.event.count({
+            where: {
+                OR: [
+                    { endDate: { lt: now } },
+                    { endDate: null, date: { lt: now } },
+                ],
+            },
+        }),
     ]);
 
     return {
         totalEvents,
         totalRegistrations,
         upcomingEvents,
+        pastEvents,
     };
 }
 
@@ -153,6 +164,18 @@ export default async function AdminDashboard() {
                                 </div>
                             </div>
                             <span className="text-2xl font-light text-slate-900">{stats.totalRegistrations}</span>
+                        </div>
+                        <div className="flex items-center justify-between border-b border-slate-50 pb-6 last:border-0 last:pb-0">
+                            <div className="flex items-center gap-4">
+                                <div className="h-10 w-10 rounded-full bg-[#FEF3C7] flex items-center justify-center text-amber-700">
+                                    <Calendar className="h-5 w-5" />
+                                </div>
+                                <div>
+                                    <h4 className="font-medium text-slate-900">Past Events</h4>
+                                    <p className="text-sm text-slate-500">Completed events</p>
+                                </div>
+                            </div>
+                            <span className="text-2xl font-light text-slate-900">{stats.pastEvents}</span>
                         </div>
                         <div className="flex items-center justify-between border-b border-slate-50 pb-6 last:border-0 last:pb-0">
                             <div className="flex items-center gap-4">
