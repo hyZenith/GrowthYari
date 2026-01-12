@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LayoutDashboard, Calendar, LogOut } from "lucide-react";
+import { LayoutDashboard, Calendar, LogOut, History } from "lucide-react";
 import Image from "next/image";
 
 export function AdminSidebar() {
@@ -26,6 +26,7 @@ export function AdminSidebar() {
     const navigation = [
         { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
         { name: "Events", href: "/admin/events", icon: Calendar },
+        { name: "Past Events", href: "/admin/past-events", icon: History },
     ];
 
     return (
