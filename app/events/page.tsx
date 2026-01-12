@@ -6,11 +6,24 @@ import { EventsView, Event } from "@/components/events/EventsView";
 export const dynamic = "force-dynamic";
 
 export default async function EventsPage() {
+  const now = new Date();
+
   const eventsData = await prisma.event.findMany({
     where: {
-      status: {
-        in: ["UPCOMING", "ONGOING"],
-      },
+      AND: [
+        {
+          status: {
+            in: ["UPCOMING", "ONGOING", "SCHEDULED"],
+          },
+        },
+        {
+          // Only show events that haven't ended yet
+          OR: [
+            { endDate: { gte: now } },
+            { endDate: null, date: { gte: now } },
+          ],
+        },
+      ],
     },
     orderBy: {
       startDate: "asc",
