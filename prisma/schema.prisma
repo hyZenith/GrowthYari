@@ -28,6 +28,7 @@ enum EventStatus {
   ONGOING
   UPCOMING
   CANCELLED
+  COMPLETED
 }
 
 enum RegistrationStatus {
