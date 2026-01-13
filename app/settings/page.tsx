@@ -190,18 +190,18 @@ function SettingsContent() {
 
     return (
         <div className="min-h-screen bg-slate-50 font-sans text-slate-900">
-            <main className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
+            <main className="mx-auto max-w-3xl px-3 py-6 sm:px-4 md:px-6 md:py-12 lg:px-8">
                 {/* Header */}
                 <motion.div
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
-                    className="mb-8"
+                    className="mb-6 md:mb-8"
                 >
-                    <h1 className="text-3xl font-bold tracking-tight text-slate-900">
+                    <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900">
                         Account Settings
                     </h1>
-                    <p className="mt-2 text-sm text-slate-600">
+                    <p className="mt-1 md:mt-2 text-xs md:text-sm text-slate-600">
                         Manage your personal information and account preferences.
                     </p>
                 </motion.div>
@@ -211,7 +211,7 @@ function SettingsContent() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.1 }}
-                    className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm"
+                    className="rounded-xl md:rounded-2xl border border-slate-200 bg-white p-5 md:p-8 shadow-sm"
                 >
                     <form onSubmit={handleSaveChanges} className="space-y-8">
                         {/* Profile Section */}
@@ -271,15 +271,16 @@ function SettingsContent() {
                                         Username
                                     </label>
                                     <div className="mt-2 flex rounded-lg shadow-sm">
-                                        <span className="inline-flex items-center rounded-l-lg border border-r-0 border-slate-300 bg-slate-50 px-3 text-slate-500 sm:text-sm">
-                                            growthyari.com/u/
+                                        <span className="inline-flex items-center rounded-l-lg border border-r-0 border-slate-300 bg-slate-50 px-2 sm:px-3 text-xs sm:text-sm text-slate-500 truncate">
+                                            <span className="hidden xs:inline">growthyari.com/u/</span>
+                                            <span className="xs:hidden">...u/</span>
                                         </span>
                                         <input
                                             id="username"
                                             type="text"
                                             value={username}
                                             onChange={(e) => setUsername(e.target.value)}
-                                            className="block w-full min-w-0 flex-1 rounded-none rounded-r-lg border border-slate-300 px-3 py-2.5 text-slate-900 placeholder-slate-400 focus:border-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-600/20 sm:text-sm"
+                                            className="block w-full min-w-0 flex-1 rounded-none rounded-r-lg border border-slate-300 px-2 sm:px-3 py-2.5 text-slate-900 placeholder-slate-400 focus:border-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-600/20 text-sm"
                                             placeholder="username"
                                         />
                                     </div>
@@ -396,7 +397,7 @@ function SettingsContent() {
                                         />
                                     </div>
 
-                                    <div className="grid grid-cols-2 gap-4">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         <div>
                                             <label htmlFor="twitter" className="block text-xs font-medium text-slate-500 mb-1">Twitter URL</label>
                                             <input
@@ -404,7 +405,7 @@ function SettingsContent() {
                                                 type="url"
                                                 value={twitterUrl}
                                                 onChange={(e) => setTwitterUrl(e.target.value)}
-                                                className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm text-slate-900 placeholder-slate-400 shadow-sm focus:border-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-600/20"
+                                                className="w-full rounded-lg border border-slate-300 bg-white px-3 md:px-4 py-2 text-sm text-slate-900 placeholder-slate-400 shadow-sm focus:border-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-600/20"
                                                 placeholder="https://twitter.com/username"
                                             />
                                         </div>
@@ -415,7 +416,7 @@ function SettingsContent() {
                                                 type="url"
                                                 value={websiteUrl}
                                                 onChange={(e) => setWebsiteUrl(e.target.value)}
-                                                className="w-full rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm text-slate-900 placeholder-slate-400 shadow-sm focus:border-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-600/20"
+                                                className="w-full rounded-lg border border-slate-300 bg-white px-3 md:px-4 py-2 text-sm text-slate-900 placeholder-slate-400 shadow-sm focus:border-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-600/20"
                                                 placeholder="https://yourwebsite.com"
                                             />
                                         </div>
@@ -429,7 +430,7 @@ function SettingsContent() {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.5, delay: 0.2 }}
-                            className="mt-8 rounded-2xl border border-slate-200 bg-white p-8 shadow-sm"
+                            className="mt-6 md:mt-8 rounded-xl md:rounded-2xl border border-slate-200 bg-white p-5 md:p-8 shadow-sm"
                         >
                             <h2 className="text-lg font-semibold text-slate-900 mb-6 flex items-center gap-2">
                                 Matching Profile
@@ -532,18 +533,18 @@ function SettingsContent() {
                         <div className="border-t border-slate-200" />
 
                         {/* Actions */}
-                        <div className="flex items-center justify-end gap-3">
+                        <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-3">
                             <button
                                 type="button"
                                 onClick={() => router.push("/profile")}
-                                className="rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition-colors hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-500"
+                                className="rounded-lg border border-slate-300 bg-white px-4 md:px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition-colors hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-500"
                             >
                                 Cancel
                             </button>
                             <button
                                 type="submit"
                                 disabled={saving}
-                                className="inline-flex items-center gap-2 rounded-lg bg-emerald-700 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-emerald-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600 disabled:cursor-not-allowed disabled:opacity-50"
+                                className="inline-flex items-center justify-center gap-2 rounded-lg bg-emerald-700 px-4 md:px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-emerald-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600 disabled:cursor-not-allowed disabled:opacity-50"
                             >
                                 <User className="h-4 w-4" />
                                 {saving ? "Saving..." : "Save Changes"}
