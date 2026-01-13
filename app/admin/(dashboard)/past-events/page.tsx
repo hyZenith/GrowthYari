@@ -34,32 +34,32 @@ export default async function PastEventsPage() {
     });
 
     return (
-        <div className="space-y-8">
+        <div className="space-y-6 md:space-y-8">
             {/* Header */}
             <div>
-                <h1 className="text-2xl font-bold text-slate-900">Past Events</h1>
-                <p className="text-slate-500">View completed events and their registration history.</p>
+                <h1 className="text-xl md:text-2xl font-bold text-slate-900">Past Events</h1>
+                <p className="text-sm md:text-base text-slate-500">View completed events and their registration history.</p>
             </div>
 
             {pastEvents.length === 0 ? (
-                <div className="rounded-lg border border-slate-200 bg-white p-12 text-center">
-                    <Calendar className="mx-auto h-12 w-12 text-slate-300" />
-                    <h3 className="mt-4 text-lg font-medium text-slate-900">No past events</h3>
-                    <p className="mt-2 text-sm text-slate-500">Events will appear here once their date has passed.</p>
+                <div className="rounded-lg border border-slate-200 bg-white p-8 md:p-12 text-center">
+                    <Calendar className="mx-auto h-10 w-10 md:h-12 md:w-12 text-slate-300" />
+                    <h3 className="mt-3 md:mt-4 text-base md:text-lg font-medium text-slate-900">No past events</h3>
+                    <p className="mt-1 md:mt-2 text-xs md:text-sm text-slate-500">Events will appear here once their date has passed.</p>
                 </div>
             ) : (
-                <div className="space-y-6">
+                <div className="space-y-4 md:space-y-6">
                     {pastEvents.map((event) => {
                         const activeRegistrations = event.registrations.filter(r => r.status === "ACTIVE");
                         const cancelledRegistrations = event.registrations.filter(r => r.status === "CANCELLED");
 
                         return (
-                            <div key={event.id} className="rounded-xl border border-slate-200 bg-white overflow-hidden shadow-sm">
+                            <div key={event.id} className="rounded-lg md:rounded-xl border border-slate-200 bg-white overflow-hidden shadow-sm">
                                 {/* Event Header with Image */}
                                 <div className="flex flex-col md:flex-row">
                                     {/* Event Image */}
                                     {event.imageUrl ? (
-                                        <div className="relative h-48 w-full md:h-auto md:w-64 flex-shrink-0 overflow-hidden">
+                                        <div className="relative h-40 w-full md:h-auto md:w-48 lg:w-64 flex-shrink-0 overflow-hidden">
                                             {/* eslint-disable-next-line @next/next/no-img-element */}
                                             <img
                                                 src={event.imageUrl}
@@ -68,17 +68,17 @@ export default async function PastEventsPage() {
                                             />
                                         </div>
                                     ) : (
-                                        <div className="flex h-48 w-full md:h-auto md:w-64 flex-shrink-0 items-center justify-center bg-slate-100">
-                                            <ImageIcon className="h-12 w-12 text-slate-300" />
+                                        <div className="flex h-40 w-full md:h-auto md:w-48 lg:w-64 flex-shrink-0 items-center justify-center bg-slate-100">
+                                            <ImageIcon className="h-10 w-10 md:h-12 md:w-12 text-slate-300" />
                                         </div>
                                     )}
 
                                     {/* Event Details */}
-                                    <div className="flex-1 p-6">
-                                        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+                                    <div className="flex-1 p-4 md:p-6">
+                                        <div className="flex flex-col gap-3 md:gap-4">
                                             <div className="flex-1">
-                                                <div className="flex items-center gap-2 mb-2">
-                                                    <span className="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-700">
+                                                <div className="flex flex-wrap items-center gap-2 mb-2">
+                                                    <span className="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-700">
                                                         PAST
                                                     </span>
                                                     <span className="flex items-center gap-1 text-xs text-slate-500">
@@ -86,23 +86,32 @@ export default async function PastEventsPage() {
                                                         {event.mode}
                                                     </span>
                                                 </div>
-                                                <h2 className="text-xl font-semibold text-slate-900">{event.title}</h2>
-                                                <p className="mt-2 text-sm text-slate-600 line-clamp-2">{event.description}</p>
+                                                <h2 className="text-lg md:text-xl font-semibold text-slate-900">{event.title}</h2>
+                                                <p className="mt-1 md:mt-2 text-xs md:text-sm text-slate-600 line-clamp-2">{event.description}</p>
 
-                                                <div className="mt-4 flex flex-wrap gap-4 text-sm text-slate-500">
+                                                <div className="mt-3 md:mt-4 flex flex-wrap gap-3 md:gap-4 text-xs md:text-sm text-slate-500">
                                                     <span className="flex items-center gap-1">
-                                                        <Calendar className="h-4 w-4" />
-                                                        {new Date(event.date).toLocaleDateString('en-US', {
-                                                            weekday: 'short',
-                                                            year: 'numeric',
-                                                            month: 'short',
-                                                            day: 'numeric',
-                                                        })}
+                                                        <Calendar className="h-3.5 w-3.5 md:h-4 md:w-4" />
+                                                        <span className="hidden sm:inline">
+                                                            {new Date(event.date).toLocaleDateString('en-US', {
+                                                                weekday: 'short',
+                                                                year: 'numeric',
+                                                                month: 'short',
+                                                                day: 'numeric',
+                                                            })}
+                                                        </span>
+                                                        <span className="sm:hidden">
+                                                            {new Date(event.date).toLocaleDateString('en-US', {
+                                                                month: 'short',
+                                                                day: 'numeric',
+                                                                year: 'numeric',
+                                                            })}
+                                                        </span>
                                                     </span>
                                                     {event.location && (
                                                         <span className="flex items-center gap-1">
-                                                            <MapPin className="h-4 w-4" />
-                                                            {event.location}
+                                                            <MapPin className="h-3.5 w-3.5 md:h-4 md:w-4" />
+                                                            <span className="truncate max-w-[200px]">{event.location}</span>
                                                         </span>
                                                     )}
                                                 </div>
@@ -110,9 +119,9 @@ export default async function PastEventsPage() {
 
                                             <Link
                                                 href={`/admin/events/${event.id}`}
-                                                className="inline-flex items-center gap-2 rounded-lg bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200 transition-colors"
+                                                className="inline-flex items-center justify-center gap-2 rounded-lg bg-slate-100 px-3 md:px-4 py-2 text-xs md:text-sm font-medium text-slate-700 hover:bg-slate-200 transition-colors"
                                             >
-                                                <Eye className="h-4 w-4" />
+                                                <Eye className="h-3.5 w-3.5 md:h-4 md:w-4" />
                                                 View Details
                                             </Link>
                                         </div>
@@ -120,36 +129,36 @@ export default async function PastEventsPage() {
                                 </div>
 
                                 {/* Stats Bar */}
-                                <div className="border-t border-slate-100 bg-slate-50 px-6 py-4">
-                                    <div className="flex flex-wrap gap-6">
+                                <div className="border-t border-slate-100 bg-slate-50 px-4 py-3 md:px-6 md:py-4">
+                                    <div className="flex flex-wrap gap-3 md:gap-6 text-xs md:text-sm">
                                         {/* Tickets */}
-                                        <div className="flex items-center gap-2">
-                                            <Ticket className="h-4 w-4 text-slate-400" />
-                                            <span className="text-sm text-slate-600">
+                                        <div className="flex items-center gap-1.5 md:gap-2">
+                                            <Ticket className="h-3.5 w-3.5 md:h-4 md:w-4 text-slate-400" />
+                                            <span className="text-slate-600">
                                                 <strong>{event.tickets.length}</strong> Ticket{event.tickets.length !== 1 ? 's' : ''}
                                                 {event.isFree && <span className="ml-1 text-emerald-600">(Free)</span>}
                                             </span>
                                         </div>
 
                                         {/* Active Registrations */}
-                                        <div className="flex items-center gap-2">
-                                            <Users className="h-4 w-4 text-emerald-500" />
-                                            <span className="text-sm text-slate-600">
+                                        <div className="flex items-center gap-1.5 md:gap-2">
+                                            <Users className="h-3.5 w-3.5 md:h-4 md:w-4 text-emerald-500" />
+                                            <span className="text-slate-600">
                                                 <strong className="text-emerald-600">{activeRegistrations.length}</strong> Active
                                             </span>
                                         </div>
 
                                         {/* Cancelled Registrations */}
-                                        <div className="flex items-center gap-2">
-                                            <UserX className="h-4 w-4 text-red-400" />
-                                            <span className="text-sm text-slate-600">
+                                        <div className="flex items-center gap-1.5 md:gap-2">
+                                            <UserX className="h-3.5 w-3.5 md:h-4 md:w-4 text-red-400" />
+                                            <span className="text-slate-600">
                                                 <strong className="text-red-500">{cancelledRegistrations.length}</strong> Cancelled
                                             </span>
                                         </div>
 
                                         {/* Capacity */}
                                         {event.capacity && (
-                                            <div className="text-sm text-slate-500">
+                                            <div className="text-slate-500">
                                                 Capacity: {activeRegistrations.length}/{event.capacity}
                                             </div>
                                         )}

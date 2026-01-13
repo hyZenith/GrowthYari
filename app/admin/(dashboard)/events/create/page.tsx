@@ -53,13 +53,13 @@ export default function CreateEventPage() {
 
     return (
         <div className="max-w-2xl mx-auto">
-            <div className="mb-8">
-                <h1 className="text-2xl font-bold text-slate-900">Add New Event</h1>
-                <p className="text-slate-500">Create a new event for GrowthYari.</p>
+            <div className="mb-6 md:mb-8">
+                <h1 className="text-xl md:text-2xl font-bold text-slate-900">Add New Event</h1>
+                <p className="text-sm md:text-base text-slate-500">Create a new event for GrowthYari.</p>
             </div>
 
-            <form action={createEvent} className="space-y-6 bg-white p-8 rounded-lg border border-slate-200 shadow-sm">
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <form action={createEvent} className="space-y-5 md:space-y-6 bg-white p-5 md:p-8 rounded-lg border border-slate-200 shadow-sm">
+                <div className="grid grid-cols-1 gap-5 md:gap-6 sm:grid-cols-2">
                     <div className="space-y-2">
                         <label htmlFor="title" className="text-sm font-medium text-slate-900">
                             Event Title
@@ -168,8 +168,8 @@ export default function CreateEventPage() {
                             transition={{ duration: 0.3, ease: "easeInOut" }}
                             className="overflow-hidden"
                         >
-                            <div className="mt-6 rounded-xl border border-emerald-100 bg-gradient-to-br from-emerald-50/50 to-white p-6 shadow-sm">
-                                <div className="flex items-center justify-between mb-5">
+                            <div className="mt-5 md:mt-6 rounded-xl border border-emerald-100 bg-gradient-to-br from-emerald-50/50 to-white p-5 md:p-6 shadow-sm">
+                                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4 md:mb-5">
                                     <div className="flex items-center gap-2">
                                         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-100">
                                             <Ticket className="h-4 w-4 text-emerald-600" />
@@ -182,7 +182,7 @@ export default function CreateEventPage() {
                                     <button
                                         type="button"
                                         onClick={addTicket}
-                                        className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm hover:bg-emerald-700 transition-all hover:scale-105 active:scale-95"
+                                        className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm hover:bg-emerald-700 transition-all hover:scale-105 active:scale-95"
                                     >
                                         <Plus className="h-3.5 w-3.5" />
                                         Add Ticket
