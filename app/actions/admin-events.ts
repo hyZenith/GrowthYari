@@ -109,7 +109,7 @@ export async function updateEvent(id: string, formData: FormData) {
   const location = formData.get("location") as string;
   const meetingUrl = formData.get("meetingUrl") as string;
   const capacityStr = formData.get("capacity") as string;
-  const status = formData.get("status") as "SCHEDULED" | "ONGOING" | "UPCOMING" | "CANCELLED";
+  const status = formData.get("status") as "SCHEDULED" | "ONGOING" | "UPCOMING" | "COMPLETED" | "CANCELLED";
 
   const hostedBy = formData.get("hostedBy") as string || "GrowthYari";
 
