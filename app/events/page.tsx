@@ -14,6 +14,7 @@ export default async function EventsPage() {
         {
           status: {
             in: ["UPCOMING", "ONGOING", "SCHEDULED"],
+            notIn: ["COMPLETED", "CANCELLED"],
           },
         },
         {

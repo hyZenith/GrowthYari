@@ -441,11 +441,11 @@ export function EventsView({ initialEvents }: EventsViewProps) {
 
                                                         {/* Title & Desc */}
                                                         <div className="min-w-0">
-                                                            <h3 className="font-serif text-2xl font-bold text-slate-900 group-hover:text-emerald-800 transition-colors mb-2">
+                                                            <h3 className="font-serif text-2xl font-bold text-slate-900 group-hover:text-emerald-800 transition-colors mb-2 line-clamp-1">
                                                                 {event.title}
                                                             </h3>
-                                                            <p className="text-slate-600 text-sm line-clamp-2 max-w-xl overflow-hidden">
-                                                                {event.description}
+                                                            <p className="text-slate-600 text-sm line-clamp-2 max-w-xl overflow-hidden" title={event.description}>
+                                                                {event.description && event.description.length > 120 ? event.description.slice(0, 120) + "..." : event.description}
                                                             </p>
 
                                                             {/* Hosted By Badge */}
@@ -465,7 +465,9 @@ export function EventsView({ initialEvents }: EventsViewProps) {
                                                                     <span className="text-[10px] uppercase font-semibold text-slate-400 tracking-wider">Location</span>
                                                                     <div className="flex items-center gap-2 grayscale brightness-75 group-hover:grayscale-0 group-hover:brightness-100 transition-all min-w-0">
                                                                         {event.mode === "ONLINE" ? <Video className="h-4 w-4 text-emerald-600 shrink-0" /> : <MapPin className="h-4 w-4 text-emerald-600 shrink-0" />}
-                                                                        <span className="font-bold text-slate-800 text-sm truncate max-w-[160px]">{event.mode === "ONLINE" ? "Online Stream" : event.location || "TBA"}</span>
+                                                                        <span className="font-bold text-slate-800 text-sm truncate" title={event.mode === "ONLINE" ? "Online Stream" : event.location || "TBA"}>
+                                                                            {event.mode === "ONLINE" ? "Online Stream" : (event.location && event.location.length > 40 ? event.location.slice(0, 40) + "..." : event.location || "TBA")}
+                                                                        </span>
                                                                     </div>
                                                                 </div>
 

@@ -29,10 +29,26 @@ function formatEventDate(date: Date) {
 }
 
 export async function UpcomingEventsSection() {
-    // Fetch up to 3 upcoming events
+    const now = new Date();
+
+    // Fetch up to 3 upcoming events (excluding past events)
     const events = await prisma.event.findMany({
         where: {
-            status: "UPCOMING",
+            AND: [
+                {
+                    status: {
+                        in: ["UPCOMING", "ONGOING", "SCHEDULED"],
+                        notIn: ["COMPLETED", "CANCELLED"],
+                    },
+                },
+                {
+                    // Only show events that haven't ended yet
+                    OR: [
+                        { endDate: { gte: now } },
+                        { endDate: null, date: { gte: now } },
+                    ],
+                },
+            ],
         },
         orderBy: {
             startDate: "asc",
@@ -143,7 +159,9 @@ export async function UpcomingEventsSection() {
                                                             ) : (
                                                                 <>
                                                                     <MapPin className="h-4 w-4 text-emerald-500" />
-                                                                    <span className="truncate">{event.location || "Location TBA"}</span>
+                                                                    <span className="truncate" title={event.location || "Location TBA"}>
+                                                                        {event.location && event.location.length > 40 ? event.location.slice(0, 40) + "..." : event.location || "Location TBA"}
+                                                                    </span>
                                                                 </>
                                                             )}
                                                         </div>
