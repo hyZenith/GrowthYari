@@ -345,6 +345,7 @@ export default function EditEventForm({ event }: { event: any }) {
                         <option value="SCHEDULED">Scheduled</option>
                         <option value="UPCOMING">Upcoming</option>
                         <option value="ONGOING">Ongoing</option>
+                        <option value="COMPLETED">Completed</option>
                         <option value="CANCELLED">Cancelled</option>
                     </select>
                 </div>
