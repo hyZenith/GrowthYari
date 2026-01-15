@@ -2,8 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { registerForEvent, cancelRegistration } from "@/app/actions/events";
+import { updatePhoneNumber } from "@/app/actions/profile";
 import { useRouter } from "next/navigation";
 import { Toast, ToastType } from "../ui/Toast";
+import { Phone } from "lucide-react";
 
 interface UserDetails {
     name: string;
@@ -40,6 +42,13 @@ export function EventRegistration({ eventId, isRegistered: initialStatus, isLogg
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [selectedTicketId, setSelectedTicketId] = useState<string | null>(null);
     const router = useRouter();
+
+    // Phone number state
+    const [currentPhone, setCurrentPhone] = useState(userDetails?.phone || "");
+    const [showPhoneModal, setShowPhoneModal] = useState(false);
+    const [phoneInput, setPhoneInput] = useState("");
+    const [phoneError, setPhoneError] = useState("");
+    const [savingPhone, setSavingPhone] = useState(false);
 
     const [toastState, setToastState] = useState<{
         isVisible: boolean;
@@ -78,12 +87,64 @@ export function EventRegistration({ eventId, isRegistered: initialStatus, isLogg
         }
     }, [tickets]);
 
+    // Update currentPhone when userDetails changes
+    useEffect(() => {
+        if (userDetails?.phone) {
+            setCurrentPhone(userDetails.phone);
+        }
+    }, [userDetails]);
+
+    async function handlePhoneSubmit() {
+        setPhoneError("");
+
+        // Basic validation
+        const phoneDigits = phoneInput.replace(/\D/g, '');
+        if (phoneDigits.length < 10) {
+            setPhoneError("Please enter a valid phone number (at least 10 digits)");
+            return;
+        }
+
+        setSavingPhone(true);
+        const result = await updatePhoneNumber(phoneInput);
+        setSavingPhone(false);
+
+        if (result.success) {
+            setCurrentPhone(phoneInput);
+            setShowPhoneModal(false);
+            showToast("Phone number saved!", "success");
+            // Proceed with registration after short delay
+            setTimeout(() => {
+                proceedWithRegistration();
+            }, 500);
+        } else {
+            setPhoneError(result.error || "Failed to save phone number");
+        }
+    }
+
     async function handleRegister() {
         if (!isLoggedIn) {
             router.push("/auth/login?redirect=/events");
             return;
         }
 
+        // Check if phone number is required
+        if (!currentPhone) {
+            setPhoneInput("");
+            setPhoneError("");
+            setShowPhoneModal(true);
+            return;
+        }
+
+        // If tickets exist, ensure one is selected before proceeding
+        if (tickets.length > 0 && !selectedTicketId) {
+            showToast("Please select a ticket type", "error");
+            return;
+        }
+
+        await proceedWithRegistration();
+    }
+
+    async function proceedWithRegistration() {
         let currentPrice = 0;
         let finalTicketId = selectedTicketId;
 
@@ -97,22 +158,10 @@ export function EventRegistration({ eventId, isRegistered: initialStatus, isLogg
             if (selectedTicket) {
                 currentPrice = selectedTicket.price;
                 if (includeGst) {
-                    currentPrice = Math.round((currentPrice * 1.18) * 100) / 100; // Client-side estimate for display/check. Backend works on base price.
-                    // Wait, create-order expects amount? No, backend recalculates based on ID. 
-                    // So we just need to send ticketId. 
-                    // But for the confirmation or UI, we should show the total.
-                    // Actually, let's keep currentPrice as Base here for logic, or use a separate variable?
-                    // The backend ignores our amount. So we don't need to change logic here EXCEPT for display?
-                    // Wait, previously I calculated `currentPrice` for `amount` body.
-                    // `body: JSON.stringify({ ... amount: currentPrice })`.
-                    // Does backend uses it?
-                    // Backend: `const { eventId, ticketId } = await req.json();` ... `price = ticket.price`.
-                    // Backend ignores `amount` from body. So we are safe.
-                    // BUT, I should update the UI to show the user the REAL amount they will pay.
+                    currentPrice = Math.round((currentPrice * 1.18) * 100) / 100;
                 }
             }
         } else {
-            // No tickets - assume free event? (Verified by backend check isFree)
             currentPrice = 0;
         }
 
@@ -121,11 +170,10 @@ export function EventRegistration({ eventId, isRegistered: initialStatus, isLogg
         try {
             // 1. If Free Event (Price 0) -> Direct Register
             if (currentPrice === 0) {
-                const result = await registerForEvent(eventId, finalTicketId); // Pass ticketId
+                const result = await registerForEvent(eventId, finalTicketId);
                 if (result.success) {
                     setIsRegistered(true);
                     showToast("Thank you for Registering!", "success");
-                    // router.push("/profile");
                 } else {
                     showToast(result.error || result.message || "An unknown error occurred", "error");
                 }
@@ -137,7 +185,7 @@ export function EventRegistration({ eventId, isRegistered: initialStatus, isLogg
             const orderRes = await fetch("/api/payments/create-order", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ eventId, ticketId: finalTicketId, amount: currentPrice }), // Pass ticket details
+                body: JSON.stringify({ eventId, ticketId: finalTicketId, amount: currentPrice }),
             });
 
             const orderData = await orderRes.json();
@@ -169,7 +217,7 @@ export function EventRegistration({ eventId, isRegistered: initialStatus, isLogg
                             razorpay_payment_id: response.razorpay_payment_id,
                             razorpay_order_id: response.razorpay_order_id,
                             razorpay_signature: response.razorpay_signature,
-                            ticketId: finalTicketId // Pass ticketId for verification record
+                            ticketId: finalTicketId
                         })
                     });
 
@@ -188,7 +236,7 @@ export function EventRegistration({ eventId, isRegistered: initialStatus, isLogg
                 prefill: {
                     name: userDetails?.name || "",
                     email: userDetails?.email || "",
-                    contact: userDetails?.phone || "",
+                    contact: currentPhone || "",
                 },
                 theme: {
                     color: "#059669" // Emerald 600
@@ -207,10 +255,6 @@ export function EventRegistration({ eventId, isRegistered: initialStatus, isLogg
                 alert("Payment Failed: " + response.error.description);
                 setLoading(false);
             });
-
-            // Handle user closing/dismissing the payment modal (handled in options.modal.ondismiss)
-
-
 
         } catch (error: any) {
             console.error("Registration Error:", error);
@@ -236,6 +280,59 @@ export function EventRegistration({ eventId, isRegistered: initialStatus, isLogg
             showToast(result.error || result.message || "Failed to cancel", "error");
         }
     }
+
+    // Phone Number Modal
+    const phoneModal = showPhoneModal ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+            <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-6 transform transition-all scale-100">
+                <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center">
+                        <Phone className="w-5 h-5 text-emerald-600" />
+                    </div>
+                    <div>
+                        <h3 className="text-lg font-semibold text-gray-900">Phone Number Required</h3>
+                        <p className="text-sm text-gray-500">We need your phone number to complete registration</p>
+                    </div>
+                </div>
+
+                <div className="mb-4">
+                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
+                        Phone Number
+                    </label>
+                    <input
+                        type="tel"
+                        id="phone"
+                        value={phoneInput}
+                        onChange={(e) => setPhoneInput(e.target.value)}
+                        placeholder="Enter your phone number"
+                        className={`w-full px-4 py-3 rounded-lg border ${phoneError ? 'border-red-300 focus:ring-red-500' : 'border-gray-300 focus:ring-emerald-500'} focus:outline-none focus:ring-2 transition-colors`}
+                        disabled={savingPhone}
+                    />
+                    {phoneError && (
+                        <p className="mt-1 text-sm text-red-600">{phoneError}</p>
+                    )}
+                </div>
+
+                <div className="flex justify-end gap-3">
+                    <button
+                        onClick={() => setShowPhoneModal(false)}
+                        className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                        disabled={savingPhone}
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        onClick={handlePhoneSubmit}
+                        className="px-4 py-2 text-sm font-medium text-white bg-emerald-600 rounded-lg hover:bg-emerald-700 transition-colors flex items-center gap-2"
+                        disabled={savingPhone}
+                    >
+                        {savingPhone && <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />}
+                        {savingPhone ? "Saving..." : "Save & Continue"}
+                    </button>
+                </div>
+            </div>
+        </div>
+    ) : null;
 
     const confirmModal = showConfirmModal ? (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
@@ -281,6 +378,7 @@ export function EventRegistration({ eventId, isRegistered: initialStatus, isLogg
                     {loading ? "Cancelling..." : "Cancel Registration"}
                 </button>
                 {confirmModal}
+                {phoneModal}
                 <Toast
                     message={toastState.message}
                     type={toastState.type}
@@ -340,10 +438,11 @@ export function EventRegistration({ eventId, isRegistered: initialStatus, isLogg
                             const total = includeGst ? Math.round(t.price * 1.18) : t.price;
                             return `Pay ₹${total} & Register`;
                         })()
-                        : "Register Now" // simplified fallback
+                        : "Register Now"
                 )}
             </button>
             {confirmModal}
+            {phoneModal}
             <Toast
                 message={toastState.message}
                 type={toastState.type}
