@@ -92,6 +92,34 @@ export async function updateUsername(formData: FormData) {
     }
 }
 
+export async function updatePhoneNumber(phone: string) {
+    const userPayload = await getUser();
+
+    if (!userPayload) {
+        return { error: "Unauthorized", success: false };
+    }
+
+    // Basic phone validation - at least 10 digits
+    const phoneDigits = phone.replace(/\D/g, '');
+    if (phoneDigits.length < 10) {
+        return { error: "Please enter a valid phone number (at least 10 digits)", success: false };
+    }
+
+    try {
+        await prisma.user.update({
+            where: { id: userPayload.userId },
+            data: { phone }
+        });
+
+        revalidatePath("/profile");
+        return { success: true, message: "Phone number saved" };
+
+    } catch (e) {
+        console.error(e);
+        return { error: "Failed to save phone number", success: false };
+    }
+}
+
 export async function getPublicUserProfile(username: string) {
     try {
         const user = await prisma.user.findUnique({
