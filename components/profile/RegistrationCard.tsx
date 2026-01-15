@@ -29,7 +29,9 @@ export function RegistrationCard({ registration, userName }: { registration: any
     const isOnline = event.mode === "ONLINE";
 
     // Check if payment is required and completed
-    const isPaid = event.isFree || registration.paymentStatus === "COMPLETED" || (registration.amountPaid && registration.amountPaid > 0);
+    // For paid events, ONLY paymentStatus === "COMPLETED" should be considered as paid
+    // Note: amountPaid is set when order is created (before payment), not when payment completes
+    const isPaid = event.isFree || registration.paymentStatus === "COMPLETED";
     const isActive = status === 'ACTIVE' && isPaid;
 
     // Dummy ticket logic (using ID)
