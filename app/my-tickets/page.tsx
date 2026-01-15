@@ -19,6 +19,15 @@ export default async function MyTicketsPage() {
         where: { id: userId },
         include: {
             registrations: {
+                where: {
+                    status: "ACTIVE",
+                    OR: [
+                        // Free events - just need ACTIVE status
+                        { event: { isFree: true } },
+                        // Paid events - must have COMPLETED payment
+                        { paymentStatus: "COMPLETED" }
+                    ]
+                },
                 include: {
                     event: true
                 },
