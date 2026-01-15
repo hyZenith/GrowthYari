@@ -167,7 +167,7 @@ export const TicketDesign = React.forwardRef<HTMLDivElement, TicketDesignProps>(
                                 <div style={{ fontSize: '16px', fontWeight: 'bold', color: primaryGreen, fontFamily: 'monospace' }}>#{ticketId}</div>
                             </div>
                         </div>
-                        <div style={{ fontSize: '11px', color: mediumGray }}>www.GrowthYari.com</div>
+                        <div style={{ fontSize: '11px', color: mediumGray }}>www.growthyari.com</div>
                     </div>
                 </div>
 
