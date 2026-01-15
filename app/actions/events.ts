@@ -80,6 +80,23 @@ export async function registerForEvent(eventId: string, ticketId?: string | null
          return { message: "Already registered", success: true };
      }
 
+     // SECURITY: If ticketId provided, verify it belongs to this event
+     if (ticketId) {
+         const ticket = await prisma.ticket.findUnique({
+             where: { id: ticketId },
+             select: { eventId: true, price: true }
+         });
+         
+         if (!ticket || ticket.eventId !== eventId) {
+             return { error: "Invalid ticket for this event", status: 400 };
+         }
+         
+         // For free event registration, ticket price should be 0
+         if (ticket.price > 0) {
+             return { error: "This ticket requires payment", status: 402 };
+         }
+     }
+
      const newRegistration = await prisma.eventRegistration.create({
          data: {
              userId,
