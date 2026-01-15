@@ -32,10 +32,23 @@ export async function POST(req: Request) {
     let price = 0;
 
     if (ticketId) {
-      const ticket = await prisma.ticket.findUnique({ where: { id: ticketId } });
-      if (ticket) {
-        price = ticket.price;
+      // SECURITY: Verify ticket belongs to THIS event to prevent price manipulation
+      const ticket = await prisma.ticket.findUnique({ 
+        where: { id: ticketId },
+        select: { id: true, price: true, eventId: true }
+      });
+      
+      if (!ticket) {
+        return NextResponse.json({ error: "Invalid ticket" }, { status: 400 });
       }
+      
+      // Critical check: Ensure ticket belongs to the requested event
+      if (ticket.eventId !== eventId) {
+        console.error(`Security: Ticket ${ticketId} doesn't belong to event ${eventId}`);
+        return NextResponse.json({ error: "Invalid ticket for this event" }, { status: 400 });
+      }
+      
+      price = ticket.price;
     } else if (!event.isFree) {
         // If it's not free and no ticket selected, we cannot determine price.
         // This should probably be an error, or we assume frontend ensures ticketId.
