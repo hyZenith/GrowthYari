@@ -4,6 +4,7 @@ import LinkedIn from "next-auth/providers/linkedin"
 import Credentials from "next-auth/providers/credentials"
 import { prisma } from "./prisma"
 import bcrypt from "bcryptjs"
+import { Role } from "@/generated/prisma"
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -59,7 +60,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           id: user.id,
           email: user.email,
           name: user.name,
-          role: user.role as string
+          role: user.role as Role
         }
       }
     })
@@ -125,22 +126,35 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return true
     },
     async jwt({ token, user, account }) {
+      // First login
       if (user) {
-        // Fetch the user from database to get the role
+        // Fetch the user from database to get the ID and role
         const dbUser = await prisma.user.findUnique({
           where: { email: user.email! }
         })
         if (dbUser) {
           token.id = dbUser.id
-          token.role = dbUser.role as string
+          token.role = dbUser.role as Role
         }
       }
+      
+      // If token.id is missing (subsequent calls or initial failure), try fetching by email
+      if (!token.id && token.email) {
+          const dbUser = await prisma.user.findUnique({
+            where: { email: token.email }
+          })
+          if (dbUser) {
+            token.id = dbUser.id
+            token.role = dbUser.role as Role
+          }
+      }
+
       return token
     },
     async session({ session, token }) {
-      if (session.user) {
+      if (session.user && token.id) {
         session.user.id = token.id as string
-        session.user.role = token.role as string
+        session.user.role = token.role as Role
       }
       return session
     }
