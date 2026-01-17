@@ -36,7 +36,14 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                         <div className="shrink-0 flex flex-col items-center">
                             <div className="h-32 w-32 sm:h-40 sm:w-40 rounded-full border-4 border-white shadow-lg overflow-hidden bg-slate-200">
                                 {user.image ? (
-                                    <img src={user.image} alt={user.name} className="h-full w-full object-cover" />
+                                    <img
+                                        src={process.env.NODE_ENV === 'development'
+                                            ? user.image
+                                            : `/_next/image?url=${encodeURIComponent(user.image)}&w=256&q=75`
+                                        }
+                                        alt={user.name}
+                                        className="h-full w-full object-cover"
+                                    />
                                 ) : (
                                     <div className="h-full w-full flex items-center justify-center bg-slate-100 text-slate-300">
                                         <span className="text-4xl font-bold uppercase">{user.name.charAt(0)}</span>
@@ -120,7 +127,14 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                                 <div key={idx} className="group relative bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition-all hover:-translate-y-1">
                                     <div className="aspect-video w-full rounded-xl overflow-hidden bg-slate-100 mb-4 relative">
                                         {reg.event.imageUrl ? (
-                                            <img src={reg.event.imageUrl} alt={reg.event.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                                            <img
+                                                src={process.env.NODE_ENV === 'development'
+                                                    ? reg.event.imageUrl
+                                                    : `/_next/image?url=${encodeURIComponent(reg.event.imageUrl)}&w=640&q=75`
+                                                }
+                                                alt={reg.event.title}
+                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                            />
                                         ) : (
                                             <div className="w-full h-full flex items-center justify-center bg-slate-200 text-slate-400">
                                                 <Calendar className="h-8 w-8" />
