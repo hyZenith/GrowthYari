@@ -83,7 +83,10 @@ export function ProfilePictureUpload({ currentImage, name, size = "xl" }: Profil
             <div className="relative h-full w-full overflow-hidden rounded-full bg-emerald-100 flex items-center justify-center text-emerald-800 font-bold border border-slate-200">
                 {currentImage ? (
                     <img
-                        src={currentImage}
+                        src={process.env.NODE_ENV === 'development'
+                            ? currentImage
+                            : `/_next/image?url=${encodeURIComponent(currentImage)}&w=256&q=75`
+                        }
                         alt={name}
                         className="h-full w-full object-cover"
                     />
