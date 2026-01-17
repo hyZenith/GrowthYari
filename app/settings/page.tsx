@@ -228,7 +228,14 @@ function SettingsContent() {
                                 <div className="flex items-center gap-6">
                                     <div className="flex h-20 w-20 items-center justify-center rounded-full bg-emerald-100 text-2xl font-bold text-emerald-700 ring-4 ring-white shadow-sm overflow-hidden">
                                         {user?.image ? (
-                                            <img src={user.image} alt={user.name} className="h-full w-full object-cover" />
+                                            <img
+                                                src={process.env.NODE_ENV === 'development'
+                                                    ? user.image
+                                                    : `/_next/image?url=${encodeURIComponent(user.image)}&w=256&q=75`
+                                                }
+                                                alt={user.name}
+                                                className="h-full w-full object-cover"
+                                            />
                                         ) : (
                                             user?.name ? user.name.charAt(0).toUpperCase() : "U"
                                         )}
