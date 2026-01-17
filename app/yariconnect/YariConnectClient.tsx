@@ -7,7 +7,9 @@ import { IncomingCallModal } from "@/components/networking/IncomingCallModal";
 import { VideoCall } from "@/components/networking/VideoCall";
 import { Button } from "@/components/ui/button";
 import { toggleNetworking } from "@/actions/networking";
-import { Loader2, Power, WifiOff } from "lucide-react";
+import { Loader2, Power, WifiOff, Search, Zap, ChevronDown, Filter } from "lucide-react";
+import { Input } from "@/components/ui/Input";
+import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner"; // Assuming sonner or similar
 
 interface YariConnectClientProps {
@@ -143,20 +145,24 @@ export default function YariConnectClient({ token, currentUser, initialNetworkin
 
     return (
         <div className="container mx-auto p-6 min-h-screen">
-            <div className="flex justify-between items-center mb-8">
-                <div>
-                    <h1 className="text-3xl font-bold bg-clip-text text-black">
+            <div className="flex flex-col items-center justify-center text-center mb-8">
+                <div className="flex flex-col items-center justify-center text-center">
+                    <span className="text-xs font-semibold tracking-[0.2em] text-emerald-600 uppercase mb-4">
                         YariConnect
+                    </span>
+                    <h1 className="text-4xl md:text-5xl font-bold text-gray-900 tracking-tight">
+                        Find Your Next <span className="font-serif italic text-emerald-600">Meaningful Connection</span>
                     </h1>
-                    <p className="text-muted-foreground mt-1">
-                        Real-time video networking with professionals.
+                    <p className="text-muted-foreground mt-4 max-w-2xl text-lg">
+                        Connect with professionals who share your interests and can help
+                        accelerate your career growth.
                     </p>
                 </div>
 
                 <Button
                     onClick={handleToggleNetworking}
                     variant={isNetworking ? "destructive" : "default"} // Green for "Go Online"? Default usually primary. "destructive" for Go Offline.
-                    className={isNetworking ? "bg-red-500/10 text-red-500 hover:bg-red-500/20" : "bg-green-600 hover:bg-green-700"}
+                    className={isNetworking ? "bg-red-500/10 text-red-500 hover:bg-red-500/20" : "bg-green-600 hover:bg-green-700 mt-6"}
                 >
                     {isNetworking ? (
                         <>
@@ -170,6 +176,52 @@ export default function YariConnectClient({ token, currentUser, initialNetworkin
                         </>
                     )}
                 </Button>
+
+            </div>
+
+            {/* Filter Section Prototype */}
+            <div className="bg-white border text-card-foreground shadow-sm rounded-xl p-4 mb-8">
+                <div className="flex flex-col gap-4">
+                    {/* Top Row: Search and Filters */}
+                    <div className="flex flex-col md:flex-row gap-4">
+                        <div className="relative flex-1">
+                            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                            <Input
+                                placeholder="Search by name, skills, or interests..."
+                                className="pl-9 bg-gray-50/50 border-gray-200"
+                            />
+                        </div>
+                        <div className="flex gap-2 w-full md:w-auto overflow-x-auto pb-1 md:pb-0">
+                            <Button variant="outline" className="min-w-[140px] justify-between font-normal text-muted-foreground">
+                                All Industries <ChevronDown className="h-4 w-4 opacity-50" />
+                            </Button>
+                            <Button variant="outline" className="min-w-[140px] justify-between font-normal text-muted-foreground">
+                                All Levels <ChevronDown className="h-4 w-4 opacity-50" />
+                            </Button>
+                        </div>
+                    </div>
+
+                    {/* Divider */}
+                    <div className="h-px bg-gray-100" />
+
+                    {/* Bottom Row: Status and Toggle */}
+                    <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <div className="flex items-center gap-2 self-start sm:self-center">
+                            <Zap className="h-5 w-5 text-emerald-600 fill-emerald-600" />
+                            <span className="font-semibold text-gray-700">Connect Now</span>
+                            <Badge variant="secondary" className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100 font-medium">
+                                4 online
+                            </Badge>
+                        </div>
+
+                        <div className="flex items-center gap-2 self-end sm:self-center">
+                            <span className="text-sm text-muted-foreground">Show online only</span>
+                            <div className="w-9 h-5 bg-gray-200 rounded-full relative cursor-pointer hover:bg-gray-300 transition-colors">
+                                <div className="absolute left-1 top-1 w-3 h-3 bg-white rounded-full shadow-sm" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             {!isNetworking ? (
