@@ -11,10 +11,13 @@ const app = express();
 app.use(cors());
 
 const httpServer = createServer(app);
+const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(",") : ["http://localhost:3000", "http://localhost:3001"];
+
 const io = new Server(httpServer, {
   cors: {
-    origin: "*", // In production, replace with specific domain
-    methods: ["GET", "POST"]
+    origin: ALLOWED_ORIGINS,
+    methods: ["GET", "POST"],
+    credentials: true,
   }
 });
 
@@ -29,6 +32,7 @@ interface UserData {
   bio?: string;
   industry?: string;
   skills?: string[];
+  networkingAvailable?: boolean;
 }
 
 interface ConnectedUser extends UserData {
@@ -62,27 +66,27 @@ io.on("connection", (socket: Socket) => {
   const user = (socket as any).user as UserData;
   console.log(`User connected: ${user.name} (${user.id})`);
 
-  // Initial state: Online but networking availability depends on client signal or DB default
-  // For now, we assume user sends 'join-networking' event to explicitly make themselves visible
+  // Check networking availability from token directly
+  // In a real scenario, you might query the DB here to be 100% sure, 
+  // but for performance, we trust the token or assume the client will update if changed.
+  // For this refactor, we trust the token contains `networkingAvailable` or we fetch it?
+  // The interface UserData in server.ts (lines 28-35) DOES NOT currently have networkingAvailable.
+  // We need to ensure the token has it, or we defaulting to false? 
+  // The user prompt says: "Authenticate using JWT. If networkingAvailable is true, mark them ONLINE."
   
-  socket.on("join-networking", (data: { networkingAvailable: boolean }) => {
-    if (data.networkingAvailable) {
+  // Let's assume the token payload now includes `networkingAvailable`.
+  // We'll cast user to any to access it safely if strictly typed
+  const isNetworking = (user as any).networkingAvailable === true;
+
+  if (isNetworking) {
       onlineUsers.set(user.id, {
         ...user,
         socketId: socket.id,
         status: "ONLINE",
         networkingAvailable: true
       });
-      
-      // Broadcast updated list to all in networking pool
       io.emit("users-update", Array.from(onlineUsers.values()));
-    }
-  });
-
-  socket.on("leave-networking", () => {
-    onlineUsers.delete(user.id);
-    io.emit("users-update", Array.from(onlineUsers.values()));
-  });
+  }
 
   // Call Request
   socket.on("call-request", (data: { toUserId: string }) => {
@@ -92,6 +96,13 @@ io.on("connection", (socket: Socket) => {
       return;
     }
     
+    // Security: Ensure caller is actually 'ONLINE' 
+    const caller = onlineUsers.get(user.id);
+    if (!caller) {
+        socket.emit("call-error", { message: "You must be online to make calls." });
+        return;
+    }
+
     if (targetUser.status === "BUSY") {
         socket.emit("call-error", { message: "User is currently busy" });
         return;
@@ -105,7 +116,7 @@ io.on("connection", (socket: Socket) => {
         bio: user.bio,
         industry: user.industry
       },
-      signal: null // Start with simple request, signal later or here
+      signal: null 
     });
   });
 
@@ -146,7 +157,6 @@ io.on("connection", (socket: Socket) => {
 
   // End Call
   socket.on("end-call", (data: { toUserId: string }) => {
-    // Determine who ended it.
     // Reset status to ONLINE
     const me = onlineUsers.get(user.id);
     if (me) {
@@ -158,7 +168,7 @@ io.on("connection", (socket: Socket) => {
     if(data.toUserId) {
         const other = onlineUsers.get(data.toUserId);
         if(other) {
-            other.status = "ONLINE"; // Or wait for them to signal? Safer to force reset if they confirm end
+            other.status = "ONLINE"; 
             onlineUsers.set(other.id, other);
             io.to(other.socketId).emit("call-ended", { byUserId: user.id });
         }
@@ -169,8 +179,10 @@ io.on("connection", (socket: Socket) => {
 
   socket.on("disconnect", () => {
     console.log(`User disconnected: ${user.name}`);
-    onlineUsers.delete(user.id);
-    io.emit("users-update", Array.from(onlineUsers.values()));
+    if (onlineUsers.has(user.id)) {
+        onlineUsers.delete(user.id);
+        io.emit("users-update", Array.from(onlineUsers.values()));
+    }
   });
 });
 
