@@ -50,6 +50,7 @@ export async function POST(req: Request) {
             userId: user.id,
             email: user.email,
             role: user.role,
+            networkingAvailable: user.networkingAvailable,
         },
         process.env.JWT_SECRET!,
         { expiresIn: "7d" }
