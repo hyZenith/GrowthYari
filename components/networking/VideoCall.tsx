@@ -42,9 +42,74 @@ export function VideoCall({ socket, remoteUserId, isInitiator, onEndCall, curren
     // HTML Elements
     const localVideoElement = useRef<HTMLVideoElement | null>(null);
     const remoteVideoElement = useRef<HTMLVideoElement | null>(null);
-    const remoteAudioElement = useRef<HTMLAudioElement | null>(null);
+    // Consolidated remote media: No separate audio element needed
     const audioContextRef = useRef<AudioContext | null>(null);
     const isMountedRef = useRef(true);
+
+    // Volume Ref to avoid dependency loops
+    const remoteVolumeRef = useRef(remoteVolume);
+
+    // Update volume ref when state changes
+    // Update volume ref when state changes
+    useEffect(() => {
+        remoteVolumeRef.current = remoteVolume;
+        if (remoteVideoElement.current) {
+            remoteVideoElement.current.volume = remoteVolume;
+        }
+    }, [remoteVolume]);
+
+    // --- Mock Stream Helper ---
+    const createMockStream = () => {
+        const canvas = document.createElement("canvas");
+        canvas.width = 640;
+        canvas.height = 480;
+        const ctx = canvas.getContext("2d");
+
+        if (!ctx) throw new Error("Canvas context not available");
+
+        // Clean white background
+        ctx.fillStyle = "#f5f5f5";
+        ctx.fillRect(0, 0, 640, 480);
+
+        const stream = canvas.captureStream(30);
+        const track = stream.getVideoTracks()[0];
+
+        // Use a loop to animate
+        let angle = 0;
+        const draw = () => {
+            if (track.readyState === "ended") return;
+
+            // Background
+            ctx.fillStyle = "#1e1e1e";
+            ctx.fillRect(0, 0, 640, 480);
+
+            // Bouncing Ball / Animation
+            angle += 0.05;
+            const x = 320 + Math.sin(angle) * 100;
+            const y = 240 + Math.cos(angle * 1.5) * 80;
+
+            ctx.beginPath();
+            ctx.arc(x, y, 40, 0, Math.PI * 2);
+            ctx.fillStyle = "#10b981"; // Emerald-500
+            ctx.fill();
+
+            // Text Overlay
+            ctx.font = "30px sans-serif";
+            ctx.fillStyle = "#ffffff";
+            ctx.textAlign = "center";
+            ctx.fillText("Mock Camera Active", 320, 240);
+            ctx.font = "20px sans-serif";
+            ctx.fillStyle = "#9ca3af";
+            ctx.fillText("Device in use / blocked", 320, 280);
+
+            requestAnimationFrame(draw);
+        };
+        draw();
+
+        // Label it for debugging
+        // track.label is read-only, so we just return the stream
+        return stream;
+    };
 
     // --- Cleanup Function ---
     const cleanupCall = useCallback(() => {
@@ -103,43 +168,25 @@ export function VideoCall({ socket, remoteUserId, isInitiator, onEndCall, curren
         }
     };
 
-    // --- Remote Video Effect ---
+    // --- Remote Video/Audio Handling ---
     useEffect(() => {
         const video = remoteVideoElement.current;
         if (!video || !remoteStream) return;
 
+        console.log("🎥 Attaching Remote Stream to Video Element", remoteStream.id, remoteStream.getTracks().map(t => `${t.kind}:${t.enabled}`));
+
         // Assign and Play
         safePlay(video, remoteStream);
+        video.volume = remoteVolumeRef.current; // Ensure volume is set
 
         // Cleanup: Pause and clear srcObject
         return () => {
             if (video) {
                 video.pause();
                 video.srcObject = null;
-                // DO NOT stop tracks here, the stream might still be alive in the PC
             }
         };
     }, [remoteStream]);
-
-
-    // --- Remote Audio Effect (Element Playback) ---
-    useEffect(() => {
-        const audio = remoteAudioElement.current;
-        if (!audio || !remoteStream) return;
-
-        // Assign and Play
-        safePlay(audio, remoteStream);
-
-        // Sync Volume
-        audio.volume = remoteVolume;
-
-        return () => {
-            if (audio) {
-                audio.pause();
-                audio.srcObject = null;
-            }
-        };
-    }, [remoteStream, remoteVolume]); // Re-run if stream changes, volume is handled by prop update usually but safe here
 
 
     // --- Audio Doctor (Analysis Only) ---
@@ -166,7 +213,7 @@ export function VideoCall({ socket, remoteUserId, isInitiator, onEndCall, curren
                 const gainNode = ctx.createGain();
                 const analyser = ctx.createAnalyser();
 
-                gainNode.gain.value = remoteVolume * 3.0; // Visual boost
+                gainNode.gain.value = remoteVolumeRef.current * 3.0; // Use Ref here
                 source.connect(gainNode);
                 gainNode.connect(analyser);
                 // DO NOT connect to ctx.destination here if the <audio> element is playing separately to avoid echo/double audio
@@ -194,7 +241,7 @@ export function VideoCall({ socket, remoteUserId, isInitiator, onEndCall, curren
 
         initAudioDoctor();
 
-    }, [remoteStream, remoteVolume]); // Re-init if stream changes
+    }, [remoteStream]); // Removed remoteVolume dependency
 
 
     // --- Initialize Call ---
@@ -266,8 +313,22 @@ export function VideoCall({ socket, remoteUserId, isInitiator, onEndCall, curren
                         localVideoTrack = videoStream.getVideoTracks()[0];
                         localCameraStream = videoStream;
                         cameraStreamRef.current = localCameraStream;
-                    } catch (videoErr) {
+                    } catch (videoErr: any) {
                         console.warn("Camera failed", videoErr);
+
+                        // FALLBACK: If device in use (NotReadableError)
+                        if (videoErr.name === 'NotReadableError' || videoErr.name === 'TrackStartError') {
+                            console.log("⚠️ Camera blocked/in-use. Swapping to MOCK CAMERA.");
+                            toast.warning("Camera in use! Using Mock Camera fallback.");
+                            try {
+                                const mockStream = createMockStream();
+                                localVideoTrack = mockStream.getVideoTracks()[0];
+                                localCameraStream = mockStream;
+                                cameraStreamRef.current = mockStream;
+                            } catch (mockErr) {
+                                console.error("Mock stream creation failed", mockErr);
+                            }
+                        }
                     }
                 }
 
@@ -303,8 +364,23 @@ export function VideoCall({ socket, remoteUserId, isInitiator, onEndCall, curren
                 pc.ontrack = (event) => {
                     const stream = event.streams[0];
                     console.log(`🎵 Incoming Track: ${event.track.kind}`, stream.id);
-                    // Update React State to trigger safePlay effect
-                    setRemoteStream(stream);
+
+                    // If we already have the stream, we might need to force a re-render or re-attach 
+                    // if the track was added later. 
+                    // However, creating a new MediaStream reference is a safe way to trigger effects.
+                    if (peerConnection.current) {
+                        // Ensure the stream has all tracks
+                        const visualTracks = stream.getVideoTracks();
+                        const audioTracks = stream.getAudioTracks();
+                        if (visualTracks.length > 0 || audioTracks.length > 0) {
+                            // Trigger state update
+                            setRemoteStream(stream);
+                            // Force re-attach if needed by re-setting state with new object reference?
+                            // Actually, let's just create a new wrapper if needed, 
+                            // but usually passing the same stream is fine IF we handle the effect right.
+                            // To be 100% sure, we can set it to the stream.
+                        }
+                    }
                 };
 
                 // Add Tracks
@@ -429,8 +505,8 @@ export function VideoCall({ socket, remoteUserId, isInitiator, onEndCall, curren
     const forceAudioRefresh = () => {
         // Just re-trigger state update if stream exists
         if (remoteStream) {
-            const audio = remoteAudioElement.current;
-            if (audio) safePlay(audio, remoteStream);
+            const video = remoteVideoElement.current;
+            if (video) safePlay(video, remoteStream);
         }
     };
 
@@ -458,15 +534,7 @@ export function VideoCall({ socket, remoteUserId, isInitiator, onEndCall, curren
                     onClick={() => safePlay(remoteVideoElement.current, remoteStream)}
                 />
 
-                {/* Hidden Remote Audio Fallback */}
-                <audio
-                    ref={remoteAudioElement}
-                    // Remove autoPlay
-                    playsInline
-                    // @ts-ignore
-                    webkit-playsinline="true"
-                    muted={false}
-                />
+
 
                 {/* Local Video (PiP) */}
                 <div className="absolute top-4 right-4 w-48 sm:w-64 aspect-video bg-neutral-800 rounded-lg overflow-hidden border border-white/20 shadow-xl transition-all hover:scale-105">

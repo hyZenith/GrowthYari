@@ -24,7 +24,7 @@ export function IncomingCallModal({ caller, onAccept, onReject }: IncomingCallMo
 
     return (
         <Dialog open={!!caller} onOpenChange={() => onReject()}>
-            <DialogContent className="sm:max-w-md">
+            <DialogContent className="sm:max-w-md bg-white">
                 <DialogHeader>
                     <DialogTitle>Incoming Call</DialogTitle>
                     <DialogDescription>
@@ -42,7 +42,7 @@ export function IncomingCallModal({ caller, onAccept, onReject }: IncomingCallMo
                     </div>
                 </div>
                 <DialogFooter className="sm:justify-center gap-4">
-                    <Button variant="destructive" size="lg" className="gap-2 w-full sm:w-auto" onClick={onReject}>
+                    <Button variant="destructive" size="lg" className="gap-2 w-full sm:w-auto bg-red-700 hover:bg-red-800" onClick={onReject}>
                         <PhoneOff className="h-5 w-5" />
                         Decline
                     </Button>
