@@ -3,9 +3,9 @@ services:
     name: growthyari-realtime
     runtime: node
     plan: free
-    # Force development environment for install to ensure devDependencies (@types) are installed
-    buildCommand: NODE_ENV=development npm install && npm run build && npm prune --production
-    startCommand: NODE_ENV=production npm start
+    # Types are now in dependencies, so standard install works
+    buildCommand: npm install && npm run build
+    startCommand: npm start
     envVars:
       - key: PORT
         value: 3001
