@@ -111,9 +111,19 @@ If you need always-on service:
 3. Verify JWT token is valid
 
 ### Build Fails
+
+**Problem:** TypeScript compilation errors like `Could not find a declaration file for module 'jsonwebtoken'`
+
+**Solution:** Already fixed in the latest configuration! The Dockerfile now:
+1. Installs all dependencies (including dev dependencies for TypeScript)
+2. Compiles TypeScript with type definitions
+3. Removes dev dependencies after build for smaller production image
+
+**If you still have build issues:**
 1. Check Node.js version (should be 20.x)
 2. Verify all dependencies are in package.json
-3. Check TypeScript compilation errors
+3. Test locally: `npm install && npm run build`
+4. Clear Render cache: Dashboard → Settings → Clear Build Cache
 
 ## Security Checklist
 
