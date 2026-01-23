@@ -426,6 +426,12 @@ export function VideoCall({ socket, remoteUserId, isInitiator, onEndCall, curren
                     socket.emit("signal", { toUserId: remoteUserId, signal: { type: "offer", offer } });
                 }
 
+                // Listen for remote end call
+                socket.on("call-ended", () => {
+                    toast.info("Call ended by remote user.");
+                    onEndCall();
+                });
+
             } catch (err) {
                 console.error("Initialization Failed:", err);
                 onEndCall();
@@ -442,6 +448,12 @@ export function VideoCall({ socket, remoteUserId, isInitiator, onEndCall, curren
     }, [isInitiator, remoteUserId, socket, iceServers, cleanupCall, onEndCall]);
 
     // ... (Keep existing actions: toggleMute, toggleVideo, startScreenShare, etc.) ...
+
+    const handleHangup = () => {
+        socket.emit("end-call", { toUserId: remoteUserId });
+        onEndCall();
+    };
+
     const toggleMute = () => {
         if (localAudioRef.current) {
             const enabled = !localAudioRef.current.enabled;
@@ -558,7 +570,7 @@ export function VideoCall({ socket, remoteUserId, isInitiator, onEndCall, curren
                     <Button
                         variant={isMuted ? "destructive" : "secondary"}
                         size="icon"
-                        className="rounded-full h-14 w-14 shadow-lg transition-transform hover:scale-110"
+                        className="rounded-full h-14 w-14 shadow-lg transition-transform hover:scale-110 bg-white"
                         onClick={toggleMute}
                     >
                         {isMuted ? <MicOff className="w-6 h-6" /> : <Mic className="w-6 h-6" />}
@@ -567,7 +579,7 @@ export function VideoCall({ socket, remoteUserId, isInitiator, onEndCall, curren
                     <Button
                         variant={!isVideoEnabled && !isScreenSharing ? "destructive" : "secondary"}
                         size="icon"
-                        className="rounded-full h-14 w-14 shadow-lg transition-transform hover:scale-110"
+                        className="rounded-full h-14 w-14 shadow-lg transition-transform hover:scale-110 bg-white"
                         onClick={toggleVideo}
                     >
                         {isScreenSharing ? <Video className="w-6 h-6" /> : (isVideoEnabled ? <Video className="w-6 h-6" /> : <VideoOff className="w-6 h-6" />)}
@@ -576,7 +588,7 @@ export function VideoCall({ socket, remoteUserId, isInitiator, onEndCall, curren
                     <Button
                         variant={isScreenSharing ? "default" : "secondary"}
                         size="icon"
-                        className={`rounded-full h-14 w-14 shadow-lg transition-transform hover:scale-110 ${isScreenSharing ? 'bg-blue-600 hover:bg-blue-700 text-white' : ''}`}
+                        className={`rounded-full h-14 w-14 shadow-lg transition-transform hover:scale-110 bg-white ${isScreenSharing ? 'bg-blue-600 hover:bg-blue-700 text-white' : ''}`}
                         onClick={isScreenSharing ? stopScreenShare : startScreenShare}
                     >
                         {isScreenSharing ? <MonitorOff className="w-6 h-6" /> : <MonitorUp className="w-6 h-6" />}
@@ -588,7 +600,7 @@ export function VideoCall({ socket, remoteUserId, isInitiator, onEndCall, curren
                         variant="destructive"
                         size="icon"
                         className="rounded-full h-16 w-16 bg-red-600 hover:bg-red-700 shadow-lg transition-transform hover:scale-110"
-                        onClick={onEndCall}
+                        onClick={handleHangup}
                     >
                         <PhoneOff className="h-8 w-8" />
                     </Button>
