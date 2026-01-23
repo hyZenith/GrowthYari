@@ -77,6 +77,7 @@ io.on("connection", (socket: Socket) => {
   // Let's assume the token payload now includes `networkingAvailable`.
   // We'll cast user to any to access it safely if strictly typed
   const isNetworking = (user as any).networkingAvailable === true;
+  console.log(`User ${user.name} networking status: ${isNetworking}`);
 
   if (isNetworking) {
       onlineUsers.set(user.id, {
@@ -85,29 +86,38 @@ io.on("connection", (socket: Socket) => {
         status: "ONLINE",
         networkingAvailable: true
       });
+      console.log(`User ${user.name} marked ONLINE. Total online: ${onlineUsers.size}`);
       io.emit("users-update", Array.from(onlineUsers.values()));
   }
 
   // Call Request
   socket.on("call-request", (data: { toUserId: string }) => {
+    console.log(`Call request from ${user.name} (${user.id}) to target ID: ${data.toUserId}`);
     const targetUser = onlineUsers.get(data.toUserId);
+    
     if (!targetUser) {
+      console.warn(`Target user ${data.toUserId} not found in onlineUsers map`);
       socket.emit("call-error", { message: "User is offline or unavailable" });
       return;
     }
     
+    console.log(`Target user found: ${targetUser.name} (${targetUser.id}) with socket: ${targetUser.socketId}`);
+    
     // Security: Ensure caller is actually 'ONLINE' 
     const caller = onlineUsers.get(user.id);
     if (!caller) {
+        console.warn(`Caller ${user.id} not found in onlineUsers map`);
         socket.emit("call-error", { message: "You must be online to make calls." });
         return;
     }
 
     if (targetUser.status === "BUSY") {
+        console.log(`Target user ${targetUser.name} is BUSY`);
         socket.emit("call-error", { message: "User is currently busy" });
         return;
     }
 
+    console.log(`Emitting incoming-call to socket ${targetUser.socketId}`);
     io.to(targetUser.socketId).emit("incoming-call", {
       from: {
         id: user.id,
