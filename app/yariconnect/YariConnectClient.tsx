@@ -50,12 +50,16 @@ export default function YariConnectClient({ token, currentUser, initialNetworkin
         const fetchData = async () => {
             try {
                 // Fetch ICE Servers
-                const iceRes = await fetch('/api/yariconnect/ice-servers');
+                const iceRes = await fetch('/api/yariconnect/ice-servers', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
                 const iceData = await iceRes.json();
                 if (iceData.iceServers) setIceServers(iceData.iceServers);
 
                 // Fetch Members
-                const membersRes = await fetch('/api/yariconnect/members');
+                const membersRes = await fetch('/api/yariconnect/members', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
                 const membersData = await membersRes.json();
                 if (membersData.members) {
                     setBaseUsers(membersData.members);
