@@ -13,10 +13,9 @@ interface User {
     bio?: string;
     industry?: string;
     status?: "ONLINE" | "BUSY" | "OFFLINE";
-    // Future fields (optional for now)
-    role?: string;
+    headline?: string;
     location?: string;
-    yearsOfExperience?: string;
+    experienceLevel?: string;
     linkedinUrl?: string;
 }
 
@@ -28,9 +27,9 @@ interface UserCardProps {
 
 export function UserCard({ user, onConnect, disabled }: UserCardProps) {
     // Defaults for missing data to match the mockup style
-    const role = user.role || "Professional";
+    const role = user.headline || "Professional";
     const location = user.location || "India";
-    const experience = user.yearsOfExperience || "Mid Level (3-5 years)";
+    const experience = user.experienceLevel || "Mid Level (3-5 years)";
     const industry = user.industry || "Technology";
 
     // Status Colors
