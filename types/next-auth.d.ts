@@ -1,5 +1,5 @@
 import { DefaultSession, DefaultJWT } from "next-auth"
-import { Role } from "@/generated/prisma"
+import { Role } from "@/generated/prisma/client"
 
 declare module "next-auth" {
   interface Session {

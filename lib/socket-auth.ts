@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { User } from "@/generated/prisma";
+import { User } from "@/generated/prisma/client";
 
 const REALTIME_SECRET = process.env.REALTIME_SECRET || "super-secret-key_CHANGE_ME";
 
