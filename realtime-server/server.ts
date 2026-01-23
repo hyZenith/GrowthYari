@@ -11,7 +11,7 @@ const app = express();
 app.use(cors());
 
 // Health check endpoint for monitoring
-app.get('/health', (req, res) => {
+app.get('/health', (req: express.Request, res: express.Response) => {
   res.status(200).json({ 
     status: 'ok', 
     uptime: process.uptime(),
