@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
+import Image from "next/image";
 import { Calendar, MapPin, Video, ArrowRight, Sparkles } from "lucide-react";
 
 
@@ -181,10 +182,12 @@ export async function UpcomingEventsSection() {
                                                     {/* Image */}
                                                     {event.imageUrl && (
                                                         <div className="sm:w-36 sm:h-28 w-full h-40 relative rounded-xl overflow-hidden shrink-0 ring-1 ring-slate-100">
-                                                            <img
+                                                            <Image
                                                                 src={event.imageUrl}
                                                                 alt={event.title}
-                                                                className="absolute inset-0 w-full h-full object-cover"
+                                                                className="object-cover"
+                                                                fill
+                                                                sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
                                                             />
                                                         </div>
                                                     )}

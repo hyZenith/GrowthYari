@@ -2,6 +2,7 @@
 
 import { useMemo, useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Footer } from "@/components/footer";
 import { Calendar, MapPin, Video, Users, ChevronLeft, ChevronRight, X, Search, ChevronDown, Check } from "lucide-react";
 import dynamic from 'next/dynamic';
@@ -512,10 +513,12 @@ export function EventsView({ initialEvents }: EventsViewProps) {
                                                     {/* Right Image */}
                                                     <div className="relative aspect-video w-full md:w-[460px] shrink-0 md:rounded-2xl overflow-hidden bg-slate-100 self-center mr-1">
                                                         {event.imageUrl ? (
-                                                            <img
+                                                            <Image
                                                                 src={event.imageUrl}
                                                                 alt={event.title}
-                                                                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                                                className="object-cover transition-transform duration-700 group-hover:scale-110"
+                                                                fill
+                                                                sizes="(max-width: 768px) 100vw, 50vw"
                                                             />
                                                         ) : (
                                                             <div className="flex h-full w-full items-center justify-center bg-slate-100 text-slate-300">

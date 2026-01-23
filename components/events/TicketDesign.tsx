@@ -167,7 +167,7 @@ export const TicketDesign = React.forwardRef<HTMLDivElement, TicketDesignProps>(
                                 <div style={{ fontSize: '16px', fontWeight: 'bold', color: primaryGreen, fontFamily: 'monospace' }}>#{ticketId}</div>
                             </div>
                         </div>
-                        <div style={{ fontSize: '11px', color: mediumGray }}>www.GrowthYari.com</div>
+                        <div style={{ fontSize: '11px', color: mediumGray }}>www.growthyari.com</div>
                     </div>
                 </div>
 
@@ -234,7 +234,10 @@ export const TicketDesign = React.forwardRef<HTMLDivElement, TicketDesignProps>(
                 >
                     {event.imageUrl ? (
                         <img
-                            src={event.imageUrl}
+                            src={process.env.NODE_ENV === 'development'
+                                ? event.imageUrl
+                                : `/_next/image?url=${encodeURIComponent(event.imageUrl)}&w=1080&q=75`
+                            }
                             alt=""
                             crossOrigin="anonymous"
                             style={{
