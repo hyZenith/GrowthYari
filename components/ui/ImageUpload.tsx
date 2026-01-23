@@ -4,6 +4,7 @@ import { useCallback, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { supabase } from '@/lib/supabase-client'
 import { Image, Loader2, UploadCloud, X } from 'lucide-react'
+import { compressAndResizeImage } from '@/lib/image-utils'
 
 interface ImageUploadProps {
     value?: string
@@ -23,13 +24,19 @@ export default function ImageUpload({ value, onChange, disabled }: ImageUploadPr
         const file = acceptedFiles[0]
 
         try {
-            const fileExt = file.name.split('.').pop()
+            // Compress and resize image
+            const compressedFile = await compressAndResizeImage(file)
+
+            const fileExt = compressedFile.name.split('.').pop()
             const fileName = `${Math.random().toString(36).substring(2)}_${Date.now()}.${fileExt}`
             const filePath = `${fileName}`
 
             const { error: uploadError } = await supabase.storage
                 .from('events')
-                .upload(filePath, file)
+                .upload(filePath, compressedFile, {
+                    cacheControl: '31536000', // 1 Year immutable cache
+                    upsert: false
+                })
 
             if (uploadError) {
                 throw uploadError

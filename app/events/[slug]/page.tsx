@@ -4,6 +4,7 @@ import { getUser } from "@/lib/user-auth";
 import { EventRegistration } from "@/components/events/EventRegistration";
 import { Calendar, MapPin, Video, Clock } from "lucide-react";
 import { EventMap } from "@/components/events/EventMap";
+import Image from "next/image";
 
 export default async function EventDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -82,10 +83,15 @@ export default async function EventDetailPage({ params }: { params: Promise<{ sl
           <div className="flex flex-col space-y-6">
             {event.imageUrl && (
               <div className="overflow-hidden rounded-xl border border-slate-200 bg-slate-100 shadow-sm">
-                <img
+                <Image
                   src={event.imageUrl}
                   alt={event.title}
-                  className="w-full h-auto object-contain"
+                  width={0}
+                  height={0}
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="w-full h-auto"
+                  unoptimized={process.env.NODE_ENV === 'development'} // Consistent with config
+                  priority
                 />
               </div>
             )}

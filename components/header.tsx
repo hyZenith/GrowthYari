@@ -221,7 +221,14 @@ export function Header() {
                 className="flex items-center justify-center h-10 w-10 rounded-full bg-emerald-100 ring-2 ring-emerald-600/20 text-emerald-800 font-semibold text-lg uppercase focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 overflow-hidden"
               >
                 {user.image ? (
-                  <img src={user.image} alt={user.name} className="h-full w-full object-cover" />
+                  <img
+                    src={process.env.NODE_ENV === 'development'
+                      ? user.image
+                      : `/_next/image?url=${encodeURIComponent(user.image)}&w=96&q=75`
+                    }
+                    alt={user.name}
+                    className="h-full w-full object-cover"
+                  />
                 ) : (
                   user.name ? user.name.charAt(0) : "U"
                 )}
@@ -232,7 +239,14 @@ export function Header() {
                   <div className="mb-2 flex items-center gap-3 rounded-lg bg-slate-50 p-3">
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 font-bold overflow-hidden">
                       {user.image ? (
-                        <img src={user.image} alt={user.name} className="h-full w-full object-cover" />
+                        <img
+                          src={process.env.NODE_ENV === 'development'
+                            ? user.image
+                            : `/_next/image?url=${encodeURIComponent(user.image)}&w=96&q=75`
+                          }
+                          alt={user.name}
+                          className="h-full w-full object-cover"
+                        />
                       ) : (
                         user.name ? user.name.charAt(0).toUpperCase() : "U"
                       )}
@@ -432,7 +446,14 @@ export function Header() {
                     <div className="flex items-center gap-3">
                       <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-200 text-emerald-800 font-bold overflow-hidden">
                         {user.image ? (
-                          <img src={user.image} alt={user.name} className="h-full w-full object-cover" />
+                          <img
+                            src={process.env.NODE_ENV === 'development'
+                              ? user.image
+                              : `/_next/image?url=${encodeURIComponent(user.image)}&w=96&q=75`
+                            }
+                            alt={user.name}
+                            className="h-full w-full object-cover"
+                          />
                         ) : (
                           user.name ? user.name.charAt(0) : "U"
                         )}

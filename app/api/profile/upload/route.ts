@@ -30,7 +30,10 @@ export async function POST(request: Request) {
 
     const { error: uploadError } = await supabase.storage
       .from('avatars')
-      .upload(filePath, file);
+      .upload(filePath, file, {
+        cacheControl: '31536000',
+        upsert: false
+      });
 
     if (uploadError) {
       console.error("Supabase upload error:", uploadError);
