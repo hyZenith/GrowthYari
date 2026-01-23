@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import { createServer } from "http";
 import { Server, Socket } from "socket.io";
 import cors from "cors";
@@ -11,7 +11,7 @@ const app = express();
 app.use(cors());
 
 // Health check endpoint for monitoring
-app.get('/health', (req: express.Request, res: express.Response) => {
+app.get('/health', (req: Request, res: Response) => {
   res.status(200).json({ 
     status: 'ok', 
     uptime: process.uptime(),
