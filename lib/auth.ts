@@ -4,7 +4,7 @@ import LinkedIn from "next-auth/providers/linkedin"
 import Credentials from "next-auth/providers/credentials"
 import { prisma } from "./prisma"
 import bcrypt from "bcryptjs"
-import { Role } from "@/generated/prisma"
+import { Role } from "@/generated/prisma/client"
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
