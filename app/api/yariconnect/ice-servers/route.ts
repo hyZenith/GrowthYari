@@ -5,24 +5,42 @@ import { getIceServers } from "@/lib/turn-credentials";
 
 export async function GET(request: NextRequest) {
   try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get("user_token")?.value || cookieStore.get("admin_token")?.value;
+    // 1. Try Authorization Header (Realtime Token)
+    const authHeader = request.headers.get("Authorization");
+    const headerToken = authHeader?.startsWith("Bearer ") ? authHeader.substring(7) : null;
+    const REALTIME_SECRET = process.env.REALTIME_SECRET || "super-secret-key_CHANGE_ME";
 
-    if (!token) {
+    let userId: string | null = null;
+
+    if (headerToken) {
+      try {
+        const decoded = jwt.verify(headerToken, REALTIME_SECRET) as { id: string };
+        userId = decoded.id; // Realtime token uses 'id' instead of 'userId'
+      } catch (error) {
+        console.warn("YariConnect /ice-servers - Header token verification failed:", error);
+      }
+    }
+
+    // 2. Fallback to Cookie
+    if (!userId) {
+      const cookieStore = await cookies();
+      const userToken = cookieStore.get("user_token")?.value;
+      const adminToken = cookieStore.get("admin_token")?.value;
+      const token = userToken || adminToken;
+      const JWT_SECRET = process.env.JWT_SECRET;
+
+      if (token && JWT_SECRET) {
+        try {
+          const decoded = jwt.verify(token, JWT_SECRET) as { userId: string };
+          userId = decoded.userId;
+        } catch (error) {
+          console.error("YariConnect /ice-servers - Cookie token verification failed:", error);
+        }
+      }
+    }
+
+    if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const JWT_SECRET = process.env.JWT_SECRET;
-    if (!JWT_SECRET) {
-      return NextResponse.json({ error: "Server configuration error" }, { status: 500 });
-    }
-
-    let userId: string;
-    try {
-      const decoded = jwt.verify(token, JWT_SECRET) as { userId: string };
-      userId = decoded.userId;
-    } catch (e) {
-        return NextResponse.json({ error: "Invalid token" }, { status: 401 });
     }
 
     const iceServers = getIceServers(userId);
