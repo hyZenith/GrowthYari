@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff, UserCircle, Users, Video, LineChart } from "lucide-react";
-import { Input } from "@/components/ui/Input";
+import { Input } from "@/components/ui/input";
 import { FaGoogle } from "react-icons/fa6";
 import { signIn } from "next-auth/react";
 

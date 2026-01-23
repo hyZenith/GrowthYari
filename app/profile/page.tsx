@@ -5,7 +5,7 @@ import { ProfileActions } from "@/components/profile/ProfileActions";
 import { ProfilePictureUpload } from "@/components/profile/ProfilePictureUpload";
 import { Calendar, MapPin, Video, User as UserIcon, Clock, Mail, Globe } from "lucide-react";
 import Link from "next/link";
-import { MotionDiv } from "@/components/ui/MotionWrapper";
+import { MotionDiv } from "@/components/ui/motion-wrapper";
 
 export default async function ProfilePage() {
   const userPayload = await getUser();

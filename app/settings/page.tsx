@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { User } from "lucide-react";
-import { Toast, ToastType } from "@/components/ui/Toast";
+import { Toast, ToastType } from "@/components/ui/toast";
 import { motion } from "framer-motion";
 
 interface UserData {

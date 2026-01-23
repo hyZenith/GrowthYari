@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { registerForEvent, cancelRegistration } from "@/app/actions/events";
 import { updatePhoneNumber } from "@/app/actions/profile";
 import { useRouter } from "next/navigation";
-import { Toast, ToastType } from "../ui/Toast";
+import { Toast, ToastType } from "../ui/toast";
 import { Phone } from "lucide-react";
 
 interface UserDetails {
