@@ -10,6 +10,8 @@ import { Loader2, Search, Zap, ChevronDown, PhoneOff } from "lucide-react";
 import { Input } from "@/components/ui/Input";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner"; // Assuming sonner or similar
+import { InstantConnectModal } from "@/components/networking/InstantConnectModal";
+import { Footer } from "@/components/footer";
 
 interface YariConnectClientProps {
     token: string;
@@ -42,6 +44,7 @@ export default function YariConnectClient({ token, currentUser, initialNetworkin
     // Call States
     const [incomingCall, setIncomingCall] = useState<any | null>(null);
     const [activeCall, setActiveCall] = useState<{ userId: string; isInitiator: boolean } | null>(null);
+    const [isInstantConnectOpen, setIsInstantConnectOpen] = useState(false);
 
     const socketRef = useRef<Socket | null>(null);
 
@@ -128,9 +131,27 @@ export default function YariConnectClient({ token, currentUser, initialNetworkin
     }, [token, currentUser.id]);
 
     const handleConnect = (userId: string) => {
-        if (!socketRef.current) return;
+        console.log("=== YARICONNECT: handleConnect called ===");
+        console.log("Target userId:", userId);
+        console.log("Socket ref exists:", !!socketRef.current);
+        console.log("Socket connected:", socketRef.current?.connected);
+
+        if (!socketRef.current) {
+            console.error("❌ Socket not available");
+            toast.error("Connection error. Please refresh the page.");
+            return;
+        }
+
+        if (!socketRef.current.connected) {
+            console.error("❌ Socket not connected");
+            toast.error("Not connected to server. Please refresh the page.");
+            return;
+        }
+
+        console.log("✓ Emitting call-request to:", userId);
         socketRef.current.emit("call-request", { toUserId: userId });
         toast.info("Calling...");
+        console.log("✓ Call request sent");
     };
 
     const handleAcceptCall = () => {
@@ -329,13 +350,29 @@ export default function YariConnectClient({ token, currentUser, initialNetworkin
                             <div className="text-2xl font-bold text-gray-900 leading-none">{onlineCount}</div>
                             <div className="text-xs text-muted-foreground">Professionals Online</div>
                         </div>
-                        <Button className="bg-emerald-700 hover:bg-emerald-800 text-white min-w-[200px] shadow-lg shadow-emerald-900/10">
-                            <PhoneOff className="mr-2 h-4 w-4 rotate-180" />
-                            Connect Randomly
+                        <Button
+                            className="bg-emerald-700 hover:bg-emerald-800 text-white min-w-[200px] shadow-lg shadow-emerald-900/10"
+                            onClick={() => setIsInstantConnectOpen(true)}
+                        >
+                            <Zap className="mr-2 h-4 w-4 fill-white" />
+                            Instant Connect
                         </Button>
                     </div>
                 </div>
             </div>
+
+            <InstantConnectModal
+                isOpen={isInstantConnectOpen}
+                onClose={() => setIsInstantConnectOpen(false)}
+                availableUsers={baseUsers.map(u => {
+                    const realtimeData = onlineUsersMap.get(u.id);
+                    return {
+                        ...u,
+                        status: realtimeData ? realtimeData.status : "OFFLINE"
+                    };
+                }).filter(u => u.status === "ONLINE")}
+                onConnect={handleConnect}
+            />
 
             {isLoading ? (
                 <div className="flex flex-col items-center justify-center py-20 text-center text-muted-foreground">
@@ -369,6 +406,8 @@ export default function YariConnectClient({ token, currentUser, initialNetworkin
                     onReject={handleRejectCall}
                 />
             )}
+
+            <Footer />
         </div>
     );
 }
