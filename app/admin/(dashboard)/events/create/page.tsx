@@ -3,9 +3,9 @@
 import { useState } from "react";
 import { useFormStatus } from "react-dom";
 import { createEvent } from "@/app/actions/admin-events";
-import { Input } from "@/components/ui/Input";
-import ImageUpload from "@/components/ui/ImageUpload";
-import { DateTimePicker } from "@/components/ui/DateTimePicker";
+import { Input } from "@/components/ui/input";
+import ImageUpload from "@/components/ui/image-upload";
+import { DateTimePicker } from "@/components/ui/date-time-picker";
 import { CategorySelector } from "@/components/admin/CategorySelector";
 import { motion, AnimatePresence } from "motion/react";
 import { Trash2, Plus, Ticket, Loader2 } from "lucide-react";

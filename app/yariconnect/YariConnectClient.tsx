@@ -7,7 +7,7 @@ import { IncomingCallModal } from "@/components/networking/IncomingCallModal";
 import { VideoCall } from "@/components/networking/VideoCall";
 import { Button } from "@/components/ui/button";
 import { Loader2, Search, Zap, ChevronDown, PhoneOff } from "lucide-react";
-import { Input } from "@/components/ui/Input";
+import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner"; // Assuming sonner or similar
 import { InstantConnectModal } from "@/components/networking/InstantConnectModal";

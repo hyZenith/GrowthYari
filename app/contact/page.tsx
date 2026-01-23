@@ -2,7 +2,7 @@
 
 import { useState, useRef } from "react";
 import { Footer } from "@/components/footer";
-import { Input } from "@/components/ui/Input";
+import { Input } from "@/components/ui/input";
 import { Linkedin, Mail, Instagram, MapPin, Phone, Send } from "lucide-react";
 import { FaXTwitter } from "react-icons/fa6";
 import dynamic from 'next/dynamic';
