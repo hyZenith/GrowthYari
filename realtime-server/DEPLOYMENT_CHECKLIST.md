@@ -141,15 +141,30 @@ socket.on("connect_error", (err) => console.error("❌ Error:", err));
 
 ### Build Failed
 
-**Check Render logs:**
-1. Go to your service dashboard
-2. Click **"Logs"** tab
-3. Look for error messages
+**Error: `Could not find a declaration file for module 'jsonwebtoken'`**
 
-**Common issues:**
-- Missing dependencies: Check package.json
-- TypeScript errors: Run `npm run build` locally
-- Node version mismatch: Render uses Node 20
+✅ **FIXED!** This issue is resolved in the current configuration. The Dockerfile now properly installs dev dependencies for TypeScript compilation.
+
+**If you still see build errors:**
+
+1. **Check Render logs:**
+   - Go to your service dashboard
+   - Click **"Logs"** tab
+   - Look for specific error messages
+
+2. **Common solutions:**
+   - Clear Render build cache: Settings → Clear Build Cache & Redeploy
+   - Verify `package.json` has all dependencies
+   - Test locally: `npm install && npm run build`
+   - Check Node.js version (Render uses Node 20)
+
+3. **Verify files are committed:**
+   ```bash
+   git status
+   git add realtime-server/
+   git commit -m "Fix build configuration"
+   git push
+   ```
 
 ### Connection Failed
 
