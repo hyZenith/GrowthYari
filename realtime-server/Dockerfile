@@ -5,7 +5,7 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
-# Install ALL dependencies (including dev for build)
+# Install ALL dependencies (including @types for TypeScript)
 RUN npm ci
 
 # Copy source code
@@ -14,7 +14,7 @@ COPY . .
 # Build TypeScript
 RUN npm run build
 
-# Remove dev dependencies after build
+# Remove dev dependencies after build to keep image small
 RUN npm prune --production
 
 # Expose port
