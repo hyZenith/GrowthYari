@@ -20,7 +20,7 @@ interface YariConnectClientProps {
 }
 
 // Mock Data for Demo Filters
-const INDUSTRIES = ["Technology", "Healthcare", "Finance", "Education", "Marketing"];
+const INDUSTRIES = ["Technology", "Finance", "Healthcare", "Education", "Marketing", "Sales","Product", "Design","Engineering", "Consulting", "Legal", "Real Estate"];
 const LEVELS = ["Junior", "Mid-Level", "Senior", "Executive"];
 
 export default function YariConnectClient({ token, currentUser, initialNetworkingAvailable }: YariConnectClientProps) {
