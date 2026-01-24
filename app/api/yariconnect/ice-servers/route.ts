@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const iceServers = getIceServers(userId);
+    const iceServers = await getIceServers(userId);
     return NextResponse.json({ iceServers });
 
   } catch (error) {

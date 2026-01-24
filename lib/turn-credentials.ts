@@ -43,7 +43,7 @@ export function generateTurnCredentials(
  * @param userId - User ID for TURN authentication
  * @returns Array of RTCIceServer configuration objects
  */
-export function getIceServers(userId: string): RTCIceServer[] {
+export async function getIceServers(userId: string): Promise<RTCIceServer[]> {
   const iceServers: RTCIceServer[] = [];
 
   // Always include Google STUN servers
@@ -51,10 +51,60 @@ export function getIceServers(userId: string): RTCIceServer[] {
     urls: [
       "stun:stun.l.google.com:19302",
       "stun:stun1.l.google.com:19302",
+      "stun:stun2.l.google.com:19302",
+      "stun:stun3.l.google.com:19302",
+      "stun:stun4.l.google.com:19302",
     ],
   });
 
-  // Add TURN server if configured (production)
+  // Additional free STUN servers as backup
+  iceServers.push({
+    urls: [
+      "stun:stun.relay.metered.ca:80",
+      "stun:global.stun.twilio.com:3478",
+      "stun:stun.cloudflare.com:3478",
+    ],
+  });
+
+  // Add Metered.ca TURN servers (dynamic credentials)
+  try {
+    const meteredApiKey = process.env.METERED_API_KEY ;
+    const response = await fetch(`https://growthyari.metered.live/api/v1/turn/credentials?apiKey=${meteredApiKey}`);
+    
+    if (response.ok) {
+      const meteredServers = await response.json();
+      iceServers.push(...meteredServers);
+      console.log("✅ Metered.ca TURN servers loaded successfully");
+    } else {
+      console.warn("⚠️  Failed to fetch Metered.ca TURN credentials, using fallback");
+      // Fallback to static Metered.ca configuration
+      iceServers.push({
+        urls: "turn:global.relay.metered.ca:80",
+        username: "50ffab20de11c4d9727721cc",
+        credential: "YEpBoVxQ5m2H49ia",
+      });
+      iceServers.push({
+        urls: "turn:global.relay.metered.ca:80?transport=tcp",
+        username: "50ffab20de11c4d9727721cc",
+        credential: "YEpBoVxQ5m2H49ia",
+      });
+      iceServers.push({
+        urls: "turns:global.relay.metered.ca:443?transport=tcp",
+        username: "50ffab20de11c4d9727721cc",
+        credential: "YEpBoVxQ5m2H49ia",
+      });
+    }
+  } catch (error) {
+    console.error("❌ Error fetching Metered.ca TURN servers:", error);
+    // Fallback to static configuration
+    iceServers.push({
+      urls: "turn:global.relay.metered.ca:80",
+      username: "50ffab20de11c4d9727721cc",
+      credential: "YEpBoVxQ5m2H49ia",
+    });
+  }
+
+  // Add custom TURN server if configured (self-hosted)
   const turnServerUrl = process.env.TURN_SERVER_URL;
   if (turnServerUrl) {
     const turnCreds = generateTurnCredentials(userId);
