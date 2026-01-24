@@ -8,7 +8,15 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "ypmwaawygmwytaxkhfbr.supabase.co",
+        hostname: "lrzekqmgprpzsblkqbck.supabase.co",
+      },
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
+      },
+      {
+        protocol: "https",
+        hostname: "*.supabase.co",
       },
     ],
     minimumCacheTTL: 31536000,
