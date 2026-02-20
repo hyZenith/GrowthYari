@@ -145,7 +145,7 @@ export function YariConnect() {
 
             <div className="mt-8 sm:mt-10">
               <LiquidButton
-                href="#start"
+                href="/yariconnect"
                 className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-emerald-700 px-6 py-2.5 text-sm font-semibold text-emerald-700 hover:text-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-emerald-800 hover:shadow-lg hover:shadow-emerald-700/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2 border-2 border-emerald-700 sm:w-auto sm:px-7 sm:py-3"
 
               >
